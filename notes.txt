@@ -1,0 +1,205 @@
+Node JS
+Lesson 1(Introduction)
+	Table of content. —> CLI, API,
+Lesson 2 (Prerequisites)
+
+Lesson 3(Setting up Workstation)
+Lesson 4(The story of NodeJs)
+	Take from this is that node is not really being used as pure node rather the packages that run around it is being used
+Lesson 6 ( what is Node)
+	 It is a C++ application that embeds the v8 js engine.
+	Now represents itself as a two application
+		1. A script processor
+			node {script name}
+				event loop.
+			node js is single thread…
+
+		2. A REPL(Read Evaluate Print Loop)
+======================================================================
+Lesson 7 (Anatomy of a Node Application)
+
+Lesson 8 (Common Node convention)
+	package.json ==> “dependencies”
+	Testing and task running
+		Normally inside a test directory, normally triggered by  a “test runner” such as Mocha.
+			( if project is using CI  or Deployment CD ) and using a CI CD runner such as Travis CI, you will notice a ‘.travis.yml’ file included in the root
+			directory. Which tells travis CI all the configuration that the project needs for the Test to pass as well as the settings.
+			Similary, if the project is using a Javascript Linter such as javascript hint, you will notice another hidden file  a ‘.jshintrc’ file, which tells the
+			linter the configuration.
+		General-purpose task runners often control the whole process.
+		Two most popular are Grunt and Gulp.
+	Node configuration
+		start you app with
+		NODE_ENV=myEnvironmentName node index.js
+	Styles and patterns
+		most popular is published by airbnb ==> https://github.com/airbnb/javascript
+		linters( jshint and jslint) will catch the styling issues. also inform the syntax many devs use.
+
+	Error Handling
+		common approach 3 approach
+		1. error back.
+		2. we avoid throwing exceptions, rather we return error to the caller. throwing an exception will kill the entire application since it is a single
+			threaded.
+		3. Avoid Globals. So you can avoid namespace collisions with any libraries we maybe using.
+
+Lesson 9 (Node Js vs the browser)
+	in the browser you have a lot of functions that are available to you that are not in node
+
+	window.open							document
+	window.location						document.body
+	window.navigator						onchange
+	window.origin							onclick
+	window.focus							onblure
+	window.blur							oncopy
+	window.scroll							uncut
+	window.alert							onscroll
+	window.localstorage					onmouseenter
+	window.onload						onmouseleave
+
+There are no backend equivalent to this in backend.
+
+Node is one environment, the browser is many (cross browser issues in browser)
+
+section 3 Lesson 10(Section over view)
+	Requirement
+		1. A restful Api listen on a PORT and accepts incoming HTTP request for POST, GET, PUT, DELETE and HEAD
+		2. The Api should allow a client to connect then create a new user, then edit and delete that user.
+		3. We want users to be able to sign in, which gives them a token that they can use for subsequent authenticated requests.
+		4. The API to allow the user to “sign out” which invalidates their token.
+		5. The API to allow a signed-in user to use their token to create a new “check” ( a task for the system to check a url for up and down)
+		6. The API allows a signed-in user to edit or delete any of their checks. and limit their checks to 5.
+		7. In the background, workers perform all the “checks” at the appropriate times, and send alerts to the users when a check changes its state from
+			“up” to “down”, or vise versa.
+		        checkes to run ones a minute.
+	Note, we would use the Twilio api to send SMS..
+	We are not going to use a third party library to connect to twilio, we would be crafting it by hand.
+	This app, we will be using a filesystem as a key-value store of json docs. In a real app, you’d want a DB.
+Lesson 11 (Basic Scaffolding)
+	just creating folder and adding index.js
+
+Lesson 12 (Starting a Server)
+	very simple, we use the http library
+
+Lesson 13 (Parsing request path)
+	library ==> url
+	we do ==> var parsedUrl = url.parse(req.url,true)
+			var path = parsedUrl.pathname;
+			var trimmedPath = path.replace(/^\/+|\/+$/g,'');
+	Note ==> clear == cntrl + k
+	curl ==> curl localhost:4000/foo .
+
+lesson 14 (parsing HTTP method)
+
+lesson 15 (Parson the Query string)
+	var queryStringObject = parsedUrl.query;
+Lesson  16( Parsing Headers)
+	var headers = req.headers
+Lesson 17( Parsing Payloads)
+	StringDecoder = require(‘string_decoder’).StringDecoder;
+	var decoder = new StringDecoder(‘utf-8’)
+	Payload comes as a stream, so we will need to catch it by binding to an event that the request object emits. (DATA)
+	req.on(‘data’, function(data) {
+		buffer += decoder.write(data);
+	}
+	Another event that tells us that the stream is ended is called ‘end’
+Lesson 18(Routing the request)
+	Set status code -> res.writeHead(statusCode);
+	var payloadString = JSON.stringify(payload);
+	res.end(payloadString);
+
+Lesson 19(Returning Json)
+	to force the return to look like JSON we have to set the header
+	—> res.setHeader('Content-Type', 'application/json');
+
+Lesson 20(Adding Configuration)
+ 	We create a config.js file, here we define the configurations we need via environments object
+	var environments = {}; environments.staging = {‘var’: value },
+	var currentEnv = typeof(process.env.NODE_ENV) note that —> NODE_ENV is passed to the terminal.
+	now in terminal —> NODE_ENV=production node index.js
+Lesson 21(Adding Https support)
+	We will need to create ssl certification.
+Lesson 22(Service 1 /ping)
+Lesson 23(Storing data)
+	note —> path is used to normalize the path to different directories
+
+Lesson 24(Service 2 :/users)
+	adding the handler.js in the lib.
+Lesson 25(service 3: /tokens
+
+Lesson 27(Connecting to an API)
+	we try not to use another persons library to integrate by crafting ours.
+Lesson 28(Background workers)
+
+Lesson 29(Logging to file)
+	Working with log files.
+	conpressing file library ==> zlib.
+Lesson 30(Logging to the )
+	Utilities package ==> var util = require('util');
+					    var debug = util.debuglog('workers');
+	Then start ==> NODE_DEBUG=workers node index.js (without this all debugs in file will not work)
+		in our file we switch “console.log” with “debug” except for the colorings!!
+		console log colors
+			console.log('\x1b[36m%s\x1b[0m', 'I am cyan');  //cyan
+			console.log('\x1b[33m%s\x1b[0m', stringToMakeYellow);  //yellow
+		color reference
+			Reset = "\x1b[0m"
+			Bright = "\x1b[1m"
+			Dim = "\x1b[2m"
+			Underscore = "\x1b[4m"
+			Blink = "\x1b[5m"
+			Reverse = "\x1b[7m"
+			Hidden = "\x1b[8m"
+
+			FgBlack = "\x1b[30m"
+			FgRed = "\x1b[31m"
+			FgGreen = "\x1b[32m"
+			FgYellow = "\x1b[33m"
+			FgBlue = "\x1b[34m"
+			FgMagenta = "\x1b[35m"
+			FgCyan = "\x1b[36m"
+			FgWhite = "\x1b[37m"
+			FgGray = "\x1b[90m"
+
+			BgBlack = "\x1b[40m"
+			BgRed = "\x1b[41m"
+			BgGreen = "\x1b[42m"
+			BgYellow = "\x1b[43m"
+			BgBlue = "\x1b[44m"
+			BgMagenta = "\x1b[45m"
+			BgCyan = "\x1b[46m"
+			BgWhite = "\x1b[47m"
+			BgGray = "\x1b[100m"
+Lesson 31(Section Review)
+Section 4 Lesson 32(Section overview)
+Lesson 33(Refactoring for a GUI)
+ 	modified server.js and handler.js
+	setting up the read using path and fs to read template files in template directory.
+Lesson 34(Using templates)
+	We implement interpolation by using a find an replace.
+Lesson 35 (Serving Static Assets)
+	added more functions and edited handler to in crude public handler and so
+Lesson 36(Making AJAX Request)
+	modify to crack http request without jQuery or any library.
+Lesson 37(Index page)
+
+Lesson 38(Create Account)
+
+Lesson 39(Page 3: Create a Session)
+Lesson 40(Page 4: Deleted Session)
+Lesson 41(Page 5: Edit  Account)
+Lesson 42(Page 6: Deleted Account)
+Lesson 43(Page 7: Create a Check)
+Lesson 44(Page 8: Dashboard) —> checks/all
+Lesson 45(Page 9: Edit)
+
+
+
+
+
+
+
+
+
+
+
+	
