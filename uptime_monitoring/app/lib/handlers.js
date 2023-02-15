@@ -359,6 +359,13 @@ handlers.public = function(data,callback){
  *
  */
 
+// Example error
+handlers.exampleError = function(data, callback) {
+  var err = new Error('This is an example error');
+  throw(err);
+}
+
+
 // Ping
 handlers.ping = function(data,callback){
     callback(200);
