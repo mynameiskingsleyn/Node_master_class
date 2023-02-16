@@ -1,0 +1,10 @@
+<mat-dialog-content class="mat-typography">
+    <p>By choosing <strong>Accept</strong>, I have confirmed the person I am enrolling has provided
+      written authorization under the Fair Credit Reporting Act (FCRA).</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center" fxFlex>
+      <button mat-flat-button color="primary" type="submit" (click)="acceptEnroll()">Accept</button>
+      <button mat-stroked-button type="button" (click)="cancelDialog()">Cancel</button>
+  </div>
+</mat-dialog-actions>

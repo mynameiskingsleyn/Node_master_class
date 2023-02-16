@@ -191,15 +191,80 @@ Lesson 42(Page 6: Deleted Account)
 Lesson 43(Page 7: Create a Check)
 Lesson 44(Page 8: Dashboard) —> checks/all
 Lesson 45(Page 9: Edit)
+Lesson 46(Section Review)
 
+Section 5(Lesson 47)(Section overview)
+	Command Line tool. We will be using an Event-driven design pattern
+		Anytime a user puts something on the console, it will emit event which will trigger one or more function.
+		The application is going to be responding to a number of requests.
+			“exit” , “man”/“help”, “stats”, “list users”,
+			“more user info —{userId}”
+			“list checks”, “list checks —up”, “list checks —down”
+			“more check info —{checkId}” , “list log"
 
+Lesson 48(Adding CLI)
+	for interacting with the command line, we used readline which takes some input object to create an interface
+	var readline = require(‘readline’)
+	var _interface = readline.createInterface({
+    					input: process.stdin,
+    					output: process.stdout,
+    					prompt: ''
+ 				  });
+	this is not the only way. We can also use REPL .
+Lesson 49(Handling Events)
+	Build handlers and responders
+Lesson 50(Command 1: Exit)
+	we just use ==> process.exit(0). -> process is a global function.
+Lesson 51(Command Man)
+	Just create an object with all the available commands as key and value = description.
+	Using process.stdout.colum (to get screen size) we were able to format the help properly..
 
+Lesson 52(Command 3: Stats)
+	mostly utilized the Vb and so to get info
+Lesson 53(Command 4: List Users)
+Lesson 54(Command 5: More User Info)
+	Here we used the console.dir.
+Lesson 55(Command 6: List checks)
+Lesson 56(Command 7: More check Info)
+Lessong 57(Summary)
 
+TESTING FOR !!!!!
+Section 6-Lesson 60(Section overview)
+	Gaining Stability.
+	Using test debugger.
+	How to create, use and catch errors.
+	Advanced use of the debugger.
+	Using “strict” flag to lint your code. (light weight version of linting code)
+	Adding a test runner, unit tests, and integration tests.
 
+Lesson 61(Crating Errors and handling it)
+	using a user specifying error
+Lesson 62(Using the debugger)
+	to run your application with debugger ==> node inspect index.js
+	we add breaking points by simply adding (debugger)
+	e.g
+		// Start the server
+  			debugger;
+ 			server.init();
+  			debugger;
+	 Now, this will create breaking points on everywhere it sees ‘debugger’
+	Now you can use commands
+		cont==> continue execution
+		next==> to step to the next breaking point.
+		in/out => to step in or out
+		pause=> to pause it.
+		repl ==> allow you to see the values of your variables
+			just type the name of the variable you want to see.
+Lesson 63(Linting with ‘strict’)
+	using ‘strict’ mode will only catch a certain subset of issues.
+		such as
+			declaring global properties, trying to delete undeletable properties
+			silently failing properties.
 
+	To utilize this, run application with ==> node —use_strict index.js
+	when we don’t use strict, some of this errors get ignored but they might end up crashing your app.
+	using strict will flag this errors.
+Lesson 64(Adding a test runner)
 
-
-
-
-
-	
+Lesson 65 (Adding unit tests)
+	Pushing the test to their own files

@@ -1,0 +1,10 @@
+<div fxLayout="column" class="popover">
+    <div class="popover-header" fxFlex fxLayoutAlign="end">
+        <button mat-icon-button aria-label="Close popover" (click)="closeSubject.next(true)">
+            <mat-icon class="md-18">close</mat-icon>
+        </button>
+    </div>
+    <div class="popover-body">
+        <ng-template appPopover></ng-template>
+    </div>
+</div>

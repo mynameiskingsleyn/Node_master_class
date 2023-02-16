@@ -1,0 +1,45 @@
+<app-layout-block [title]="title" [loading]="loading" [expanded]="expanded" [hideHeader]="hideHeader">
+  <table aria-describedby="SubjectInformation" *ngIf="data?.SubjectInformation">
+    <tr>
+      <td class="table-header">Name</td>
+      <td>
+        {{ data.SubjectInformation.Name.First }}
+        {{ data.SubjectInformation.Name.Last }}
+      </td>
+      <td class="table-header">Residence</td>
+      <td>
+        {{ data.SubjectInformation.Address.StreetAddress1 }}
+        {{ data.SubjectInformation.Address.StreetAddress2 }}
+      </td>
+    </tr>
+    <tr>
+      <td class="table-header">Social Security Number</td>
+      <td>{{ data.SubjectInformation.SSN }}</td>
+      <td class="table-header">City</td>
+      <td>{{ data.SubjectInformation.Address.City }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Date of Birth</td>
+      <td>{{ data.SubjectInformation.DOB.Month }}/{{ data.SubjectInformation.DOB.Day }}/{{
+        data.SubjectInformation.DOB.Year }}</td>
+      <td class="table-header">State</td>
+      <td>{{ data.SubjectInformation.Address.State }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Unique ID</td>
+      <td>{{ data.SubjectEcho.SubjectId }}</td>
+      <td class="table-header">Zip Code</td>
+      <td>{{ data.SubjectInformation.Address.Zip5 }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">LexID</td>
+      <td>{{ data.SubjectEcho.Lexid }}</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr *ngIf="!hideAgencyNotes">
+      <td class="table-header">Agency Notes</td>
+      <td colspan="3">{{ data?.Notes }}</td>
+    </tr>
+  </table>
+</app-layout-block>

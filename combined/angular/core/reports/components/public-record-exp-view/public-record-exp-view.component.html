@@ -1,0 +1,1346 @@
+<div [ngClass]="{'printable': printable}">
+  <mat-accordion displayMode="default" multi="true" hideToggle="true">
+    <h1 class="mat-title blue-color">
+      FCRA Public Records
+      <ng-container *ngIf="report?.ReportDate">
+        - {{ report?.ReportDate | date: titleDateFormat }}
+      </ng-container>
+    </h1>
+    <mat-expansion-panel
+      expanded="true"
+      class="report-panel mat-elevation-z0"
+      #prSubjectInfoPanel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h3 fxFlex>
+            <mat-icon *ngIf="!prSubjectInfoPanel.expanded" class="md-18">add_box</mat-icon>
+            <mat-icon *ngIf="prSubjectInfoPanel.expanded" class="md-18">indeterminate_check_box</mat-icon>
+            Individual Information
+          </h3>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ng-template #loader>
+        <div *ngIf="!printable" class="loading-box">
+          <div *ngIf="loading" class="loading-area">
+            <mat-spinner strokeWidth="2" diameter="100"></mat-spinner>
+          </div>
+        </div>
+      </ng-template>
+      <ng-container *ngTemplateOutlet="loader"></ng-container>
+      <table aria-describedby="SubjectInformation" *ngIf="report?.SubjectInformation">
+        <tr>
+          <td class="table-header">{{ "SSN" | mapField }}</td>
+          <td>{{ report?.SubjectInformation?.SSN }}</td>
+          <td class="table-header">{{ "Unique ID" | mapField }}</td>
+          <td>{{ report?.SubjectEcho?.SubjectId }}</td>
+        </tr>
+        <tr>
+          <td class="table-header">Name</td>
+          <td>
+            {{ report?.SubjectInformation?.Name?.First }}
+            {{ report?.SubjectInformation?.Name?.Last }}
+          </td>
+          <td class="table-header">{{ "LexID" | mapField }}</td>
+          <td>{{ report?.SubjectEcho?.Lexid }}</td>
+        </tr>
+        <tr>
+          <td class="table-header">{{ "DOB" | mapField }}</td>
+          <td>
+            {{ report?.SubjectInformation?.DOB?.Month }}/{{
+            report?.SubjectInformation?.DOB?.Day
+            }}/{{ report?.SubjectInformation?.DOB?.Year }}
+          </td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td class="table-header">{{ "Address" | mapField }}</td>
+          <td>{{ report?.SubjectInformation?.Address?.StreetAddress1 }}</td>
+          <td class="table-header">{{ "Address 2" | mapField }}</td>
+          <td>{{ report?.SubjectInformation?.Address?.StreetAddress2 }}</td>
+        </tr>
+        <tr>
+          <td class="table-header">{{ "City" | mapField }}</td>
+          <td>{{ report?.SubjectInformation?.Address?.City }}</td>
+          <td class="table-header">{{ "State" | mapField }}</td>
+          <td>{{ report?.SubjectInformation?.Address?.State }}</td>
+        </tr>
+        <tr>
+          <td class="table-header">{{ "Zip" | mapField }}</td>
+          <td>{{ report?.SubjectInformation?.Address?.Zip5 }}</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr *ngIf="!hideAgencyNotes">
+          <td class="table-header">Agency Notes</td>
+          <td colspan="3">{{ report?.Notes }}</td>
+        </tr>
+      </table>
+    </mat-expansion-panel>
+    <mat-expansion-panel
+      [expanded]="expanded"
+      class="report-panel mat-elevation-z0"
+      #prlAndJPanel
+      *ngIf="report?.JudgmentAndLienRecords">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h3 fxFlex>
+            <mat-icon *ngIf="!prlAndJPanel.expanded" class="md-18">add_box</mat-icon>
+            <mat-icon *ngIf="prlAndJPanel.expanded" class="md-18">indeterminate_check_box</mat-icon>
+            Judgments & Liens
+          </h3>
+        </mat-panel-title>
+        <mat-panel-description>
+          {{
+          report.JudgmentAndLienRecords.JudgmentAndLienRecord
+          | verDate: "jnl_ver_date":verificationDateFormat
+          }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <ng-container *ngTemplateOutlet="loader"></ng-container>
+      <div
+        *ngFor="let JudgmentAndLienRecord of report?.JudgmentAndLienRecords
+        ?.JudgmentAndLienRecord;
+        let i= index"style="padding: 20px;">
+        <mat-expansion-panel
+          [expanded]="expanded"
+          class="report-panel mat-elevation-z0"
+          hideToggle="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <h4>Judgment & Lien Record {{ i + 1 }}</h4>
+            </mat-panel-title>
+            <mat-panel-description>
+              {{ JudgmentAndLienRecord?.jnl_ver_date | reportDate: dateFormat }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <table [attr.aria-describedby]="'JudgmentAndLienRecord'+i+1+'Info'">
+            <tr>
+              <td class="table-header">{{ "jnl_ver_date" | mapField }}</td>
+              <td>
+                {{ JudgmentAndLienRecord?.jnl_ver_date | reportDate: dateFormat }}
+              </td>
+              <td colspan="2">&nbsp;</td>
+            </tr>
+            <tr>
+              <td class="table-header" colspan="4">Judgment & Lien Information</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "jnl_orig_filing_date" | mapField }}</td>
+              <td>
+                {{
+                JudgmentAndLienRecord?.OriginFilingDate
+                | reportDate: dateFormat
+                }}
+              </td>
+              <td class="table-header">{{ "jnl_orig_filing_type" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.OriginFilingType }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "jnl_release_date" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.ReleaseDate | reportDate: dateFormat}}</td>
+              <td class="table-header">{{ "CaseNumber" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.CaseNumber }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "FilingJurisdiction" | mapField }}</td>
+              <td>
+                {{
+                JudgmentAndLienRecord?.FilingJurisdiction
+                }}
+              </td>
+              <td class="table-header">{{ "FilingJurisdictionName" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.FilingJurisdictionName }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "FilingState" | mapField }}</td>
+              <td>
+                {{
+                JudgmentAndLienRecord?.FilingState
+                }}
+              </td>
+              <td class="table-header">{{ "FilingStatus" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.FilingStatus }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "jnl_case_amount" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.Amount }}</td>
+              <td class="table-header">{{ "jnl_eviction" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.Eviction }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "jnl_vacated_date" | mapField }}</td>
+              <td>
+                {{ JudgmentAndLienRecord?.JudgeVacatedDate | reportDate: dateFormat }}
+              </td>
+              <td class="table-header">{{ "jnl_satisfied_date" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.JudgeSatisfiedDate | reportDate: dateFormat }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "RMSId" | mapField }}</td>
+              <td> {{ JudgmentAndLienRecord?.RMSId }}</td>
+              <td class="table-header">{{ "TMSID" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.TMSID }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "IdValue" | mapField }}</td>
+              <td> {{ JudgmentAndLienRecord?.IdValue }}</td>
+              <td class="table-header">{{ "TaxCode" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.TaxCode }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "IsDisputed" | mapField }}</td>
+              <td> {{ JudgmentAndLienRecord?.IsDisputed }}</td>
+              <td class="table-header">{{ "PersistentRecordId" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.PersistentRecordId }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "StatementId" | mapField}}(s)</td>
+              <td>
+                <div *ngFor="let stId of JudgmentAndLienRecord?.StatementIdRecs?.StatementIdRec">
+                  {{ stId?.StatementId }}
+                </div>
+              </td>
+              <td colspan="2"></td>
+            </tr>
+            <tr>
+              <td class="table-header" colspan="4">Court Information</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "jnl_state_filing_jurisdiction" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.FilingJurisdiction }}</td>
+              <td class="table-header">{{ "jnl_agency_state" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.FilingJurisdictionName }}</td>
+            </tr>
+            <tr>
+              <td class="table-header" colspan="4">Matched Party</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "OriginName" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.OriginName }}</td>
+              <td class="table-header">Type</td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.PartyType }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "UniqueId" | mapField }}</td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.UniqueId }}</td>
+              <td class="table-header">Party {{ "FullName" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.ParsedParty?.Full }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">Party Prefix </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.ParsedParty?.Prefix }}</td>
+              <td class="table-header">Party {{ "FirstName" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.ParsedParty?.First }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">Party {{ "MiddleName" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.ParsedParty?.Middle }}</td>
+              <td class="table-header">Party {{ "LastName" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.ParsedParty?.Last }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">Party {{ "CompanyName" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.ParsedParty?.Company }}</td>
+              <td colspan="2"></td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "StreetNumber" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.Address?.StreetNumber }}</td>
+              <td class="table-header">{{ "StreetName" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.Address?.StreetName }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "StreetSuffix" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.Address?.StreetSuffix }}</td>
+              <td class="table-header">{{ "StreetAddress1" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.Address?.StreetAddress1 }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "StreetAddress2" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.Address?.StreetAddress2 }}</td>
+              <td class="table-header">{{ "City" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.Address?.City }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "State" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.Address?.State }}</td>
+              <td class="table-header">{{ "Zip" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.Address?.Zip5 }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "Zip4" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.Address?.Zip4 }}</td>
+              <td class="table-header">{{ "County" | mapField }} </td>
+              <td>{{ JudgmentAndLienRecord?.MatchedParty?.Address?.County }}</td>
+            </tr>
+          </table>
+          <table aria-describedby="JudgmentAndLienThirdParties">
+            <tr>
+              <td class="table-header" colspan="4">Third Parties</td>
+            </tr>
+          </table>
+          <div class="" *ngFor="let ThirdParty of JudgmentAndLienRecord?.ThirdParties?.ThirdParty;
+            let i= index">
+            <table [attr.aria-describedby]="'JudgmentAndLienRecordThirdParty'+i+1">
+              <tr>
+                <td class="table-header">Third Party {{ i + 1 }} Original Name</td>
+                <td>{{ ThirdParty.OriginName }}</td>
+                <td class="table-header"> Third Party {{ i+1 }} has criminal Conviction </td>
+                <td>{{ ThirdParty.HasCriminalConviction }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">{{ "ThirdParty" | mapField }} {{ i + 1 }} {{ "Address1" | mapField}}</td>
+                <td>{{ ThirdParty.Address?.StreetAddress1 }}</td>
+                <td class="table-header">{{ "ThirdParty" | mapField }} {{ i + 1 }} {{ "Address2" | mapField}}</td>
+                <td>{{ ThirdParty.Address?.StreetAddress2 }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">{{ "ThirdParty" | mapField }} {{ i + 1 }} {{ "City" | mapField}}</td>
+                <td>{{ ThirdParty.Address?.City }}</td>
+                <td class="table-header">{{ "ThirdParty" | mapField }} {{ i + 1 }} {{ "State" | mapField}}</td>
+                <td>{{ ThirdParty.Address?.State }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">{{ "ThirdParty" | mapField }} {{ i + 1 }} {{ "Zip" | mapField }}</td>
+                <td> {{ ThirdParty.Address?.Zip5}}</td>
+                <td colspan="2"></td>
+              </tr>
+            </table>
+            <table *ngFor="let phone of ThirdParty?.Phones?.Phone let ph = index">
+              <tr >
+                <td class="table-header">{{ "ThirdParty" | mapField }} {{ i+1 }} Phone {{ ph+1 }}</td>
+                <td>{{ phone.Phone10 }}</td>
+                <td class="table-header">{{ "ThirdParty" | mapField }} {{ i+1 }} Fax {{ ph+1 }}</td>
+                <td>{{ phone.Fax }}</td>
+              </tr>
+              <tr>
+                <td class="table-header" colspan="2">{{ "ThirdParty" | mapField }} {{ i+1 }} {{ "TimeZone" | mapField }} {{ ph+1 }}</td>
+                <td colspan="2">{{ phone.TimeZone }}</td>
+
+              </tr>
+            </table>
+            <table *ngFor="let Party of ThirdParty.ParsedParties.Party let pa=index">
+              <tr>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "SuffixName" | mapField }}</td>
+                <td>  {{ Party.Name?.Suffix }}</td>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "FullName" | mapField}}</td>
+                <td>  {{ Party.Name?.Full }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "FirstName" | mapField}}</td>
+                <td>  {{ Party.Name?.First }}</td>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "MiddleName" | mapField}}</td>
+                <td>  {{ Party.Name?.Middle }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "LastName" | mapField}}</td>
+                <td>  {{ Party.Name?.Last }}</td>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "CompanyName" | mapField}}</td>
+                <td>  {{ Party?.CompanyName }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "BusinessId" | mapField}}</td>
+                <td>  {{ Party?.BusinessId }}</td>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "SSN" | mapField}}</td>
+                <td>  {{ Party?.SSN }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "FEIN" | mapField}}</td>
+                <td>  {{ Party?.FEIN }}</td>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "PersonFilterId" | mapField}}</td>
+                <td>  {{ Party?.PersonFilterId }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "TaxId" | mapField}}</td>
+                <td>  {{ Party?.TaxId }}</td>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "IsDisputed" | mapField}}</td>
+                <td>  {{ Party?.IsDisputed }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "StatementId" | mapField}}(s)</td>
+                <td>
+                  <div *ngFor="let stId of Party?.StatementIdRecs?.StatementIdRec">
+                    {{ stId?.StatementId }}
+                  </div>
+                </td>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "IsDisputed" | mapField}}</td>
+                <td>  {{ Party?.IsDisputed }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Third Party {{ i+1 }} Party {{ pa + 1 }} {{ "UniqueId" | mapField}}</td>
+                <td>  {{ Party?.UniqueId }}</td>
+                <td colspan="2"></td>
+              </tr>
+            </table>
+            <table [attr.aria-describedby]="'JudgmentAndLienRecordThirdParty'+i+1+'End'">
+              <tr>
+                <td colspan="4"></td>
+              </tr>
+            </table>
+          </div>
+          <div class="">
+            <table arial-decribedby="JudgmentAndLienRecordCreditorsHeader">
+              <tr>
+                <td class="table-header" colspan="4">Creditors</td>
+              </tr>
+            </table>
+          </div>
+          <div *ngFor="let Creditor of JudgmentAndLienRecord?.Creditors?.Creditor;
+            let i= index">
+            <table [attr.aria-describedby]="'JudgmentAndLienRecordCreditor'+i+1">
+              <tr>
+                <td class="table-header"> Creditor {{ i + 1 }} Name </td>
+                <td> {{ Creditor.Name }} </td>
+                <td class="table-header"> Creditor {{ i + 1 }} {{ "IsSexualOffender" | mapField }} </td>
+                <td> {{ Creditor.IsSexualOffender }} </td>
+              </tr>
+              <tr>
+                <td class="table-header"> Creditor {{ i + 1 }} {{ "HasCriminalConviction" | mapField }} </td>
+                <td> {{ Creditor.HasCriminalConviction }} </td>
+                <td class="table-header"> Creditor {{ i + 1 }} Address </td>
+                <td> {{ Creditor.Address }} </td>
+              </tr>
+            </table>
+            <table *ngFor="let address of Creditor?.Addresses?.Address let ad= index"
+            [attr.aria-describedby]="'JudgmentAndLienRecordCreditor'+i+1+'Address'+ad+1">
+              <tr>
+                <td class="table-header"> Creditor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetNumber" | mapField }} </td>
+                <td>{{ address?.StreetNumber }}</td>
+                <td class="table-header">Creditor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetName" | mapField }} </td>
+                <td>{{ address?.StreetName }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Creditor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetSuffix" | mapField }} </td>
+                <td>{{ address?.StreetSuffix }}</td>
+                <td class="table-header">Creditor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetAddress1" | mapField }} </td>
+                <td>{{ address?.StreetAddress1 }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Creditor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetAddress2" | mapField }}</td>
+                <td>{{ address?.StreetAddress2 }}</td>
+                <td class="table-header">Creditor  {{ i + 1 }} Address {{ ad +1}} {{ "City" | mapField }} </td>
+                <td>{{ address?.City }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Creditor  {{ i + 1 }} Address {{ ad +1}} {{ "State" | mapField }} </td>
+                <td>{{ address?.State }}</td>
+                <td class="table-header">Creditor  {{ i + 1 }} Address {{ ad +1}} {{ "Zip" | mapField }}  </td>
+                <td>{{ address?.Zip5 }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Creditor  {{ i + 1 }} Address {{ ad +1}} {{ "Zip4" | mapField }}  </td>
+                <td>{{ address?.Zip4 }}</td>
+                <td class="table-header">Creditor  {{ i + 1 }} Address {{ ad + 1}} {{ "County" | mapField }} </td>
+                <td>{{ address?.County }}</td>
+              </tr>
+            </table>
+            <table *ngFor="let phone of Creditor?.Phones?.Phone let ph= index"
+              [attr.aria-describedby]="'JudgmentAndLienRecordCreditor'+i+1+'Phone'+ph+1">
+              <tr >
+                <td class="table-header">Creditor  {{ i + 1 }} Phone {{ ph +1 }} Phone </td>
+                <td>{{ phone.Phone10 }}</td>
+                <td class="table-header">Creditor  {{ i + 1 }} Phone {{ ph +1 }} Fax </td>
+                <td>{{ phone.Fax }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Creditor  {{ i + 1 }} Phone {{ ph +1 }} {{ "TimeZone" | mapField }}</td>
+                <td>{{ phone.TimeZone }}</td>
+                <td colspan="2"></td>
+              </tr>
+            </table>
+            <table *ngFor="let Party of Creditor.ParsedParties.Party let pa=index">
+              <tr>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "SuffixName" | mapField }}</td>
+                <td>  {{ Party.Name?.Suffix }}</td>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "FullName" | mapField}}</td>
+                <td>  {{ Party.Name?.Full }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "FirstName" | mapField}}</td>
+                <td>  {{ Party.Name?.First }}</td>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "MiddleName" | mapField}}</td>
+                <td>  {{ Party.Name?.Middle }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "LastName" | mapField}}</td>
+                <td>  {{ Party.Name?.Last }}</td>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "CompanyName" | mapField}}</td>
+                <td>  {{ Party?.CompanyName }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "BusinessId" | mapField}}</td>
+                <td>  {{ Party?.BusinessId }}</td>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "SSN" | mapField}}</td>
+                <td>  {{ Party?.SSN }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "FEIN" | mapField}}</td>
+                <td>  {{ Party?.FEIN }}</td>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "PersonFilterId" | mapField}}</td>
+                <td>  {{ Party?.PersonFilterId }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "TaxId" | mapField}}</td>
+                <td>  {{ Party?.TaxId }}</td>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "IsDisputed" | mapField}}</td>
+                <td>  {{ Party?.IsDisputed }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "StatementId" | mapField}}(s)</td>
+                <td>
+                  <div *ngFor="let stId of Party?.StatementIdRecs?.StatementIdRec">
+                    {{ stId?.StatementId }}
+                  </div>
+                </td>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "IsDisputed" | mapField}}</td>
+                <td>  {{ Party?.IsDisputed }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Creditor {{ i+1 }} Party {{ pa + 1 }} {{ "UniqueId" | mapField}}</td>
+                <td>  {{ Party?.UniqueId }}</td>
+                <td colspan="2"></td>
+              </tr>
+            </table>
+          </div>
+
+          <div>
+            <table arial-decribedby="JudgmentAndLienRecordDebtorsHeader">
+              <tr>
+                <td class="table-header" colspan="4">Debtors</td>
+              </tr>
+            </table>
+          </div>
+          <div *ngFor="let Debtor of JudgmentAndLienRecord?.Debtors?.Debtor;
+            let i= index">
+            <table [attr.aria-describedby]="'JudgmentAndLienRecordDebtor'+i+1">
+              <tr>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "OriginName" | mapField }} </td>
+                <td> {{ Debtor.OriginName }} </td>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "IsSexualOffender" | mapField }} </td>
+                <td> {{ Debtor.IsSexualOffender }} </td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "HasCriminalConviction" | mapField }} </td>
+                <td> {{ Debtor.HasCriminalConviction }} </td>
+                <td colspan="2"></td>
+              </tr>
+            </table>
+            <!-- Debtor phones -->
+            <table *ngFor="let address of Debtor?.Addresses?.Address let ad= index"
+            [attr.aria-describedby]="'JudgmentAndLienRecordDebtor'+i+1+'Address'+ad+1">
+              <tr>
+                <td class="table-header"> Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetNumber" | mapField }} </td>
+                <td>{{ address?.StreetNumber }}</td>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetName" | mapField }} </td>
+                <td>{{ address?.StreetName }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetSuffix" | mapField }} </td>
+                <td>{{ address?.StreetSuffix }}</td>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetAddress1" | mapField }} </td>
+                <td>{{ address?.StreetAddress1 }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetAddress2" | mapField }}</td>
+                <td>{{ address?.StreetAddress2 }}</td>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "City" | mapField }} </td>
+                <td>{{ address?.City }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "State" | mapField }} </td>
+                <td>{{ address?.State }}</td>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "Zip" | mapField }}  </td>
+                <td>{{ address?.Zip5 }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "Zip4" | mapField }}  </td>
+                <td>{{ address?.Zip4 }}</td>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad + 1}} {{ "County" | mapField }} </td>
+                <td>{{ address?.County }}</td>
+              </tr>
+            </table>
+            <!-- Debtor phones -->
+            <table *ngFor="let phone of Debtor?.Phones?.Phone let ph= index"
+              [attr.aria-describedby]="'JudgmentAndLienRecordDebtor'+i+1+'Phone'+ph+1">
+              <tr >
+                <td class="table-header">Debtor  {{ i + 1 }} Phone {{ ph +1 }} Phone </td>
+                <td>{{ phone.Phone10 }}</td>
+                <td class="table-header">Debtor  {{ i + 1 }} Phone {{ ph +1 }} Fax </td>
+                <td>{{ phone.Fax }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Debtor  {{ i + 1 }} Phone {{ ph +1 }} {{ "TimeZone" | mapField }}</td>
+                <td>{{ phone.TimeZone }}</td>
+                <td colspan="2"></td>
+              </tr>
+            </table>
+            <!-- Debtor parties -->
+            <table *ngFor="let Party of Debtor.ParsedParties.Party let pa=index">
+              <tr>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "SuffixName" | mapField }}</td>
+                <td>  {{ Party.Name?.Suffix }}</td>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "FullName" | mapField}}</td>
+                <td>  {{ Party.Name?.Full }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "FirstName" | mapField}}</td>
+                <td>  {{ Party.Name?.First }}</td>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "MiddleName" | mapField}}</td>
+                <td>  {{ Party.Name?.Middle }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "LastName" | mapField}}</td>
+                <td>  {{ Party.Name?.Last }}</td>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "CompanyName" | mapField}}</td>
+                <td>  {{ Party?.CompanyName }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "BusinessId" | mapField}}</td>
+                <td>  {{ Party?.BusinessId }}</td>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "SSN" | mapField}}</td>
+                <td>  {{ Party?.SSN }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "FEIN" | mapField}}</td>
+                <td>  {{ Party?.FEIN }}</td>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "PersonFilterId" | mapField}}</td>
+                <td>  {{ Party?.PersonFilterId }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "TaxId" | mapField}}</td>
+                <td>  {{ Party?.TaxId }}</td>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "IsDisputed" | mapField}}</td>
+                <td>  {{ Party?.IsDisputed }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "StatementId" | mapField}}(s)</td>
+                <td>
+                  <div *ngFor="let stId of Party?.StatementIdRecs?.StatementIdRec">
+                    {{ stId?.StatementId }}
+                  </div>
+                </td>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "IsDisputed" | mapField}}</td>
+                <td>  {{ Party?.IsDisputed }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i+1 }} Party {{ pa + 1 }} {{ "UniqueId" | mapField}}</td>
+                <td>  {{ Party?.UniqueId }}</td>
+                <td colspan="2"></td>
+              </tr>
+            </table>
+          </div>
+          <!-- Debtor Attorneys -->
+          <div>
+            <table arial-decribedby="JudgmentAndLienRecordDebtorAttorneysHeader">
+              <tr>
+                <td class="table-header" colspan="4">{{ "DebtorAttorney" | mapField }}s</td>
+              </tr>
+            </table>
+          </div>
+          <div *ngFor="let Attorney of JudgmentAndLienRecord?.DebtorAttorneys?.Attorney let i=index">
+            <table [attr.arial-describedby]="'JudgmentAndLienRecordDebtorAttorney'+i+1+'GeneralInfo'">
+              <tr>
+                <td class="table-header"> Attorney {{ i + 1 }} {{ "HasCriminalConviction" | mapField }} </td>
+                <td> {{ Attorney.HasCriminalConviction }} </td>
+                <td class="table-header"> Attorney {{ i + 1 }} {{ "IsSexualOffender" | mapField }} </td>
+                <td> {{ Attorney.IsSexualOffender }} </td>
+              </tr>
+              <tr>
+                <td class="table-header"> Attorney {{ i + 1 }} Name </td>
+                <td> {{ Attorney.Name }} </td>
+                <td class="table-header"> Attorney {{ i + 1 }} Phone </td>
+                <td> {{ Attorney.Phone }} </td>
+              </tr>
+              <tr>
+                <td class="table-header"> Attorney {{ i + 1 }} {{ "TimeZone" | mapField }} </td>
+                <td> {{ Attorney.TimeZone }} </td>
+                <td colspan="2"></td>
+              </tr>
+              <tr>
+                <td class="table-header"> Attorney {{ i + 1 }}  {{ "StreetNumber" | mapField }} </td>
+                <td>{{ Attorney?.Address?.StreetNumber }}</td>
+                <td class="table-header">Attorney {{ i + 1 }}  {{ "StreetName" | mapField }} </td>
+                <td>{{ Attorney?.Address?.StreetName }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Attorney {{ i + 1 }} {{ "StreetSuffix" | mapField }} </td>
+                <td>{{ Attorney?.Address?.StreetSuffix }}</td>
+                <td class="table-header">Attorney {{ i + 1 }}  {{ "StreetAddress1" | mapField }} </td>
+                <td>{{ Attorney?.Address?.StreetAddress1 }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Attorney {{ i + 1 }} {{ "StreetAddress2" | mapField }} </td>
+                <td>{{ Attorney?.Address?.StreetAddress2 }}</td>
+                <td class="table-header">Attorney {{ i + 1 }} {{ "City" | mapField }} </td>
+                <td>{{ Attorney?.Address?.City }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Attorney {{ i + 1 }} {{ "State" | mapField }} </td>
+                <td>{{ Attorney?.Address?.State }}</td>
+                <td class="table-header">Attorney {{ i + 1 }} {{ "Zip" | mapField }} </td>
+                <td>{{ Attorney?.Address?.Zip5 }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Attorney {{ i + 1 }} {{ "Zip4" | mapField }} </td>
+                <td>{{ Attorney?.Address?.Zip4 }}</td>
+                <td class="table-header">Attorney {{ i + 1 }} {{ "County" | mapField }} </td>
+                <td>{{ Attorney?.Address?.County }}</td>
+              </tr>
+            </table>
+            <!-- Attorney Phones -->
+            <table *ngFor="let Phone of Attorney?.Phones?.Phone let ph=index"
+            [attr.arial-describedby]="'JudgmentAndLienRecordDebtorAttorney'+i+1+'Phone'+ph+1">
+            <tr >
+              <td class="table-header">Attorney {{ i + 1 }} Phone {{ ph+1 }}</td>
+              <td>{{ Phone.Phone10 }}</td>
+              <td class="table-header">Attorney {{ i + 1 }} Fax {{ ph+1 }}</td>
+              <td>{{ Phone.Fax }}</td>
+            </tr>
+            <tr>
+              <td class="table-header" colspan="2">Attorney {{ i + 1 }}  {{ "TimeZone" | mapField }} {{ ph+1 }}</td>
+              <td colspan="2">{{ Phone.TimeZone }}</td>
+
+            </tr>
+            </table>
+            <!-- Attorney Addresses -->
+            <table *ngFor="let Address of Attorney?.Addresses?.Address let ad= index"
+            [attr.aria-describedby]="'JudgmentAndLienRecordCreditor'+i+1+'Address'+ad+1">
+              <tr>
+                <td class="table-header"> Attorney {{ i + 1 }} Address {{ ad +1}} {{ "StreetNumber" | mapField }} </td>
+                <td>{{ Address?.StreetNumber }}</td>
+                <td class="table-header">Attorney {{ i + 1 }} Address {{ ad +1}} {{ "StreetName" | mapField }} </td>
+                <td>{{ Address?.StreetName }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Attorney {{ i + 1 }} Address {{ ad +1}} {{ "StreetSuffix" | mapField }} </td>
+                <td>{{ Address?.StreetSuffix }}</td>
+                <td class="table-header">Attorney {{ i + 1 }} Address {{ ad +1}} {{ "StreetAddress1" | mapField }} </td>
+                <td>{{ Address?.StreetAddress1 }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Attorney {{ i + 1 }} Address {{ ad +1}} {{ "StreetAddress2" | mapField }}</td>
+                <td>{{ Address?.StreetAddress2 }}</td>
+                <td class="table-header">Attorney {{ i + 1 }} Address {{ ad +1}} {{ "City" | mapField }} </td>
+                <td>{{ Address?.City }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Attorney {{ i + 1 }} Address {{ ad +1}} {{ "State" | mapField }} </td>
+                <td>{{ Address?.State }}</td>
+                <td class="table-header">Attorney {{ i + 1 }} Address {{ ad +1}} {{ "Zip" | mapField }}  </td>
+                <td>{{ Address?.Zip5 }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Attorney {{ i + 1 }} Address {{ ad +1}} {{ "Zip4" | mapField }}  </td>
+                <td>{{ Address?.Zip4 }}</td>
+                <td class="table-header">Attorney {{ i + 1 }} Address {{ ad + 1}} {{ "County" | mapField }} </td>
+                <td>{{ Address?.County }}</td>
+              </tr>
+            </table>
+            <!-- Attorney parties -->
+            <table *ngFor="let Party of Attorney.ParsedParties.Party let pa=index">
+              <tr>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "SuffixName" | mapField }}</td>
+                <td>  {{ Party.Name?.Suffix }}</td>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "FullName" | mapField}}</td>
+                <td>  {{ Party.Name?.Full }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "FirstName" | mapField}}</td>
+                <td>  {{ Party.Name?.First }}</td>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "MiddleName" | mapField}}</td>
+                <td>  {{ Party.Name?.Middle }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "LastName" | mapField}}</td>
+                <td>  {{ Party.Name?.Last }}</td>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "CompanyName" | mapField}}</td>
+                <td>  {{ Party?.CompanyName }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "BusinessId" | mapField}}</td>
+                <td>  {{ Party?.BusinessId }}</td>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "SSN" | mapField}}</td>
+                <td>  {{ Party?.SSN }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "FEIN" | mapField}}</td>
+                <td>  {{ Party?.FEIN }}</td>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "PersonFilterId" | mapField}}</td>
+                <td>  {{ Party?.PersonFilterId }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "TaxId" | mapField}}</td>
+                <td>  {{ Party?.TaxId }}</td>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "IsDisputed" | mapField}}</td>
+                <td>  {{ Party?.IsDisputed }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "StatementId" | mapField}}(s)</td>
+                <td>
+                  <div *ngFor="let stId of Party?.StatementIdRecs?.StatementIdRec">
+                    {{ stId?.StatementId }}
+                  </div>
+                </td>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "IsDisputed" | mapField}}</td>
+                <td>  {{ Party?.IsDisputed }}</td>
+              </tr>
+              <tr>
+                <td class="table-header"> Attorney {{ i+1 }} Party {{ pa + 1 }} {{ "UniqueId" | mapField}}</td>
+                <td>  {{ Party?.UniqueId }}</td>
+                <td colspan="2"></td>
+              </tr>
+            </table>
+          </div>
+          <!-- JudgmentAndLienRecord filing -->
+          <div>
+              <table aria-describedby="JudgmentAndLienFilings">
+                <tr>
+                  <td class="table-header" colspan="4">{{ 'Filing' | mapField }}s</td>
+                </tr>
+              </table>
+
+              <div *ngFor="let Filing of JudgmentAndLienRecord?.Filings?.Filing;
+                let i= index">
+                <table [attr.aria-describedby]="'JudgmentAndLienRecordFiling'+i+1">
+                  <tr>
+                    <td class="table-header">{{ 'Filing' | mapField }} {{ i + 1 }} Number</td>
+                    <td>{{ Filing?.Number }}</td>
+                    <td class="table-header">{{ 'Filing' | mapField }} {{ i + 1 }} Type</td>
+                    <td>{{ Filing?.Type }}</td>
+                  </tr>
+                  <tr>
+                    <td class="table-header">{{ 'Filing' | mapField }} {{ i + 1 }} Date</td>
+                    <td>{{ Filing?.Date | reportDate: dateFormat }}</td>
+                    <td class="table-header">{{ 'OriginFilingDate' | mapField }} {{ i + 1 }} Type</td>
+                    <td>{{ Filing?.OriginFilingDate | reportDate: dateFormat }}</td>
+                  </tr>
+                  <tr>
+                    <td class="table-header">{{ 'Filing' | mapField }} {{ i + 1 }} Book</td>
+                    <td>{{ Filing?.Book }}</td>
+                    <td class="table-header">{{ 'Filing' | mapField }} {{ i + 1 }} Page</td>
+                    <td>{{ Filing?.Page }}</td>
+                  </tr>
+                  <tr>
+                    <td class="table-header">{{ 'Filing' | mapField }} {{ i + 1 }} Agency</td>
+                    <td>{{ Filing?.Agency }}</td>
+                    <td class="table-header">{{ 'Filing' | mapField }} {{ i + 1 }} {{ 'AgencyCity' | mapField }}</td>
+                    <td>{{ Filing?.AgencyCity }}</td>
+                  </tr>
+                  <tr>
+                    <td class="table-header">{{ 'Filing' | mapField }} {{ i + 1 }} {{ 'AgencyState' | mapField }}</td>
+                    <td>{{ Filing?.AgencyState }}</td>
+                    <td class="table-header">{{ 'Filing' | mapField }} {{ i + 1 }} {{ 'AgencyCounty' | mapField }}</td>
+                    <td>{{ Filing?.AgencyCounty }}</td>
+                  </tr>
+                  <tr>
+                    <td class="table-header">{{ 'Filing' | mapField }} {{ i + 1 }} {{ 'FilingStatus' | mapField }}</td>
+                    <td>{{ Filing?.FilingStatus }}</td>
+                    <td class="table-header">{{ 'Filing' | mapField }} {{ i + 1 }} {{ 'FilingDescription' | mapField }}</td>
+                    <td>{{ Filing?.FilingDescription }}</td>
+                  </tr>
+                  <tr>
+                    <td class="table-header">{{ 'Filing' | mapField }} {{ i + 1 }} {{ 'FilingTime' | mapField }}</td>
+                    <td>{{ Filing?.FilingTime }}</td>
+                    <td class="table-header">{{ 'Filing' | mapField }} {{ i + 1 }} {{ 'IsDisputed' | mapField }}</td>
+                    <td>{{ Filing?.IsDisputed }}</td>
+                  </tr>
+                  <tr>
+                    <td class="table-header"> {{ 'Filing' | mapField }} {{ i + 1 }} {{ "StatementId" | mapField}}(s)</td>
+                    <td>
+                      <div *ngFor="let stId of Filing?.StatementIdRecs?.StatementIdRec">
+                        {{ stId?.StatementId }}
+                      </div>
+                    </td>
+                    <td colspan="2"></td>
+                  </tr>
+                </table>
+              </div>
+          </div>
+        </mat-expansion-panel>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel
+      [expanded]="expanded"
+      class="report-panel mat-elevation-z0"
+      #prBankruptcyPanel
+      *ngIf="report?.BankruptcyRecords">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <h3 fxFlex>
+            <mat-icon *ngIf="!prBankruptcyPanel.expanded" class="md-18">add_box</mat-icon>
+            <mat-icon *ngIf="prBankruptcyPanel.expanded" class="md-18">indeterminate_check_box</mat-icon>
+            Bankruptcy
+          </h3>
+        </mat-panel-title>
+        <mat-panel-description>
+          {{
+          report.BankruptcyRecords.BankruptcyRecord
+          | verDate: "bkt_most_recent_date":verificationDateFormat
+          }}
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <ng-container *ngTemplateOutlet="loader"></ng-container>
+      <div
+        *ngFor="let BankruptcyRecord of
+        report?.BankruptcyRecords?.BankruptcyRecord;
+        let i= index"style="padding: 20px;">
+        <mat-expansion-panel
+          [expanded]="expanded"
+          class="report-panel mat-elevation-z0"
+          hideToggle="true">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <h4>Bankruptcy Record {{ i + 1 }}</h4>
+            </mat-panel-title>
+            <mat-panel-description>
+              {{
+                BankruptcyRecord | verDate: "MostRecentDate":verificationDateFormat
+              }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <table aria-describedby="BankruptcyRecord">
+            <tr>
+              <td class="table-header">{{ 'CaseNumber' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.CaseNumber }}</td>
+              <td class="table-header">{{ 'CourtLocation' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.CourtLocation }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'CaseType' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.CaseType }}</td>
+              <td class="table-header">{{ 'ClosedDate' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.ClosedDate | reportDate: dateFormat }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'CorpFlag' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.CorpFlag }}</td>
+              <td class="table-header">{{ 'Chapter' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Chapter }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'OriginalChapter' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.OriginalChapter }}</td>
+              <td class="table-header">{{ 'Meeting' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Meeting | reportDate: dateFormat }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'SelfRepresented' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.SelfRepresented | reportDate: dateFormat }}</td>
+              <td class="table-header">{{ 'AssetsForUnsecured' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.AssetsForUnsecured }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'IsDisputed' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.IsDisputed }}</td>
+              <td colspan="2"></td>
+            </tr>
+            <tr>
+              <td class="table-header" colspan="4">Filing</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'FilingDate' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.FilingDate | reportDate: dateFormat }}</td>
+              <td class="table-header">{{ 'OriginalFilingDate' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.OriginalFilingDate | reportDate: dateFormat }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'FilingType' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.FilingType }}</td>
+              <td class="table-header">{{ 'FilerType' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.FilerType }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'FilingStatus' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.FilingStatus }}</td>
+              <td class="table-header">{{ 'FilingJurisdiction' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.FilingJurisdiction }}</td>
+            </tr>
+            <tr>
+              <td class="table-header" colspan="4">Court Information</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'CourtName' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.CourtName }}</td>
+              <td class="table-header">{{ 'CourtCode' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.CourtCode }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'JudgeName' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.JudgeName }}</td>
+              <td class="table-header">{{ 'JudgeIdentification' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.JudgeIdentification }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'DischargeDate' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.DischargeDate | reportDate: dateFormat }}</td>
+              <td class="table-header">{{ 'Disposition' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Disposition }}</td>
+            </tr>
+            <tr>
+              <td class="table-header" colspan="4">Details</td>
+            </tr>
+          </table>
+          <!-- Status History -->
+          <table *ngFor="let Status of BankruptcyRecord?.StatusHistory?.Status let s=index"
+            [attr.aria-describedby]="'BankruptcyRecord'+i+1+'statusHistory'+s+1">
+            <tr>
+              <td class="table-header">{{ 'StatusHistory' | mapField }} {{ s+1 }}  Type </td>
+              <td>{{ Status?.Type }}</td>
+              <td class="table-header">{{ 'StatusHistory' | mapField }} {{ s+1 }} {{ 'Date' | mapField }}</td>
+              <td>{{ Status?.Date | reportDate: dateFormat }}</td>
+            </tr>
+          </table>
+          <!-- Comments -->
+          <table *ngFor="let Comment of BankruptcyRecord?.Comments?.Comment let c=index"
+            [attr.aria-describedby]="'BankruptcyRecord'+i+1+'Comments'+c+1">
+            <tr>
+              <td class="table-header">{{ 'Comment' | mapField }} {{ c+1 }}  {{ 'Description' | mapField }} </td>
+              <td>{{ Comment?.Description }}</td>
+              <td class="table-header">{{ 'Comment' | mapField }} {{ c+1 }} {{ 'FilingDate' | mapField }}</td>
+              <td>{{ Comment?.FilingDate | reportDate: dateFormat }}</td>
+            </tr>
+          </table>
+          <!-- Trustees -->
+          <table aria-describedby="BankruptcyRecordTrusteesHeader">
+            <tr>
+              <td class="table-header" colspan="4">Trustee Information</td>
+            </tr>
+            <tr>
+              <td class="table-header">Trustee {{ 'UniqueId' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Trustee?.UniqueId }}</td>
+              <td class="table-header">{{ 'FullName' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Trustee?.Name?.Full }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'Prefix' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Trustee?.Name?.Prefix }}</td>
+              <td class="table-header">{{ 'FirstName' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Trustee?.Name?.First }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'MiddleName' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Trustee?.Name?.Middle }}</td>
+              <td class="table-header">{{ 'LastName' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Trustee?.Name?.Last }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "StreetNumber" | mapField }} </td>
+              <td>{{ BankruptcyRecord?.Trustee?.Address?.StreetNumber }}</td>
+              <td class="table-header">{{ "StreetName" | mapField }} </td>
+              <td>{{ BankruptcyRecord?.Trustee?.Address?.StreetName }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "StreetSuffix" | mapField }} </td>
+              <td>{{ BankruptcyRecord?.Trustee?.Address?.StreetSuffix }}</td>
+              <td class="table-header">{{ "StreetAddress1" | mapField }} </td>
+              <td>{{ BankruptcyRecord?.Trustee?.Address?.StreetAddress1 }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "StreetAddress2" | mapField }} </td>
+              <td>{{ BankruptcyRecord?.Trustee?.Address?.StreetAddress2 }}</td>
+              <td class="table-header">{{ "City" | mapField }} </td>
+              <td>{{ BankruptcyRecord?.Trustee?.Address?.City }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "State" | mapField }} </td>
+              <td>{{ BankruptcyRecord?.Trustee?.Address?.State }}</td>
+              <td class="table-header">{{ "Zip" | mapField }} </td>
+              <td>{{ BankruptcyRecord?.Trustee?.Address?.Zip5 }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ "Zip4" | mapField }} </td>
+              <td>{{ BankruptcyRecord?.Trustee?.Address?.Zip4 }}</td>
+              <td class="table-header">{{ "County" | mapField }} </td>
+              <td>{{ BankruptcyRecord?.Trustee?.Address?.County }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'Cart' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Trustee?.Cart }}</td>
+              <td class="table-header">{{ 'CrSortSz' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Trustee?.CrSortSz }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'Lot' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Trustee?.Lot }}</td>
+              <td class="table-header">{{ 'LotOrder' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Trustee?.LotOrder }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'DBPC' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Trustee?.DBPC }}</td>
+              <td class="table-header">{{ 'ChkDigit' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Trustee?.ChkDigit }}</td>
+            </tr>
+            <tr>
+              <td class="table-header">{{ 'RecType' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Trustee?.RecType }}</td>
+              <td class="table-header">{{ 'Phone' | mapField }}</td>
+              <td>{{ BankruptcyRecord?.Trustee?.Phone10 }}</td>
+            </tr>
+          </table>
+          <!-- Attorneys -->
+          <div>
+            <table aria-describedby="BankruptcyRecordAttorneysHeader">
+              <tr>
+                <td class="table-header" colspan="4">Attorneys</td>
+              </tr>
+            </table>
+
+          </div>
+          <div *ngFor="let Attorney of BankruptcyRecord?.Attorneys?.Attorney let a=index "  >
+            <table [attr.aria-describedby]="'BankruptcyRecordAttorney'+a+1+'GeneralInfo'">
+              <tr>
+                <td class="table-header">{{ 'Attorney' | mapField}} {{ a+1 }} {{ 'BusinessId' | mapField }}</td>
+                <td>{{ Attorney?.BusinessId }}</td>
+                <td class="table-header">{{ 'Attorney' | mapField}} {{ a+1 }} {{ 'UniqueId' | mapField }}</td>
+                <td>{{ Attorney?.UniqueId }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">{{ 'Attorney' | mapField}} {{ a+1 }} {{ 'SSN' | mapField }}</td>
+                <td>{{ Attorney?.SSN }}</td>
+                <td class="table-header">{{ 'Attorney' | mapField}} {{ a+1 }} {{ 'AppendedSSN' | mapField }}</td>
+                <td>{{ Attorney?.AppendedSSN }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">{{ 'Attorney' | mapField}} {{ a+1 }} {{ 'TaxId' | mapField }}</td>
+                <td>{{ Attorney?.TaxId }}</td>
+                <td colspan="2"></td>
+              </tr>
+            </table>
+            <table *ngFor="let Name of Attorney?.Names?.Name let n=index"
+            [attr.aria-describedby]="'BankruptcyRecordAttorney'+a+1+'Name'+n+1">
+              <tr>
+                <td class="table-header">{{ 'Attorney' | mapField}} {{ a+1 }} Name {{ n+1 }} {{ 'FullName' | mapField }}</td>
+                <td>{{ Name.Full }}</td>
+                <td class="table-header">{{ 'Attorney' | mapField}} {{ a+1 }} Name {{ n+1 }} {{ 'Prefix' | mapField }}</td>
+                <td>{{ Name.Prefix }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">{{ 'Attorney' | mapField}} {{ a+1 }} Name {{ n+1 }} {{ 'FirstName' | mapField }}</td>
+                <td>{{ Name.First }}</td>
+                <td class="table-header">{{ 'Attorney' | mapField}} {{ a+1 }} Name {{ n+1 }} {{ 'MiddleName' | mapField }}</td>
+                <td>{{ Name.MIddle }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">{{ 'Attorney' | mapField}} {{ a+1 }} Name {{ n+1 }} {{ 'LastName' | mapField }}</td>
+                <td>{{ Name.Last }}</td>
+                <td class="table-header">{{ 'Attorney' | mapField}} {{ a+1 }} Name {{ n+1 }} {{ 'Suffix' | mapField }}</td>
+                <td>{{ Name.Suffix }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">{{ 'Attorney' | mapField}} {{ a+1 }} Name {{ n+1 }} {{ 'CompanyName' | mapField }}</td>
+                <td>{{ Name.CompanyName }}</td>
+                <td class="table-header">{{ 'Attorney' | mapField}} {{ a+1 }} Name {{ n+1 }} {{ 'Type' | mapField }}</td>
+                <td>{{ Name.Type }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">{{ 'Attorney' | mapField}} {{ a+1 }} Name {{ n+1 }} {{ 'UniqueId' | mapField }}</td>
+                <td>{{ Name.UniqueId }}</td>
+                <td colspan="4"></td>
+              </tr>
+            </table>
+            <table *ngFor="let address of Attorney?.Addresses?.Address let ad= index"
+            [attr.aria-describedby]="'BankruptcyRecordAttorney'+a+1+'Address'+ad+1">
+              <tr>
+                <td class="table-header"> Attorney  {{ a + 1 }} Address {{ ad +1}} {{ "StreetNumber" | mapField }} </td>
+                <td>{{ address?.StreetNumber }}</td>
+                <td class="table-header">Attorney  {{ a + 1 }} Address {{ ad +1}} {{ "StreetName" | mapField }} </td>
+                <td>{{ address?.StreetName }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Attorney  {{ a + 1 }} Address {{ ad +1}} {{ "StreetSuffix" | mapField }} </td>
+                <td>{{ address?.StreetSuffix }}</td>
+                <td class="table-header">Attorney  {{ a + 1 }} Address {{ ad +1}} {{ "StreetAddress1" | mapField }} </td>
+                <td>{{ address?.StreetAddress1 }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Attorney  {{ a + 1 }} Address {{ ad +1}} {{ "StreetAddress2" | mapField }}</td>
+                <td>{{ address?.StreetAddress2 }}</td>
+                <td class="table-header">Attorney  {{ a + 1 }} Address {{ ad +1}} {{ "City" | mapField }} </td>
+                <td>{{ address?.City }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Attorney  {{ a + 1 }} Address {{ ad +1}} {{ "State" | mapField }} </td>
+                <td>{{ address?.State }}</td>
+                <td class="table-header">Attorney  {{ a + 1 }} Address {{ ad +1}} {{ "Zip" | mapField }}  </td>
+                <td>{{ address?.Zip5 }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Attorney  {{ a + 1 }} Address {{ ad +1}} {{ "Zip4" | mapField }}  </td>
+                <td>{{ address?.Zip4 }}</td>
+                <td class="table-header">Attorney  {{ a + 1 }} Address {{ ad + 1}} {{ "County" | mapField }} </td>
+                <td>{{ address?.County }}</td>
+              </tr>
+            </table>
+          </div>
+          <!-- Bankruptcy Debtors -->
+          <table arial-decribedby="BankruptcyRecordDebtorsHeader">
+            <tr>
+              <td class="table-header" colspan="4">Debtors</td>
+            </tr>
+          </table>
+          <div *ngFor="let Debtor of BankruptcyRecord?.Debtors?.Debtor;
+            let i= index">
+            <table [attr.aria-describedby]="'BankruptcyRecordDebtor'+i+1+'Info'">
+              <tr>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "BusinessId" | mapField }} </td>
+                <td> {{ Debtor.BusinessId }} </td>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "UniqueId" | mapField }} </td>
+                <td> {{ Debtor.UniqueId }} </td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "PersonFilterId" | mapField }} </td>
+                <td> {{ Debtor.PersonFilterId }} </td>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "DebtorType" | mapField }} </td>
+                <td> {{ Debtor.DebtorType }} </td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "SSN" | mapField }} </td>
+                <td> {{ Debtor.SSN }} </td>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "AppendedSSN" | mapField }} </td>
+                <td> {{ Debtor.AppendedSSN }} </td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "SSNMatch" | mapField }} </td>
+                <td> {{ Debtor.SSNMatch }} </td>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "SSNMSrc" | mapField }} </td>
+                <td> {{ Debtor.SSNMSrc }} </td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "TaxId" | mapField }} </td>
+                <td> {{ Debtor.TaxId }} </td>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "AppendedTaxId" | mapField }} </td>
+                <td> {{ Debtor.AppendedTaxId }} </td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "DCodeDesc" | mapField }} </td>
+                <td> {{ Debtor.DCodeDesc }} </td>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "DispTypeDesc" | mapField }} </td>
+                <td> {{ Debtor.DispTypeDesc }} </td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "Chapter" | mapField }} </td>
+                <td> {{ Debtor.Chapter }} </td>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "StatusDate" | mapField }} </td>
+                <td> {{ Debtor.StatusDate | reportDate: dateFormat }} </td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "DateVacated" | mapField }} </td>
+                <td> {{ Debtor.DateVacated | reportDate: dateFormat }} </td>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "DateTransferred" | mapField }} </td>
+                <td> {{ Debtor.DateTransferred | reportDate: dateFormat }} </td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "ConvertedDate" | mapField }} </td>
+                <td> {{ Debtor.ConvertedDate | reportDate: dateFormat }} </td>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "DischargeDate" | mapField }} </td>
+                <td> {{ Debtor.DischargeDate | reportDate: dateFormat }} </td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "FilingType" | mapField }} </td>
+                <td> {{ Debtor.FilingType }} </td>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "IsDisputed" | mapField }} </td>
+                <td> {{ Debtor.IsDisputed }} </td>
+              </tr>
+              <tr>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "WithdrawnStatus" | mapField }} </td>
+                <td> {{ Debtor.WithdrawnStatus }} </td>
+                <td class="table-header"> Debtor {{ i + 1 }} {{ "StatementId" | mapField }}(s) </td>
+                <td>
+                  <div *ngFor="let stId of Debtor?.StatementIdRecs?.StatementIdRec">
+                    {{ stId?.StatementId }}
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <!-- Debtor Addresses -->
+            <table *ngFor="let address of Debtor?.Addresses?.Address let ad= index"
+            [attr.aria-describedby]="'JudgmentAndLienRecordDebtor'+i+1+'Address'+ad+1">
+              <tr>
+                <td class="table-header"> Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetNumber" | mapField }} </td>
+                <td>{{ address?.StreetNumber }}</td>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetName" | mapField }} </td>
+                <td>{{ address?.StreetName }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetSuffix" | mapField }} </td>
+                <td>{{ address?.StreetSuffix }}</td>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetAddress1" | mapField }} </td>
+                <td>{{ address?.StreetAddress1 }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "StreetAddress2" | mapField }}</td>
+                <td>{{ address?.StreetAddress2 }}</td>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "City" | mapField }} </td>
+                <td>{{ address?.City }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "State" | mapField }} </td>
+                <td>{{ address?.State }}</td>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "Zip" | mapField }}  </td>
+                <td>{{ address?.Zip5 }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad +1}} {{ "Zip4" | mapField }}  </td>
+                <td>{{ address?.Zip4 }}</td>
+                <td class="table-header">Debtor  {{ i + 1 }} Address {{ ad + 1}} {{ "County" | mapField }} </td>
+                <td>{{ address?.County }}</td>
+              </tr>
+            </table>
+            <!-- Debtor phones -->
+            <table *ngFor="let phone of Debtor?.Phones?.Phone let ph= index"
+              [attr.aria-describedby]="'JudgmentAndLienRecordDebtor'+i+1+'Phone'+ph+1">
+              <tr >
+                <td class="table-header">Debtor  {{ i + 1 }} Phone {{ ph +1 }} Phone </td>
+                <td>{{ phone.Phone10 }}</td>
+                <td class="table-header">Debtor  {{ i + 1 }} Phone {{ ph +1 }} Fax </td>
+                <td>{{ phone.Fax }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Debtor  {{ i + 1 }} Phone {{ ph +1 }} {{ "TimeZone" | mapField }}</td>
+                <td>{{ phone.TimeZone }}</td>
+                <td colspan="2"></td>
+              </tr>
+            </table>
+            <!-- Debtor Names -->
+            <table *ngFor="let Name of Debtor?.Names?.Name let n=index"
+            [attr.aria-describedby]="'BankruptcyRecordDebtor'+i+1+'Name'+n+1">
+              <tr>
+                <td class="table-header">{{ 'Debtor' | mapField}} {{ i+1 }} Name {{ n+1 }} {{ 'FullName' | mapField }}</td>
+                <td>{{ Name.Full }}</td>
+                <td class="table-header">{{ 'Debtor' | mapField}} {{ i+1 }} Name {{ n+1 }} {{ 'Prefix' | mapField }}</td>
+                <td>{{ Name.Prefix }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">{{ 'Debtor' | mapField}} {{ i+1 }} Name {{ n+1 }} {{ 'FirstName' | mapField }}</td>
+                <td>{{ Name.First }}</td>
+                <td class="table-header">{{ 'Debtor' | mapField}} {{ i+1 }} Name {{ n+1 }} {{ 'MiddleName' | mapField }}</td>
+                <td>{{ Name.MIddle }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">{{ 'Debtor' | mapField}} {{ i+1 }} Name {{ n+1 }} {{ 'LastName' | mapField }}</td>
+                <td>{{ Name.Last }}</td>
+                <td class="table-header">{{ 'Debtor' | mapField}} {{ i+1 }} Name {{ n+1 }} {{ 'Suffix' | mapField }}</td>
+                <td>{{ Name.Suffix }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">{{ 'Debtor' | mapField}} {{ i+1 }} Name {{ n+1 }} {{ 'CompanyName' | mapField }}</td>
+                <td>{{ Name.CompanyName }}</td>
+                <td class="table-header">{{ 'Debtor' | mapField}} {{ i+1 }} Name {{ n+1 }} {{ 'Type' | mapField }}</td>
+                <td>{{ Name.Type }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">{{ 'Debtor' | mapField}} {{ i+1 }} Name {{ n+1 }} {{ 'UniqueId' | mapField }}</td>
+                <td>{{ Name.UniqueId }}</td>
+                <td colspan="4"></td>
+              </tr>
+            </table>
+
+          </div>
+
+        </mat-expansion-panel>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

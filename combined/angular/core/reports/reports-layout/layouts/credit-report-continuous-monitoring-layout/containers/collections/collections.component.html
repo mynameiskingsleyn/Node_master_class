@@ -1,0 +1,26 @@
+<app-layout-block [title]="title" [loading]="loading" [expanded]="expanded" [printable]="printable" [hideHeader]="hideHeader">
+  <table *ngFor="let collection of data?.Collections; let i= index" class="table-divider">
+    <tr class="sub-heading">
+      <td class="table-header">Collection Agency</td>
+      <td>{{ collection?.CREDITOR?.Name }}</td>
+      <td class="table-header">Date Assigned to Collection</td>
+      <td>{{ collection?.AccountReportedDate | reportDate:dateFormats.display.long }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Collection Agency Subcode</td>
+      <td>{{ collection?.SubscriberCode }}</td>
+      <td class="table-header">Status of Collection</td>
+      <td>{{ collection?.AccountStatusType }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Collection Amount</td>
+      <td>{{ collection?.HighCreditAmount | currency }}</td>
+      <td class="table-header">Collection Balance</td>
+      <td>{{ collection?.UnpaidBalanceAmount | currency }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Agency Notes</td>
+      <td colspan="3">{{ collection?.CREDIT_COMMENT }}</td>
+    </tr>
+  </table>
+</app-layout-block>

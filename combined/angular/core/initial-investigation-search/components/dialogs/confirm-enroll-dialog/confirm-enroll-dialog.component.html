@@ -1,0 +1,30 @@
+<mat-dialog-content class="mat-typography">
+  <div class="confirm-enroll-dialog">
+    <h2> Data Confirmation </h2>
+    <div>
+      By choosing <strong>Submit</strong>, I have confirmed the person I am enrolling has provided
+        written authorization under the Fair Credit Reporting Act (FCRA).
+    </div>
+    <div class="fields-list">
+      <table>
+        <tr *ngFor= "let field of confirmData; let i = index;">
+          <td class="field-label">{{field.label}}</td>
+          <td>
+            <span [ngClass] ="(field.hasError) ? 'possible-error': ''"> {{ field.value }}</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="accuracy-check">
+      <strong>(Check search criteria for accuracy, especially underlined fields)</strong>
+    </div>
+  </div>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center" fxFlex>
+      <mat-checkbox [(ngModel)]="confirmed" class="enter-as-intended">Entered as Intended</mat-checkbox>
+      <button mat-flat-button color="primary" type="submit" (click)="acceptEnroll()" [disabled]="!confirmed" class="submit-button">Submit</button>
+      <button mat-stroked-button type="button" (click)="cancelDialog()" class="edit-button">Edit Criteria</button>
+  </div>
+</mat-dialog-actions>

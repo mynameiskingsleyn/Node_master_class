@@ -1,0 +1,12 @@
+<mat-dialog-content>
+  <p class="confirm-incorrect">By Selecting "Submit" I am acknowledging that some portion of the manually entered search criteria for this
+    user is incorrect. It will remove this record from display in the Insider Threat portal in 1-2 business days so that
+    the search criteria can be resubmitted. Resubmitting the search criteria may process new credit reports and
+    personal record reports.</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center" fxFlex>
+      <button mat-flat-button color="primary" type="submit" (click)="acceptDialog()">Submit</button>
+      <button mat-stroked-button type="button" (click)="cancelDialog()">Cancel</button>
+  </div>
+</mat-dialog-actions>

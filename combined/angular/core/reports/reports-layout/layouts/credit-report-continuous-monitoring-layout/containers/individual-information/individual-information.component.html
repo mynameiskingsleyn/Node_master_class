@@ -1,0 +1,187 @@
+<app-layout-block [title]="title" [loading]="loading" [expanded]="expanded" [printable]="printable" [hideHeader]="hideHeader">
+  <table aria-describedby="creditReport" *ngIf="data">
+    <tr>
+      <td class="table-header">Name (from Credit Bureau)</td>
+      <td colspan="3">
+        <div *ngFor="let creditFile of data.CreditFile; let i = index">
+          <p>{{ creditFile?.Borrower?.UnparsedName }} ({{ creditFile?.SourceType }})</p>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="table-header">Alias</td>
+      <td colspan="3">
+        <table *ngIf="data.CreditFile" aria-describedby="nameAliases">
+          <tr>
+            <th scope="row">First Name</th>
+            <th scope="row">Middle Name</th>
+            <th scope="row">Last Name</th>
+          </tr>
+          <ng-container *ngFor="let creditFile of data.CreditFile; let i = index">
+            <tr *ngFor="let alias of creditFile?.Borrower?.Aliases; let i = index">
+              <td>{{ alias?.FirstName }}</td>
+              <td>{{ alias?.MiddleName }}</td>
+              <td>{{ alias?.LastName }}</td>
+            </tr>
+          </ng-container>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td class="table-header">Social Security Number</td>
+      <td colspan="3">{{ data.BorrowerSubject?.SSN }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Residence</td>
+      <td colspan="3">
+        <div *ngFor="let residence of data.BorrowerSubject?.Residence; let i = index">
+          <p *ngIf="residence?.Location === 'Residence'">{{ residence?.StreetAddress }}, {{ residence?.City }}, {{
+            residence?.State }} {{ residence?.PostalCode }}</p>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="table-header">PO ID</td>
+      <td colspan="3">{{ data.PoID }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Case Number</td>
+      <td colspan="3">{{ data.CaseNumber }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Time Report Processed</td>
+      <td colspan="3">{{ data.TimeReportProcessed }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Date Report Processed</td>
+      <td colspan="3">{{ data.DateReportProcessed | reportDate:dateFormats.display.long }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">TMS Score (overall)</td>
+      <td colspan="3">{{ data.Keys?.TMS_SCORE || 'X' }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Highest Tradeline TMS Score</td>
+      <td colspan="3">{{ data.Keys?.HIGHEST_RATING_ON_ANY_TRADE || 'X' }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Number of Tradelines with Highest TMS Score</td>
+      <td colspan="3">{{ data.Keys?.NUMBER_OF_TRADES_WITH_HIGHEST_RATING || 'X' }}</td>
+    </tr>
+    <ng-container *ngIf="!showSmallNoRecordReport()">
+      <tr>
+        <td class="table-header">B01 - Hit(0), No Hit(1)</td>
+        <td>{{ data.Keys?.B01 || 'X' }}</td>
+        <td class="table-header">Reports Combined</td>
+        <td>{{ data.ReportsCombined }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">B02 - Number of Unrated Tradelines</td>
+        <td>{{ data.Keys?.B02 || 'X' }}</td>
+        <td class="table-header">Is there a Bankruptcy?</td>
+        <td>{{ data.Keys?.PUBLIC_RECORD_INFORMATION_PROVIDERS ? 'YES' : 'NO' }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">B03 - Number of Unclassified Tradelines</td>
+        <td>{{ data.Keys?.B03 || 'X' }}</td>
+        <td class="table-header">Total Credit Limit of All Tradelines</td>
+        <td>{{ data.Keys?.TRADELINE_TOTAL_CREDIT_LIMIT | currency }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">B04 - Number of Too-New-To-Rate Tradelines</td>
+        <td>{{ data.Keys?.B04 || 'X' }}</td>
+        <td class="table-header">Total Balance of All Tradelines</td>
+        <td>{{ data.Keys?.TRADELINE_TOTAL_BALANCE | currency }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">B05 - Number of Paying As Agreed</td>
+        <td>{{ data.Keys?.B05 || 'X' }}</td>
+        <td class="table-header">Total High Credit of All Tradelines</td>
+        <td>{{ data.Keys?.TRADELINE_TOTAL_HIGH_CREDIT | currency }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">B06 - Number of Worst Rating Ever R2</td>
+        <td>{{ data.Keys?.B06 || 'X' }}</td>
+        <td class="table-header">Total Past Due from All Tradelines</td>
+        <td>{{ data.Keys?.TRADELINE_TOTAL_PAST_DUE | currency }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">B07 - Number of Worst Rating Ever R3</td>
+        <td>{{ data.Keys?.B07 || 'X' }}</td>
+        <td class="table-header">Total Number of Derogatory Tradelines</td>
+        <td>{{ data.Keys?.DEROGATORY_TRADELINE_TOTAL_TRADELINES_USED }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">B08 - Number of Worst Rating Ever R4</td>
+        <td>{{ data.Keys?.B08 || 'X' }}</td>
+        <td class="table-header">Total Credit Limit of All Derogatory Tradelines</td>
+        <td>{{ data.Keys?.DEROGATORY_TRADELINE_TOTAL_CREDIT_LIMIT | currency }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">B09 - Number of Worst Rating Ever R5</td>
+        <td>{{ data.Keys?.B09 || 'X' }}</td>
+        <td class="table-header">Total Balance of All Derogatory Tradelines</td>
+        <td>{{ data.Keys?.DEROGATORY_TRADELINE_TOTAL_BALANCE | currency }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">B10 - Paid Derogatory Public Records or Tradelines</td>
+        <td>{{ data.Keys?.B10 || 'X' }}</td>
+        <td class="table-header">Total High Credit of All Derogatory Tradelines</td>
+        <td>{{ data.Keys?.DEROGATORY_TRADELINE_TOTAL_HIGH_CREDIT | currency }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">B11 - Number of Chapter 13 and R7 Not Paid</td>
+        <td>{{ data.Keys?.B11 || 'X' }}</td>
+        <td class="table-header">Total Past Due on All Derogatory Tradelines</td>
+        <td>{{ data.Keys?.DEROGATORY_TRADELINE_TOTAL_PAST_DUE | currency }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">B12 - Number of Repossessions Not Paid</td>
+        <td>{{ data.Keys?.B12 || 'X' }}</td>
+        <td class="table-header">Total Number of Non-Derogatory Tradelines</td>
+        <td>{{ data.Keys?.TRADELINE_TOTAL_TRADELINES_USED }}</td>
+      </tr>
+      <tr>
+        <td class="table-header not-break-text">B13 - Derogatory Public Record, R9, Collection Not Paid</td>
+        <td>{{ data.Keys?.B13 || 'X' }}</td>
+        <td class="table-header">Credit Utilization Percentage</td>
+        <td>{{ data.CreditPercentUtilization | number }}%</td>
+      </tr>
+      <tr>
+        <td class="table-header">B14 - Number of Tradelines Added Manually</td>
+        <td>{{ data.Keys?.B14 || 'X' }}</td>
+        <td class="table-header">Total Payment Amount</td>
+        <td>{{ data.TotalPaymentAmount | currency }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">B15 - Number of Tradelines</td>
+        <td>{{ data.Keys?.B15 || 'X' }}</td>
+        <td class="table-header">Date of First Tradeline</td>
+        <td>{{ data.DateofFirstTradeline | reportDate:dateFormats.display.long }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">B16 - Number of Inquiries</td>
+        <td>{{ data.Keys?.B16 || 'X' }}</td>
+        <td class="table-header">Date of Last Tradeline Activity</td>
+        <td>{{ data.DateofLastTradelineActivity | reportDate:dateFormats.display.long }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">B17 - Total Current Balance</td>
+        <td>{{ data.Keys?.B17 | currency }}</td>
+        <td colspan="2" rowspan="2">
+          <div><strong>Tradeline Type Summary:</strong></div>
+          <ul>
+            <li>Installment: {{ data.TradesInstallment }}</li>
+            <li>Revolving: {{ data.TradesRevolving }}</li>
+            <li>Mortgage: {{ data.TradesMortgage }}</li>
+            <li>Other: {{ data.TradesOther }}</li>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td class="table-header">B27 - Balance of Tradelines with Maximum Derogatory>R3</td>
+        <td class="border-right">{{ data.Keys?.B27 | currency }}</td>
+      </tr>
+    </ng-container>
+  </table>
+</app-layout-block>

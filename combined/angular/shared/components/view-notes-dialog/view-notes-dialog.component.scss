@@ -1,0 +1,12 @@
+.notes-list-table {
+  th {
+    &:first-child {
+      min-width: 130px;
+    }
+  }
+  td {
+    &:last-child {
+      padding-right: 0;
+    }
+  }
+}

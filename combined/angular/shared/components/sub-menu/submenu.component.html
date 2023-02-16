@@ -1,0 +1,80 @@
+<button mat-icon-button [matMenuTriggerFor]="rootMenu">
+    <mat-icon class="icon-blue">more_vert</mat-icon>
+</button>
+
+<mat-menu #downloadMenu="matMenu">
+  <ng-template matMenuContent>
+    <ng-container *canAccess="[permissions.publicRecordsFcraEnabled]">
+      <button mat-menu-item *ngIf="report?.max_pr_date" (click)="downloadReportPdf(report, PublicRecord)">Public Records</button>
+    </ng-container>
+    <mat-divider *ngIf="report?.max_cr_date"></mat-divider>
+    <ng-container *canAccess="[permissions.creditReportEnabled]">
+      <button mat-menu-item *ngIf="report?.max_cr_date" (click)="downloadReportPdf(report, CreditReport)">Credit Report</button>
+    </ng-container>
+    <mat-divider *ngIf="report?.max_nr_date"></mat-divider>
+    <ng-container *canAccess="[permissions.publicRecordsNonFcraEnabled]">
+      <button mat-menu-item *ngIf="report?.max_nr_date" (click)="downloadReportPdf(report, NonFCRAPublicRecord)">Non-FCRA Public Records</button>
+    </ng-container>
+  </ng-template>
+</mat-menu>
+<mat-menu #notesMenu="matMenu">
+  <ng-template matMenuContent>
+    <ng-container *canAccess="[permissions.publicRecordsFcraEnabled]">
+      <button mat-menu-item *ngIf="report?.max_pr_date" (click)="addNote(report, PublicRecord)">Public Records</button>
+    </ng-container>
+    <mat-divider *ngIf="report?.max_cr_date"></mat-divider>
+    <ng-container *canAccess="[permissions.creditReportEnabled]">
+      <button mat-menu-item *ngIf="report?.max_cr_date" (click)="addNote(report, CreditReport)">Credit Report</button>
+    </ng-container>
+    <mat-divider *ngIf="report?.max_nr_date"></mat-divider>
+    <ng-container *canAccess="[permissions.publicRecordsNonFcraEnabled]">
+      <button mat-menu-item *ngIf="report?.max_nr_date" (click)="addNote(report, NonFCRAPublicRecord)">Non-FCRA Public Records</button>
+    </ng-container>
+  </ng-template>
+</mat-menu>
+
+<mat-menu #rootMenu="matMenu" xPosition="before">
+    <ng-template matMenuContent>
+        <ng-container *canAccess="[permissions.monitoring]">
+            <button mat-menu-item (click)="toggleWatch(report)">
+                {{ report?.watcher ? 'Remove' : 'Set' }} Alert
+            </button>
+            <mat-divider></mat-divider>
+        </ng-container>
+        <ng-container *canAccess="[permissions.creditReportEnabled]">
+          <button mat-menu-item (click)="runReport(report, CreditReport)">
+            Process New Credit Report
+          </button>
+          <mat-divider></mat-divider>
+        </ng-container>
+        <ng-container *ngIf="canTriggerPrRecord">
+          <button mat-menu-item (click)="runReport(report, PublicRecord)">
+            Process New Public Record
+          </button>
+          <mat-divider></mat-divider>
+        </ng-container>
+        <ng-container *canAccess="[permissions.softDeleteEnabled]">
+          <button mat-menu-item (click)="incorrectlyEntered(report)">
+              Mark as Incorrectly Entered
+          </button>
+          <mat-divider></mat-divider>
+        </ng-container>
+        <ng-container *ngIf="showAgencyNotes && (report?.max_pr_date || report?.max_cr_date || report?.max_nr_date)">
+          <button mat-menu-item [matMenuTriggerFor]="notesMenu">
+              Add Agency Note to
+          </button>
+          <mat-divider></mat-divider>
+        </ng-container>
+        <ng-container *ngIf="(report?.max_pr_date || report?.max_cr_date || report?.max_nr_date)">
+          <button mat-menu-item [matMenuTriggerFor]="downloadMenu">
+              Download PDF
+          </button>
+          <mat-divider></mat-divider>
+        </ng-container>
+        <ng-container *ngIf="showAgencyNotes && (report?.max_pr_date || report?.max_cr_date || report?.max_nr_date)">
+          <button mat-menu-item (click)="viewNotes(report)">
+              View Agency Notes
+          </button>
+        </ng-container>
+    </ng-template>
+</mat-menu>

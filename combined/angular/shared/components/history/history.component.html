@@ -1,0 +1,59 @@
+<div class="history-container">
+    <ng-container>
+        <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z0 full-width-table"
+            aria-label="History Reports" aria-describedby="History Reports" multiTemplateDataRows [trackBy]="trackBy">
+
+            <ng-container matColumnDef="unique_id">
+              <th mat-header-cell *matHeaderCellDef>Unique ID</th>
+              <td mat-cell *matCellDef="let element">
+                <app-uniqueid [uniqueid]="element.unique_id"></app-uniqueid>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="lexid">
+              <th mat-header-cell *matHeaderCellDef>Lex ID</th>
+              <td mat-cell *matCellDef="let element">{{element.lexid}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="name_first">
+                <th mat-header-cell *matHeaderCellDef>First Name</th>
+                <td mat-cell *matCellDef="let element">{{element.name_first}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="name_last">
+              <th mat-header-cell *matHeaderCellDef>Last Name</th>
+              <td mat-cell *matCellDef="let element">{{element.name_last}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="date_returned">
+              <th mat-header-cell *matHeaderCellDef>Report Date &amp; Time</th>
+              <td mat-cell *matCellDef="let element">{{element.date_returned | date:'MM/dd/yyyy hh:mm a'}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="output_type">
+              <th mat-header-cell *matHeaderCellDef>Report Type</th>
+              <td mat-cell *matCellDef="let element">
+                <button class="link" [routerLink]="[reportView(element.output_type, element)]" *ngIf="element.status!==reportStatus.NO_RECORD">{{ getReportType(element.output_type) }}</button>
+                <a href="#" (click)="crNoRecord(element, $event)" *ngIf="element.status===reportStatus.NO_RECORD">{{ getReportType(element.output_type) }}</a>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Report Status</th>
+              <td mat-cell *matCellDef="let element">{{element.status}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+        <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+        <mat-paginator #paginator
+            [disabled]="loading"
+            [length]="page.length"
+            [pageIndex]="page.pageIndex"
+            [pageSize]="page.pageSize"
+            [pageSizeOptions]="pageSizeOptions">
+        </mat-paginator>
+    </ng-container>
+</div>

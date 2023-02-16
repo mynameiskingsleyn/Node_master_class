@@ -1,0 +1,51 @@
+<app-layout-block [title]="title" [loading]="loading" [expanded]="expanded" [printable]="printable" [hideHeader]="hideHeader">
+  <table aria-describedby="PublicRecords" *ngFor="let record of data?.PublicRecords; let i = index"
+    class="table-divider">
+    <tr>
+      <td class="table-header">Court Code/Name</td>
+      <td>{{ record?.CourtName }}</td>
+      <td class="table-header">Case Number</td>
+      <td>{{ record?.CaseNumber }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Court Address</td>
+      <td>{{ record?.Address }}</td>
+      <td class="table-header">Account Ownership Type</td>
+      <td>{{ record?.AccountOwnershipType }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Bankruptcy Type</td>
+      <td>{{ record?.Type }}</td>
+      <td class="table-header">Chapter 13 Bankruptcy?</td>
+      <td>{{ record?.Chapter13Bankruptcy }}</td>
+
+    </tr>
+    <tr>
+      <td class="table-header">Date Filed</td>
+      <td>{{ record?.FiledDate | reportDate:dateFormats.display.long }}</td>
+      <td colspan="2"></td>
+    </tr>
+    <tr>
+      <td class="table-header">Discharge Date</td>
+      <td>{{ record?.PaidDate | reportDate:dateFormats.display.long }}</td>
+      <td class="table-header">Disposition</td>
+      <td>{{ record?.DispositionType }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Bankruptcy Assets Value</td>
+      <td>{{ record?.BankruptcyAssetsAmount | currency }}</td>
+      <td class="table-header">Bankruptcy Liabilities Value</td>
+      <td>{{ record?.BankruptcyLiabilitiesAmount | currency }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Borrower ID</td>
+      <td>{{ record?.BorrowerID }}</td>
+      <td colspan="2"></td>
+    </tr>
+    <tr>
+      <td class="table-header">Remarks</td>
+      <td></td>
+      <td colspan="2"></td>
+    </tr>
+  </table>
+</app-layout-block>

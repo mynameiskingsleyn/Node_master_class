@@ -1,0 +1,21 @@
+<app-layout-block [title]="title" [loading]="loading" [expanded]="expanded" [printable]="printable" [hideHeader]="hideHeader">
+  <table aria-describedby="Inquiries" *ngIf="data?.Inquiries?.length">
+    <tr>
+      <th scope="row">Number of Inquiries</th>
+      <td colspan="3">{{ data?.NumberInquiries }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Credit Subscriber Name</th>
+      <th scope="row">Kind of Business</th>
+
+      <th scope="row">Date</th>
+      <th scope="row">Credit Bureau Code</th>
+    </tr>
+    <tr *ngFor="let inquiry of data?.Inquiries; let i = index">
+      <td>{{ inquiry?.Name }}</td>
+      <td>{{ inquiry?.BusinessType }}</td>
+      <td>{{ inquiry?.Date | reportDate:dateFormats.display.long }}</td>
+      <td>{{ inquiry?.SourceType }}</td>
+    </tr>
+  </table>
+</app-layout-block>

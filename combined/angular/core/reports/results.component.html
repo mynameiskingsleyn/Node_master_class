@@ -1,0 +1,164 @@
+<div class="mat-elevation-z1 reports">
+  <!-- Tool Bar -->
+  <mat-toolbar>
+    <div fxFlex>
+      <button mat-flat-button color="primary" class="btn-small" (click)="openFilters()">Date Filter</button>
+    </div>
+    <div fxFlex></div>
+    <div fxFlexAlign="center end">
+      <mat-paginator #paginator1 [length]="page.length" [pageIndex]="page.pageIndex" [pageSize]="page.pageSize"
+        [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true">
+      </mat-paginator>
+    </div>
+  </mat-toolbar>
+  <!-- End Tool Bar -->
+  <!-- Results -->
+  <mat-progress-bar mode="indeterminate" *ngIf="dataSource.loading$ | async"></mat-progress-bar>
+  <table mat-table class="full-width-table stripped hoverable expandable-table" [dataSource]="dataSource" matSort
+    matSortDisableClear matSortStart="asc" aria-label="Reports" aria-describedby="Reports" multiTemplateDataRows [trackBy]="trackBy">
+
+    <ng-container *canAccess="[permissions.monitoring]" matColumnDef="watcher">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-icon class="md-18">star</mat-icon>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon class="md-18 icon-red" *ngIf="element.watcher">star</mat-icon>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="history">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-icon class="md-18">watch_later</mat-icon>
+      </th>
+      <td mat-cell *matCellDef="let element" [ngClass]="{'cell-clickable': element.max_pr_date || element.max_cr_date}">
+        <mat-icon class="md-18 icon-blue" (click)="expandedElement = expandedElement === element ? null : element"
+          *ngIf="element.max_pr_date || element.max_cr_date">watch_later</mat-icon>
+      </td>
+    </ng-container>
+
+    <ng-container *canAccess="[permissions.publicRecordsNonFcraEnabled]" matColumnDef="triggered">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-icon class="md-18">notification_important</mat-icon>
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-icon class="md-18 icon-red" *ngIf="element.triggered">notifications_active</mat-icon>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="unique_id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Unique ID</th>
+      <td mat-cell *matCellDef="let element">
+        <app-uniqueid [uniqueid]="element.unique_id"></app-uniqueid>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lexid">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>LexID</th>
+      <td mat-cell *matCellDef="let element">{{element.lexid}}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name_first">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>First Name</th>
+      <td mat-cell *matCellDef="let element">
+        <button class="link" (click)="showRecordMetadata($event, element)"
+          arial-label="Link to display current individual information in a popover">{{element.name_first}}</button>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="name_last">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Name</th>
+      <td mat-cell *matCellDef="let element">
+          <button class="link" (click)="showRecordMetadata($event, element)"
+          arial-label="Link to display current individual information in a popover">{{element.name_last}}</button>
+      </td>
+    </ng-container>
+
+    <ng-container *canAccess="[permissions.publicRecordsFcraEnabled]" matColumnDef="max_pr_date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Public Records</th>
+      <td mat-cell *matCellDef="let element">
+        <ng-template #publicRecordTplDate>{{element.max_pr_date | date:'MM/dd/yyyy hh:mm a' }}</ng-template>
+        <button class="link" [routerLink]="[reportView('pr', element)]" *ngIf="element.max_pr_date !== null">
+          <ng-container *ngTemplateOutlet="publicRecordTplDate"></ng-container>
+        </button>
+        <br>
+        <span *ngIf="element.pr_status">Status: {{ element.pr_status }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container *canAccess="[permissions.creditReportEnabled]" matColumnDef="max_cr_date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Credit Report</th>
+      <td mat-cell *matCellDef="let element">
+        <ng-template #creditReportTplDate>{{element.max_cr_date | date:'MM/dd/yyyy hh:mm a' }}</ng-template>
+        <button class="link" [routerLink]="[reportView('cr', element)]"
+          *ngIf="element.cr_status!==reportStatus.NO_RECORD && element.max_cr_date !== null">
+          <ng-container *ngTemplateOutlet="creditReportTplDate"></ng-container>
+        </button>
+        <a href="#" (click)="crNoRecord(element, $event)" *ngIf="element.cr_status===reportStatus.NO_RECORD">
+          <ng-container *ngTemplateOutlet="creditReportTplDate"></ng-container>
+        </a>
+        <br>
+        <span *ngIf="element.cr_status">Status: {{ element.cr_status }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container *canAccess="[permissions.publicRecordsNonFcraEnabled]" matColumnDef="max_nr_date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Non-FCRA Public Records</th>
+      <td mat-cell *matCellDef="let element">
+        <ng-template #nonFcraReportTplDate>{{element.max_nr_date | date:'MM/dd/yyyy hh:mm a' }}</ng-template>
+        <button class="link" [routerLink]="[reportView('nr', element)]" *ngIf="element.max_nr_date !== null">
+          <ng-container *ngTemplateOutlet="nonFcraReportTplDate"></ng-container>
+        </button>
+        <br>
+        <span *ngIf="element.nr_status">Status: {{ element.nr_status }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container *showCombined matColumnDef="report_date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Combined Report</th>
+      <td mat-cell *matCellDef="let element">
+        <ng-template #completeReportTplDate>{{element.report_date | date:'MM/dd/yyyy hh:mm a' }}</ng-template>
+        <button class="link" [routerLink]="[reportView('complete', element)]" *ngIf="element.report_date !== null">
+          <ng-container *ngTemplateOutlet="completeReportTplDate"></ng-container>
+        </button>
+        <br>
+        <span *ngIf="element.status">Status: {{ element.status }}</span>
+        <span *ngIf="!element.status">&nbsp;</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="action_menu" stickyEnd>
+        <th mat-header-cell *matHeaderCellDef>Action</th>
+        <td mat-cell *matCellDef="let element">
+            <app-submenu (click)="$event.stopPropagation()" [report]="element"
+              (watch)="onWatchChange($event)"
+              (run)="runReport($event)"
+              (note)="addAgencyNote($event)"
+              (view)="viewReportsNotes($event)"
+              *ngIf="element.pf_status==='1'"></app-submenu>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="historyPanel">
+      <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length" class="sub-container">
+        <div class="table-details-container" [@detailExpand]="element === expandedElement ? 'expanded' : 'collapsed'">
+          <app-history fxFlex="100" *ngIf="element === expandedElement" [subject]="element"></app-history>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let element; columns: displayedColumns;" class="table-element-row"
+      [class.example-expanded-row]="expandedElement === element"
+      [class.inactive-subject-row]="element.pf_status === '0'">
+    </tr>
+    <tr mat-row *matRowDef="let row; columns: ['historyPanel']" class="table-element-details-row"></tr>
+  </table>
+  <mat-progress-bar mode="indeterminate" *ngIf="dataSource.loading$ | async"></mat-progress-bar>
+  <!-- End Results -->
+  <!-- Table paginator -->
+  <mat-paginator #paginator2 [length]="page.length" [pageIndex]="page.pageIndex" [pageSize]="page.pageSize"
+    [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true">
+  </mat-paginator>
+  <!-- End Table paginator -->
+
+</div>

@@ -1,0 +1,12 @@
+<div class="subject-info" fxLayout="column" fxFlexFill>
+    <div *ngIf="loading" fxFlexFill fxLayoutAlign="center center">
+        <mat-spinner [diameter]="50" strokeWidth="2"></mat-spinner>
+    </div>
+    <ng-container *ngIf="!loading">
+        <div fxFlex><strong>{{subjectName}}</strong></div>
+        <div fxFlex>{{subjectAddress?.StreetAddress1}} {{subjectAddress?.StreetAddress2}}</div>
+        <div fxFlex>{{subjectAddress?.City}} {{subjectAddress?.State}}</div>
+        <div fxFlex>{{subjectAddress?.Zip5}}</div>
+        <div fxFlex>{{subjectDob}}</div>
+    </ng-container>
+</div>

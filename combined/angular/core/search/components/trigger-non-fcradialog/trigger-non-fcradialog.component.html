@@ -1,0 +1,14 @@
+<h3 mat-dialog-title>To continue please select one of the following:</h3>
+<mat-dialog-content class="mat-typography">
+  <ul>
+    <li *ngFor="let reason of reasons">
+      <mat-checkbox [(ngModel)]="reason.selected">{{ reason.description }}</mat-checkbox>
+    </li>
+  </ul>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center" fxFlex>
+    <button mat-flat-button color="primary" type="submit" (click)="submit()">Submit</button>
+    <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
+  </div>
+</mat-dialog-actions>

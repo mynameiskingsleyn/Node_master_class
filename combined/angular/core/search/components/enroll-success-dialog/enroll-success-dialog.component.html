@@ -1,0 +1,19 @@
+<mat-dialog-content>
+    <div fxLayout="column" fxLayoutAlign="center center">
+        <mat-icon class="material-icons md-48 success">done</mat-icon>
+        <ng-container *ngIf="showEnrollMsg">
+            <p>Credit Reports will be delivered typically within 1-3 hours and available public records
+              within 30 minutes. If not, please contact <a href="mailto:{{config.support.email}}">{{config.support.email}}</a></p>
+        </ng-container>
+        <ng-container *ngIf="!showEnrollMsg">
+            <p>Credit Reports and available public records are generally available within a few minutes
+              of submitting the request. If they haven't been delivered within 30 minutes, please contact
+              <a href="mailto:{{config.support.email}}">{{config.support.email}}</a></p>
+        </ng-container>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center" fxFlex>
+        <button mat-flat-button color="primary" type="button" (click)="closeDialog()">OK</button>
+    </div>
+</mat-dialog-actions>

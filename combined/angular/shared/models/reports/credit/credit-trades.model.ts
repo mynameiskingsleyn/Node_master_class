@@ -1,0 +1,42 @@
+import { ContactPoint } from './contact-point.model';
+import { CreditCurrentRating } from './credit-current-rating.model';
+import { CreditLateCount } from './credit-late-count.model';
+import { CreditPaymentPattern } from './credit-payment-pattern.model';
+import { CreditorTrade } from './creditor-trade.model';
+
+export interface CreditTrades {
+  CREDITOR: CreditorTrade;
+  CONTACT_POINT: ContactPoint;
+  LATE_COUNT: CreditLateCount;
+  PAYMENT_PATTERN: CreditPaymentPattern;
+  CURRENT_RATING: CreditCurrentRating;
+  CreditRepository: string;
+  SubscriberCode: string;
+  SourceBureaus: string;
+  BorrowerID: string;
+  CreditBusinessType: string;
+  CreditFileID: string;
+  CreditLiabilityID: string;
+  CreditLoanType: string;
+  CreditTradeReferenceID: string;
+  AccountBalanceDate: string;
+  AccountIdentifier: string;
+  AccountOpenedDate: string;
+  AccountOwnershipType: string;
+  AccountReportedDate: string;
+  AccountStatusDate: string;
+  AccountStatusType: string;
+  AccountType: string;
+  CreditLimitAmount: string;
+  DerogatoryDataIndicator: string;
+  HighCreditAmount: string;
+  LastActivityDate: string;
+  MonthlyPaymentAmount: string;
+  MonthsReviewedCount: string;
+  PastDueAmount: string;
+  TermsDescription: string;
+  TermsSourceType: string;
+  UnpaidBalanceAmount: string;
+  Creditor_Name: string;
+  CREDIT_COMMENT: string;
+}

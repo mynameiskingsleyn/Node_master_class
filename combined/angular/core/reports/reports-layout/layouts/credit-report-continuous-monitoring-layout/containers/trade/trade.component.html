@@ -1,0 +1,177 @@
+<app-layout-block [title]="title" [loading]="loading" [expanded]="expanded" [printable]="printable" [hideHeader]="hideHeader">
+  <table *ngIf="data" class="four-cols" aria-describedby="creditReportTrades">
+    <tr class="sub-heading">
+      <th colspan="4" class="center-text">Tradeline {{ index + 1 }}</th>
+    </tr>
+    <tr>
+      <ng-container *ngIf="collectionsSet.indexOf(data?.CreditBusinessType) < 0">
+        <td class="table-header">Creditor Name</td>
+        <td>{{ data?.CREDITOR?.Name }}</td>
+      </ng-container>
+      <td class="table-header">Tradeline TMS Score</td>
+      <td [attr.colspan]="collectionsSet.indexOf(data?.CreditBusinessType) < 0 ? '0' : '3'">{{ data?.CURRENT_RATING?.Code }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Creditor Address</td>
+      <td colspan="3">
+        <div *ngIf="data?.CREDITOR?.StreetAddress">
+          {{ data?.CREDITOR?.StreetAddress }}<br>
+          {{ data?.CREDITOR?.City }}, {{ data?.CREDITOR?.State }} {{
+          data?.CREDITOR?.PostalCode }}<br>
+          <div *ngIf="data?.CONTACT_POINT?.Phones"><strong>Phone:</strong> {{
+            data?.CONTACT_POINT?.Phones }}</div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="table-header">Subscriber Code</td>
+      <td colspan="3">{{ data?.SubscriberCode }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Kind of Business</td>
+      <td colspan="3">{{ data?.CreditBusinessType }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Account Number</td>
+      <td colspan="3"><span *ngIf="data?.AccountIdentifier">{{
+          data?.AccountIdentifier }}<br></span></td>
+    </tr>
+    <tr>
+      <th scope="row">Account Ownership Type</th>
+      <td colspan="3">{{ data?.AccountOwnershipType }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Borrower ID</td>
+      <td colspan="3">{{ data?.BorrowerID }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Source Bureau(s)</td>
+      <td colspan="3">{{ data?.SourceBureaus }}</td>
+    </tr>
+    <tr class="sub-heading">
+      <th colspan="4" class="center-text">Tradeline {{ index + 1 }} Specifics</th>
+    </tr>
+    <tr>
+      <th scope="row">Date Account Opened</th>
+      <td>{{ data?.AccountOpenedDate | reportDate }}</td>
+      <ng-container *ngIf="collectionsSet.indexOf(data?.CreditBusinessType) < 0">
+        <th scope="row">Date Account Last Reported</th>
+        <td>{{ data?.AccountReportedDate | reportDate }}</td>
+      </ng-container>
+      <ng-container *ngIf="collectionsSet.indexOf(data?.CreditBusinessType) >= 0">
+        <td colspan="2"></td>
+      </ng-container>
+    </tr>
+    <tr>
+      <th scope="row">Date of Most Recent Balance</th>
+      <td>{{ data?.AccountBalanceDate | reportDate }}</td>
+      <th scope="row">Date of Last Activity</th>
+      <td>{{ data?.LastActivityDate | reportDate }}</td>
+    </tr>
+    <ng-container *ngIf="collectionsSet.indexOf(data?.CreditBusinessType) < 0">
+      <tr>
+        <th scope="row">Credit Limit</th>
+        <td>{{ data?.CreditLimitAmount | currency }}</td>
+        <th scope="row">Current Balance</th>
+        <td>{{ data?.UnpaidBalanceAmount | currency }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Manner of Payment</th>
+        <td>{{ data?.CURRENT_RATING.Type }}</td>
+        <th scope="row">High Credit</th>
+        <td>{{ data?.HighCreditAmount | currency }}</td>
+      </tr>
+    </ng-container>
+    <ng-container *ngIf="collectionsSet.indexOf(data?.CreditBusinessType) >= 0">
+      <tr>
+        <th scope="row">Credit Limit</th>
+        <td>{{ data?.CreditLimitAmount | currency }}</td>
+        <th scope="row">Manner of Payment</th>
+        <td>{{ data?.CURRENT_RATING.Type }}</td>
+      </tr>
+    </ng-container>
+    <tr>
+      <th scope="row">Account Status</th>
+      <td>{{ data?.AccountStatusType }}</td>
+      <th scope="row">Status Date</th>
+      <td>{{ data?.AccountStatusDate | reportDate }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Account Type</th>
+      <td>{{ data?.AccountType }}</td>
+      <th scope="row">Credit Type</th>
+      <td>{{ data?.CreditLoanType }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Number of Months Reviewed</th>
+      <td>{{ data?.MonthsReviewedCount }}</td>
+      <th scope="row">Monthly Payment Amount</th>
+      <td>{{ data?.MonthlyPaymentAmount }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Payment Pattern</th>
+      <td colspan="3">
+        <div>{{ data?.PAYMENT_PATTERN?.StartDate | reportDate }}</div>
+        <div>{{ data?.PAYMENT_PATTERN?.Data }}</div>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Number of 30 days late</th>
+      <td colspan="3">{{ data?.LATE_COUNT?.Days30 }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Number of 60 days late</th>
+      <td colspan="3">{{ data?.LATE_COUNT?.Days60 }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Number of 90 days late</th>
+      <td colspan="3">{{ data?.LATE_COUNT?.Days90 }}</td>
+    </tr>
+    <tr *ngIf="collectionsSet.indexOf(data?.CreditBusinessType) < 0">
+      <td><strong>Account Creditor Notes</strong></td>
+      <td colspan="3">
+        {{ data?.CREDIT_COMMENT }}
+      </td>
+    </tr>
+    <tr class="sub-heading">
+      <th colspan="4" class="center-text">Tradeline {{ index + 1 }} Derogatory
+        Information</th>
+    </tr>
+    <tr>
+      <th scope="row">Derogatory Data Indicator</th>
+      <td>{{ data?.DerogatoryDataIndicator }}</td>
+      <th scope="row">Past Due Amount</th>
+      <td>{{ data?.PastDueAmount | currency }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Repayment Terms Indicator</th>
+      <td>{{ data?.TermsSourceType }}</td>
+      <th scope="row">Repayment Terms</th>
+      <td>{{ data?.TermsDescription }}</td>
+    </tr>
+    <ng-container *ngIf="collectionsSet.indexOf(data?.CreditBusinessType) >= 0">
+    <tr>
+      <th scope="row">Collection Amount</th>
+      <td>{{ data?.HighCreditAmount | currency }}</td>
+      <th scope="row">Date Assigned to Collection</th>
+      <td>{{ data?.AccountReportedDate | reportDate:dateFormats.display.long }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Collection Balance</th>
+      <td>{{ data?.UnpaidBalanceAmount | currency }}</td>
+      <th scope="row">Collection Agency Subcode</th>
+      <td>{{ data?.SubscriberCode }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Collection Agency</th>
+      <td>{{ data?.CREDITOR?.Name }}</td>
+      <th scope="row">Status of Collection</th>
+      <td>{{ data?.AccountStatusType }}</td>
+    </tr>
+    <tr>
+      <th scope="row">Collection Agency Notes</th>
+      <td colspan="3">{{ data?.CREDIT_COMMENT }}</td>
+    </tr>
+    </ng-container>
+  </table>
+</app-layout-block>

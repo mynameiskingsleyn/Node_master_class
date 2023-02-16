@@ -1,0 +1,72 @@
+<mat-dialog-content style="padding: 20px;">
+  <ng-container>
+    <form (ngSubmit)="submitFilters()" [formGroup]="filtersForm">
+      <label>Date Range:</label>
+      <div fxLayout="row wrap" fxLayoutAlign="start center">
+        <mat-radio-group formControlName="date_range" style="padding: 20px;">
+          <mat-radio-button value="all">All</mat-radio-button>
+          <mat-radio-button value="yesterday">Past Day</mat-radio-button>
+          <mat-radio-button value="last-week">Past Week</mat-radio-button>
+          <mat-radio-button value="past-2weeks">Past 2 Weeks</mat-radio-button>
+          <mat-radio-button value="last-month">Past Month</mat-radio-button>
+          <mat-radio-button value="custom" fxFlex="grow"
+            >Custom Range</mat-radio-button
+          >
+        </mat-radio-group>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center" style="padding: 20px;">
+        <div
+          style="width:70%"
+          fxLayout="row"
+          fxLayoutAlign="space-around
+          center"
+        >
+          <mat-form-field fxFlex="40" appearance="outline">
+            <input
+              matInput
+              [matDatepicker]="startDatePicker"
+              placeholder="Start date"
+              formControlName="start_date"
+              (dateChange)="onDatesChange($event)"
+              (focus)="startDatePicker.open()"
+              [max]="endDate.value"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="startDatePicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #startDatePicker></mat-datepicker>
+          </mat-form-field>
+          <span fxFlex="10" style="text-align: center; justify-content: center">to</span>
+          <mat-form-field fxFlex="40" appearance="outline">
+            <input
+              matInput
+              [matDatepicker]="endDatePicker"
+              placeholder="End date"
+              formControlName="end_date"
+              (dateChange)="onDatesChange($event)"
+              (focus)="endDatePicker.open()"
+              [min]="startDate.value"
+            />
+            <mat-datepicker-toggle
+              matSuffix
+              [for]="endDatePicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #endDatePicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center center">
+        <button
+          mat-flat-button
+          color="primary"
+          class="submit-button"
+          type="submit"
+        >
+          Submit
+        </button>
+        <button mat-stroked-button type="reset">Clear Form</button>
+      </div>
+    </form>
+  </ng-container>
+</mat-dialog-content>

@@ -1,0 +1,625 @@
+<div [ngClass]="{'printable': printable}">
+  <h1 class="mat-title green-color">
+    {{ creditReport?.CreditBureau }} Credit Report
+    <ng-container *ngIf="creditReport?.ReportDate">
+        - {{ creditReport?.ReportDate | date:dateFormat }}
+    </ng-container>
+  </h1>
+  <mat-accordion displayMode="default" multi="true" hideToggle="true">
+      <app-layout-section title="New Report Section">
+        <table>
+            <tr>
+              <td>Name</td><td>Julio</td>
+            </tr>
+        </table>
+      </app-layout-section>
+      <app-layout-section title="New Report Section">
+        <table>
+            <tr>
+              <td>Name</td><td>Julio</td>
+            </tr>
+        </table>
+      </app-layout-section>
+      <mat-expansion-panel expanded="true" class="report-panel mat-elevation-z0" #crSubjectInfoPanel>
+          <mat-expansion-panel-header>
+              <mat-panel-title>
+                  <h3 fxFlex>
+                      <mat-icon *ngIf="!crSubjectInfoPanel.expanded" class="md-18">add_box</mat-icon>
+                      <mat-icon *ngIf="crSubjectInfoPanel.expanded" class="md-18">indeterminate_check_box</mat-icon> Individual Information
+                  </h3>
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-template #loader>
+            <div *ngIf="!printable" class="loading-box">
+              <div *ngIf="loading" class="loading-area">
+                <mat-spinner strokeWidth="2" diameter="100"></mat-spinner>
+              </div>
+            </div>
+          </ng-template>
+          <ng-container *ngTemplateOutlet="loader"></ng-container>
+          <table aria-describedby="SubjectInformation" *ngIf="report?.SubjectInformation">
+              <tr>
+                  <td class="table-header">Name</td>
+                  <td>
+                      {{ report?.SubjectInformation?.Name?.First }}
+                      {{ report?.SubjectInformation?.Name?.Last }}
+                  </td>
+                  <td class="table-header">Residence</td>
+                  <td>
+                    {{ report?.SubjectInformation?.Address?.StreetAddress1 }}
+                  </td>
+              </tr>
+              <tr>
+                  <td class="table-header">Social Security Number</td>
+                  <td>{{ report?.SubjectInformation?.SSN }}</td>
+                  <td class="table-header">Address 2</td>
+                  <td>
+                    {{ report?.SubjectInformation?.Address?.StreetAddress2 }}
+                  </td>
+              </tr>
+              <tr>
+                  <td class="table-header">Date of Birth</td>
+                  <td>{{ report?.SubjectInformation?.DOB?.Month }}/{{ report?.SubjectInformation?.DOB?.Day }}/{{ report?.SubjectInformation?.DOB?.Year }}</td>
+                  <td class="table-header">City</td>
+                  <td>{{ report?.SubjectInformation?.Address?.City }}</td>
+
+              </tr>
+              <tr>
+                  <td class="table-header">Unique ID</td>
+                  <td>{{ report?.SubjectEcho?.SubjectId }}</td>
+                  <td class="table-header">State</td>
+                  <td>{{ report?.SubjectInformation?.Address?.State }}</td>
+              </tr>
+              <tr>
+                  <td class="table-header">LexID</td>
+                  <td>{{ report?.SubjectEcho?.Lexid }}</td>
+                  <td class="table-header">Zip Code</td>
+                  <td>{{ report?.SubjectInformation?.Address?.Zip5 }}</td>
+              </tr>
+              <tr *ngIf="!hideAgencyNotes">
+                <td class="table-header">Agency Notes</td>
+                <td colspan="3">{{ creditReport?.Notes }}</td>
+              </tr>
+          </table>
+      </mat-expansion-panel>
+      <mat-expansion-panel [expanded]="expanded" class="report-panel mat-elevation-z0" #crSubjectHeaderPanel hideToggle="true">
+          <mat-expansion-panel-header>
+              <mat-panel-title>
+                  <h3 fxFlex>
+                      <mat-icon *ngIf="!crSubjectHeaderPanel.expanded" class="md-18">add_box</mat-icon>
+                      <mat-icon *ngIf="crSubjectHeaderPanel.expanded" class="md-18">indeterminate_check_box</mat-icon> Individual Header
+                  </h3>
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-container *ngTemplateOutlet="loader"></ng-container>
+          <table aria-describedby="creditReport" *ngIf="creditReport">
+              <tr>
+                  <td class="table-header">Name (from Credit Bureau)</td>
+                  <td colspan="3">
+                      <div *ngFor="let creditFile of creditReport?.CreditFile; let i = index">
+                          <p>{{ creditFile?.Borrower?.UnparsedName }} ({{ creditFile?.SourceType }})</p>
+                      </div>
+                  </td>
+              </tr>
+              <tr>
+                <td class="table-header">Alias</td>
+                <td colspan="3">
+                    <table *ngIf="creditReport?.CreditFile" aria-describedby="nameAliases">
+                      <tr>
+                        <th scope="row">First Name</th>
+                        <th scope="row">Middle Name</th>
+                        <th scope="row">Last Name</th>
+                      </tr>
+                      <ng-container *ngFor="let creditFile of creditReport?.CreditFile; let i = index">
+                        <tr *ngFor="let alias of creditFile?.Borrower?.Aliases; let i = index">
+                          <td>{{ alias?.FirstName }}</td>
+                          <td>{{ alias?.MiddleName }}</td>
+                          <td>{{ alias?.LastName }}</td>
+                        </tr>
+                      </ng-container>
+                    </table>
+                </td>
+              </tr>
+              <tr>
+                  <td class="table-header">Social Security Number</td>
+                  <td colspan="3">{{ creditReport?.BorrowerSubject?.SSN }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Residence</td>
+                <td colspan="3">
+                  <div *ngFor="let residence of creditReport?.BorrowerSubject?.Residence; let i = index">
+                    <p *ngIf="residence?.Location === 'Residence'">{{ residence?.StreetAddress }}, {{ residence?.City }}, {{ residence?.State }} {{ residence?.PostalCode }}</p>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                  <td class="table-header">PO ID</td>
+                  <td colspan="3">{{ creditReport?.PoID }}</td>
+              </tr>
+              <tr>
+                  <td class="table-header">Case Number</td>
+                  <td colspan="3">{{ creditReport?.CaseNumber }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Date Report Processed</td>
+                <td colspan="3">{{ creditReport?.DateReportProcessed | reportDate:longFormat }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Time Report Processed</td>
+                <td colspan="3">{{ creditReport?.TimeReportProcessed }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">TMS Score (overall)</td>
+                <td colspan="3">{{ creditReport?.Keys?.TMS_SCORE || 'X' }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Highest Tradeline TMS Score</td>
+                <td colspan="3">{{ creditReport?.Keys?.HIGHEST_RATING_ON_ANY_TRADE || 'X' }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Number of Trades with Highest TMS Score</td>
+                <td colspan="3">{{ creditReport?.Keys?.NUMBER_OF_TRADES_WITH_HIGHEST_RATING || 'X' }}</td>
+              </tr>
+              <ng-container *ngIf="!showSmallNoRecordReport()">
+              <tr>
+                  <td class="table-header">B01 - Hit(0), No Hit(1)</td>
+                  <td>{{ creditReport?.Keys?.B01 || 'X' }}</td>
+                  <td class="table-header">Reports Combined</td>
+                  <td>{{ creditReport?.ReportsCombined }}</td>
+              </tr>
+              <tr>
+                  <td class="table-header">B02 - Number of Unrated Tradelines</td>
+                  <td>{{ creditReport?.Keys?.B02 || 'X' }}</td>
+                  <td class="table-header">Is there a Bankruptcy?</td>
+                  <td>{{ creditReport?.Keys?.PUBLIC_RECORD_INFORMATION_PROVIDERS ? 'YES' : 'NO' }}</td>
+              </tr>
+              <tr>
+                  <td class="table-header">B03 - Number of Unclassified Tradelines</td>
+                  <td>{{ creditReport?.Keys?.B03 || 'X' }}</td>
+                  <td class="table-header">Total Credit Limit of All Tradelines</td>
+                  <td>{{ creditReport?.Keys?.TRADELINE_TOTAL_CREDIT_LIMIT | currency }}</td>
+              </tr>
+              <tr>
+                  <td class="table-header">B04 - Number of Too-New-To-Rate Tradelines</td>
+                  <td>{{ creditReport?.Keys?.B04 || 'X' }}</td>
+                  <td class="table-header">Total Balance of All Tradelines</td>
+                  <td>{{ creditReport?.Keys?.TRADELINE_TOTAL_BALANCE | currency }}</td>
+              </tr>
+              <tr>
+                  <td class="table-header">B05 - Number of Paying As Agreed</td>
+                  <td>{{ creditReport?.Keys?.B05 || 'X' }}</td>
+                  <td class="table-header">Total High Credit of All Tradelines</td>
+                  <td>{{ creditReport?.Keys?.TRADELINE_TOTAL_HIGH_CREDIT | currency }}</td>
+              </tr>
+              <tr>
+                  <td class="table-header">B06 - Number of Worst Rating Ever R2</td>
+                  <td>{{ creditReport?.Keys?.B06 || 'X' }}</td>
+                  <td class="table-header">Total Past Due from All Tradelines</td>
+                  <td>{{ creditReport?.Keys?.TRADELINE_TOTAL_PAST_DUE | currency }}</td>
+              </tr>
+              <tr>
+                  <td class="table-header">B07 - Number of Worst Rating Ever R3</td>
+                  <td>{{ creditReport?.Keys?.B07 || 'X' }}</td>
+                  <td class="table-header">Total Number of Derogatory Tradelines</td>
+                  <td>{{ creditReport?.Keys?.DEROGATORY_TRADELINE_TOTAL_TRADELINES_USED }}</td>
+              </tr>
+              <tr>
+                  <td class="table-header">B08 - Number of Worst Rating Ever R4</td>
+                  <td>{{ creditReport?.Keys?.B08 || 'X' }}</td>
+                  <td class="table-header">Total Credit Limit of All Derogatory Tradelines</td>
+                  <td>{{ creditReport?.Keys?.DEROGATORY_TRADELINE_TOTAL_CREDIT_LIMIT | currency }}</td>
+              </tr>
+              <tr>
+                  <td class="table-header">B09 - Number of Worst Rating Ever R5</td>
+                  <td>{{ creditReport?.Keys?.B09 || 'X' }}</td>
+                  <td class="table-header">Total Balance of All Derogatory Tradelines</td>
+                  <td>{{ creditReport?.Keys?.DEROGATORY_TRADELINE_TOTAL_BALANCE | currency }}</td>
+              </tr>
+              <tr>
+                  <td class="table-header">B10 - Paid Derogatory Public Records or Tradelines</td>
+                  <td>{{ creditReport?.Keys?.B10 || 'X' }}</td>
+                  <td class="table-header">Total High Credit of All Derogatory Tradelines</td>
+                  <td>{{ creditReport?.Keys?.DEROGATORY_TRADELINE_TOTAL_HIGH_CREDIT | currency }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">B11 - Number of Chapter 13 and R7 Not Paid</td>
+                <td>{{ creditReport?.Keys?.B11 || 'X' }}</td>
+                <td class="table-header">Total Past Due on All Derogatory Tradelines</td>
+                <td>{{ creditReport?.Keys?.DEROGATORY_TRADELINE_TOTAL_PAST_DUE | currency }}</td>
+              </tr>
+              <tr>
+                  <td class="table-header">B12 - Number of Repossessions Not Paid</td>
+                  <td>{{ creditReport?.Keys?.B12 || 'X' }}</td>
+                  <td class="table-header">Total Number of Non-Derogatory Tradelines</td>
+                  <td>{{ creditReport?.Keys?.TRADELINE_TOTAL_TRADELINES_USED }}</td>
+              </tr>
+              <tr>
+                  <td class="table-header">B13 - Derogatory Public Record, R9, Collection Not Paid</td>
+                  <td>{{ creditReport?.Keys?.B13 || 'X' }}</td>
+                  <td class="table-header">Credit Utilization Percentage</td>
+                  <td>{{ creditReport?.CreditPercentUtilization | number }}%</td>
+              </tr>
+              <tr>
+                  <td class="table-header">B14 - Number of Tradelines Added Manually</td>
+                  <td>{{ creditReport?.Keys?.B14 || 'X' }}</td>
+                  <td class="table-header">Total Payment Amount</td>
+                  <td>{{ creditReport?.TotalPaymentAmount | currency }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">B15 - Number of Tradelines</td>
+                <td>{{ creditReport?.Keys?.B15 || 'X' }}</td>
+                <td class="table-header">Date of First Tradeline</td>
+                <td>{{ creditReport?.DateofFirstTradeline | reportDate:longFormat }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">B16 - Number of Inquiries</td>
+                <td>{{ creditReport?.Keys?.B16 || 'X' }}</td>
+                <td class="table-header">Date of Last Tradeline Activity</td>
+                <td>{{ creditReport?.DateofLastTradelineActivity | reportDate:longFormat }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">B17 - Total Current Balance</td>
+                <td>{{ creditReport?.Keys?.B17 || 'X' }}</td>
+                <td colspan="2" rowspan="2">
+                  <div><strong>Tradeline Type Summary:</strong></div>
+                  <ul>
+                      <li>Installment: {{ creditReport?.TradesInstallment }}</li>
+                      <li>Revolving: {{ creditReport?.TradesRevolving }}</li>
+                      <li>Mortgage: {{ creditReport?.TradesMortgage }}</li>
+                      <li>Other: {{ creditReport?.TradesOther }}</li>
+                  </ul>
+                </td>
+              </tr>
+              <tr>
+                <td class="table-header">B27 - Balance of Tradelines with Maximum Derogatory>R3</td>
+                <td>{{ creditReport?.Keys?.B27 || 'X' }}</td>
+              </tr>
+            </ng-container>
+          </table>
+      </mat-expansion-panel>
+      <ng-container *ngIf="!showSmallNoRecordReport()">
+      <mat-expansion-panel [expanded]="expanded" class="report-panel mat-elevation-z0" #crCreditFilePanel hideToggle="true" *ngIf="creditReport?.CreditFile">
+          <mat-expansion-panel-header>
+              <mat-panel-title>
+                  <h3 fxFlex>
+                      <mat-icon *ngIf="!crCreditFilePanel.expanded" class="md-18">add_box</mat-icon>
+                      <mat-icon *ngIf="crCreditFilePanel.expanded" class="md-18">indeterminate_check_box</mat-icon> Credit File Information
+                  </h3>
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-container *ngTemplateOutlet="loader"></ng-container>
+          <ng-container *ngIf="creditReport?.CreditFile">
+          <table aria-describedby="CreditFile" *ngFor="let creditFile of creditReport?.CreditFile; let i = index" class="five-cols">
+              <tr>
+                  <td class="table-header">Name</td>
+                  <td>{{ creditFile?.Borrower?.UnparsedName }}</td>
+                  <td>{{ creditFile?.SourceType }}</td>
+                  <td class="table-header">Number of Credit Bureaus Hit</td>
+                  <td>{{ creditReport?.ReportsCombined }}</td>
+              </tr>
+              <tr>
+                <td class="table-header">Social Security Number</td>
+                <td>{{ creditFile?.Borrower?.SSN }}</td>
+                <td>{{ creditFile?.SourceType }}</td>
+                <td class="table-header">Total Number of Trades in Report </td>
+                <td>{{ creditReport?.Keys?.TRADELINE_TOTAL_TRADELINES_USED }}</td>
+              </tr>
+              <tr>
+                  <td class="table-header">Date of Birth</td>
+                  <td>{{ creditFile?.Borrower?.BirthDate }}</td>
+                  <td>{{ creditFile?.SourceType }}</td>
+                  <td class="table-header">Reported Monthly Income</td>
+                  <td></td>
+              </tr>
+              <tr>
+                  <td colspan="5" class="table-header">Consumer Address</td>
+              </tr>
+              <tr *ngFor="let address of creditFile?.Borrower?.Residence; let i = index">
+                <td class="table-header">
+                  <span *ngIf="address?.BorrowerResidencyType === 'Current'">Current Residence</span>
+                  <span *ngIf="address?.BorrowerResidencyType === 'Prior'">Previous Residence</span>
+                </td>
+                <td >{{ address?.StreetAddress }} {{ address?.City }}, {{ address?.State }} {{ address?.PostalCode }}</td>
+                <td>{{ creditFile?.SourceType }}</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+              </tr>
+              <tr>
+                <td colspan="5">
+                  <table aria-describedby="UnparsedEmployment" *ngIf="creditFile?.Borrower?.Employer">
+                    <tr>
+                        <td class="table-header" colspan="4">Employment</td>
+                    </tr>
+                    <ng-container *ngFor="let employer of creditFile?.Borrower?.Employer; let i = index">
+                      <tr>
+                          <td class="table-header">
+                            <span *ngIf="employer?.EmploymentCurrentIndicator === 'Y'"><strong>Current Employer (Name, Address, Date Reported)</strong></span>
+                            <span *ngIf="employer?.EmploymentCurrentIndicator === 'N'"><strong>Previous Employer (Name, Address, Date Reported)</strong></span>
+                          </td>
+                          <td colspan="3">{{ employer?.Name }}</td>
+                      </tr>
+                      <tr>
+                        <td class="table-header">Date Employment Verified</td>
+                        <td>{{ employer?.EmploymentReportedDate | reportDate:longFormat }}</td>
+                        <td [ngClass]="{'table-header' : employer?.EmploymentCurrentIndicator === 'N'}"><span *ngIf="employer?.EmploymentCurrentIndicator === 'N'">Date Individual Left Employer</span></td>
+                        <td><span *ngIf="employer?.EmploymentCurrentIndicator === 'N'"></span></td>
+                      </tr>
+                    </ng-container>
+                  </table>
+                </td>
+              </tr>
+          </table>
+          </ng-container>
+
+      </mat-expansion-panel>
+      <mat-expansion-panel [expanded]="expanded" class="report-panel mat-elevation-z0" #crTradesPanel hideToggle="true" *ngIf="creditReport?.Trades">
+          <mat-expansion-panel-header>
+              <mat-panel-title>
+                  <h3 fxFlex>
+                      <mat-icon *ngIf="!crTradesPanel.expanded" class="md-18">add_box</mat-icon>
+                      <mat-icon *ngIf="crTradesPanel.expanded" class="md-18">indeterminate_check_box</mat-icon> Trades
+                  </h3>
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-container *ngTemplateOutlet="loader"></ng-container>
+          <div>
+              <table *ngIf="creditReport?.Trades" class="flexible-width" aria-describedby="creditReportTrades">
+                  <ng-container *ngFor="let trade of creditReport?.Trades; let i = index">
+                      <tr class="sub-heading">
+                        <th colspan="5" class="center-text">Tradeline {{ i + 1 }}</th>
+                      </tr>
+                      <tr>
+                        <td class="table-header">Creditor Name</td>
+                        <td>{{ trade?.CREDITOR?.Name }}</td>
+                        <td class="table-header">Tradeline TMS Score</td>
+                        <td>{{ trade?.CURRENT_RATING?.Code }}</td>
+                      </tr>
+                      <tr>
+                        <td class="table-header">Creditor Address</td>
+                        <td colspan="3">
+                          <div *ngIf="trade?.CREDITOR?.StreetAddress">
+                            {{ trade?.CREDITOR?.StreetAddress }}<br>
+                            {{ trade?.CREDITOR?.City }}, {{ trade?.CREDITOR?.State }} {{ trade?.CREDITOR?.PostalCode }}<br>
+                            <div *ngIf="trade?.CONTACT_POINT?.Phones"><strong>Phone:</strong> {{ trade?.CONTACT_POINT?.Phones }}</div>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="table-header">Subscriber Code</td>
+                        <td colspan="3">{{ trade?.SubscriberCode }}</td>
+                      </tr>
+                      <tr>
+                        <td class="table-header">Kind of Business</td>
+                        <td colspan="3">{{ trade?.CreditBusinessType }}</td>
+                      </tr>
+                      <tr>
+                        <td class="table-header">Account Number</td>
+                        <td colspan="3"><span *ngIf="trade?.AccountIdentifier">{{ trade?.AccountIdentifier }}<br></span></td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Account Ownership Type</th>
+                        <td colspan="3">{{ trade?.AccountOwnershipType }}</td>
+                      </tr>
+                      <tr>
+                        <td class="table-header">Borrower ID</td>
+                        <td colspan="3">{{ trade?.BorrowerID }}</td>
+                      </tr>
+                      <tr>
+                        <td class="table-header">Source Bureau(s)</td>
+                        <td colspan="3">{{ trade?.SourceBureaus }}</td>
+                      </tr>
+                      <tr class="sub-heading">
+                        <th colspan="5" class="center-text">Tradeline {{ i + 1 }} Specifics</th>
+                      </tr>
+                      <tr class="sub-heading">
+                        <th scope="row">Date Account Opened</th>
+                        <td>{{ trade?.AccountOpenedDate | reportDate }}</td>
+                        <th scope="row">Date Account Last Reported</th>
+                        <td>{{ trade?.AccountReportedDate | reportDate }}</td>
+                      </tr>
+                      <tr>
+                          <th scope="row">Date of Most Recent Balance</th>
+                          <td>{{ trade?.AccountBalanceDate | reportDate }}</td>
+                          <th scope="row">Date of Last Activity</th>
+                          <td>{{ trade?.LastActivityDate | reportDate }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Credit Limit</th>
+                        <td>{{ trade?.CreditLimitAmount | currency }}</td>
+                        <th scope="row">Current Balance</th>
+                        <td>{{ trade?.UnpaidBalanceAmount | currency }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Manner of Payment</th>
+                        <td>{{ trade?.CURRENT_RATING.Type }}</td>
+                        <th scope="row">High Credit</th>
+                        <td>{{ trade?.HighCreditAmount | currency }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Account Status</th>
+                        <td>{{ trade?.AccountStatusType }}</td>
+                        <th scope="row">Status Date</th>
+                        <td>{{ trade?.AccountStatusDate | reportDate }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Account Type</th>
+                        <td>{{ trade?.AccountType }}</td>
+                        <th scope="row">Credit Type</th>
+                        <td>{{ trade?.CreditLoanType | reportDate }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Number of Months Reviewed</th>
+                        <td>{{ trade?.MonthsReviewedCount }}</td>
+                        <th scope="row">Monthly Payment Amount</th>
+                        <td>{{ trade?.MonthlyPaymentAmount }}</td>
+                     </tr>
+                      <tr>
+                        <th scope="row">Payment Pattern</th>
+                        <td colspan="3">
+                          <div>{{ trade?.PAYMENT_PATTERN?.StartDate | reportDate }}</div>
+                          <div class="strict-length">{{ trade?.PAYMENT_PATTERN?.Data }}</div>
+                        </td>
+                      </tr>
+                      <tr class="sub-heading">
+                          <th scope="row">Number of 30 days late</th>
+                          <td colspan="3">{{ trade?.LATE_COUNT?.Days30 }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Number of 60 days late</th>
+                        <td colspan="3">{{ trade?.LATE_COUNT?.Days60 }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Number of 90 days late</th>
+                        <td colspan="3">{{ trade?.LATE_COUNT?.Days90 }}</td>
+                      </tr>
+                      <tr>
+                        <td><strong>Account Creditor Notes</strong></td>
+                        <td  colspan="3">
+                          {{ trade?.CREDIT_COMMENT }}
+                        </td>
+                      </tr>
+                      <tr class="sub-heading">
+                        <th colspan="5" class="center-text">Tradeline {{ i + 1 }} Derogatory Information</th>
+                      </tr>
+                      <tr>
+                        <th scope="row">Derogatory Data Indicator</th>
+                        <td>{{ trade?.DerogatoryDataIndicator }}</td>
+                        <th scope="row">Past Due Amount</th>
+                        <td>{{ trade?.PastDueAmount | currency }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Repayment Terms Indicator</th>
+                        <td>{{ trade?.TermsSourceType }}</td>
+                        <th scope="row">Repayment Terms</th>
+                        <td>{{ trade?.TermsDescription }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Collection Amount</th>
+                        <td>{{ trade?.HighCreditAmount }}</td>
+                        <th scope="row">Date Assigned to Collection</th>
+                        <td>{{ trade?.AccountReportedDate | reportDate:longFormat }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Collection Balance</th>
+                        <td>{{ trade?.UnpaidBalanceAmount }}</td>
+                        <th scope="row">Collection Agency Subcode</th>
+                        <td>{{ trade?.SubscriberCode }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Collection Agency</th>
+                        <td>{{ trade?.CREDITOR?.Name }}</td>
+                        <th scope="row">Status of Collection</th>
+                        <td>{{ trade?.AccountStatusType }}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Collection Agency Notes</th>
+                        <td colspan="3">{{ trade?.CREDIT_COMMENT }}</td>
+                      </tr>
+                  </ng-container>
+              </table>
+          </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel [expanded]="expanded" class="report-panel mat-elevation-z0" #crInquiryPanel hideToggle="true" *ngIf="creditReport?.Inquiries">
+          <mat-expansion-panel-header>
+              <mat-panel-title>
+                  <h3 fxFlex>
+                      <mat-icon *ngIf="!crInquiryPanel.expanded" class="md-18">add_box</mat-icon>
+                      <mat-icon *ngIf="crInquiryPanel.expanded" class="md-18">indeterminate_check_box</mat-icon> Inquiry History
+                  </h3>
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-container *ngTemplateOutlet="loader"></ng-container>
+          <div>
+              <table aria-describedby="Inquiries" *ngIf="creditReport?.Inquiries">
+                  <tr>
+                    <th scope="row">Number of Inquiries</th>
+                    <td>{{ creditReport?.NumberInquiries }}</td>
+                    <td colspan="2"></td>
+                  </tr>
+                  <tr>
+                      <th scope="row">Credit Subscriber Name</th>
+                      <th scope="row">Kind of Business</th>
+                      <th scope="row">Subscriber Number</th>
+                      <th scope="row">Date</th>
+                      <th scope="row">Credit Bureau Code</th>
+                  </tr>
+                  <tr *ngFor="let inquiry of creditReport?.Inquiries; let i = index">
+                      <td>{{ inquiry?.Name }}</td>
+                      <td>{{ inquiry?.BusinessType }}</td>
+                      <td>{{ inquiry?.BorrowerID }}</td>
+                      <td>{{ inquiry?.Date | reportDate:longFormat }}</td>
+                      <td>{{ inquiry?.SubscriberCode }}</td>
+                  </tr>
+              </table>
+          </div>
+      </mat-expansion-panel>
+      <mat-expansion-panel [expanded]="expanded" class="report-panel mat-elevation-z0" #crPublicRecordsPanel hideToggle="true" *ngIf="creditReport?.PublicRecords">
+          <mat-expansion-panel-header>
+              <mat-panel-title>
+                  <h3 fxFlex>
+                      <mat-icon *ngIf="!crPublicRecordsPanel.expanded" class="md-18">add_box</mat-icon>
+                      <mat-icon *ngIf="crPublicRecordsPanel.expanded" class="md-18">indeterminate_check_box</mat-icon> Public Records
+                  </h3>
+              </mat-panel-title>
+          </mat-expansion-panel-header>
+          <ng-container *ngTemplateOutlet="loader"></ng-container>
+          <div *ngIf="creditReport?.PublicRecords">
+              <table aria-describedby="PublicRecords" *ngFor="let record of creditReport?.PublicRecords; let i = index" class="table-divider">
+                      <tr>
+                          <td class="table-header">Court Code/Name</td>
+                          <td>{{ record?.CourtName }}</td>
+                          <td class="table-header">Case Number</td>
+                          <td>{{ record?.CaseNumber }}</td>
+                      </tr>
+                      <tr>
+                          <td class="table-header">Court Address</td>
+                          <td>{{ record?.Address }}</td>
+                          <td class="table-header">Account Ownership Type</td>
+                          <td>{{ record?.AccountOwnershipType }}</td>
+                      </tr>
+                      <tr>
+                          <td class="table-header">Bankruptcy Type</td>
+                          <td>{{ record?.Type }}</td>
+                          <td class="table-header">Chapter 13 Bankruptcy?</td>
+                          <td>{{ record?.Chapter13Bankruptcy }}</td>
+
+                      </tr>
+                      <tr>
+                          <td class="table-header">Date Filed</td>
+                          <td>{{ record?.FiledDate | reportDate:longFormat }}</td>
+                          <td colspan="2"></td>
+                      </tr>
+                      <tr>
+                          <td class="table-header">Amount</td>
+                          <td>{{ record?.LegalObligationAmount }}</td>
+
+                      </tr>
+                      <tr>
+                          <td class="table-header">Discharge Date</td>
+                          <td>{{ record?.AccountPaidDate | reportDate:longFormat }}</td>
+                          <td class="table-header">Disposition</td>
+                          <td>{{ record?.DispositionType }}</td>
+                      </tr>
+                      <tr>
+                          <td class="table-header">Bankruptcy Assets Value</td>
+                          <td>{{ record?.BankruptcyAssetsAmount }}</td>
+                          <td class="table-header">Bankruptcy Liabilities Value</td>
+                          <td>{{ record?.BankruptcyLiabilitiesAmount }}</td>
+                      </tr>
+                      <tr>
+                          <td class="table-header">Borrower ID</td>
+                          <td>{{ record?.BorrowerID }}</td>
+                          <td colspan="2"></td>
+                      </tr>
+                      <tr>
+                        <td class="table-header">Remarks</td>
+                        <td>{{ record?.BankruptcyAssetsAmount }}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+              </table>
+          </div>
+      </mat-expansion-panel>
+    </ng-container>
+  </mat-accordion>
+  </div>

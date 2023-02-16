@@ -1,0 +1,19 @@
+<ng-container *ngIf="authActions">
+    <div fxLayout="row" class="auth-links">
+        <button mat-button class="link" type="button" [routerLink]="[ACL.AUTH_CHANGE_PASSWORD, []]">Reset Password</button>
+        <div fxFlex></div>
+        <button mat-button class="link" type="button" [routerLink]="[ACL.AUTH_HELP, []]">Help & Support</button>
+    </div>
+</ng-container>
+<ng-container *ngIf="passwordResetActions">
+    <div fxLayout="row" fxLayoutAlign="center" class="auth-links">
+        <button mat-button class="link" type="button" [routerLink]="[ACL.AUTH_LOGIN, []]">Return to User Login</button>
+    </div>
+</ng-container>
+<ng-container *ngIf="helpActions">
+    <div fxLayout="row" class="auth-links">
+        <button mat-button class="link" type="button" [routerLink]="[ACL.AUTH_LOGIN, []]">Sign In</button>
+        <div fxFlex></div>
+        <button mat-button class="link" type="button" [routerLink]="[ACL.AUTH_CHANGE_PASSWORD, []]">Reset Password</button>
+    </div>
+</ng-container>

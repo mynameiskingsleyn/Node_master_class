@@ -1,0 +1,30 @@
+<mat-menu #notificationsMenu="matMenu" yPosition="above" xPosition="before">
+    <ng-template matMenuContent>
+        <mat-list>
+            <mat-list-item>
+               <a matLine>Notification message here, click to read...</a>
+               <button mat-icon-button>
+                  <mat-icon>delete</mat-icon>
+               </button>
+            </mat-list-item>
+            <mat-list-item>
+                <a matLine>Notification message here, click to read...</a>
+                <button mat-icon-button>
+                   <mat-icon>delete</mat-icon>
+                </button>
+             </mat-list-item>
+              <mat-list-item>
+                <a matLine>Notification message here, click to read...</a>
+                <button mat-icon-button>
+                   <mat-icon>delete</mat-icon>
+                </button>
+             </mat-list-item>
+          </mat-list>
+    </ng-template>
+</mat-menu>
+
+<button class="pad-icon" mat-icon-button>
+    <mat-icon matBadge="1" matBadgeColor="accent"
+    matBadgeSize="medium"  matBadgePosition="above after"
+    [matMenuTriggerFor]="notificationsMenu">notifications</mat-icon>
+</button>

@@ -1,0 +1,35 @@
+<div class="notes-dialog">
+  <div fxLayout="column" fxLayoutAlign="stretch">
+    <div fxLayout="row">
+      <h3 fxFlex mat-dialog-title>{{data.title}}</h3>
+      <div fxFlex></div>
+      <div fxFlexAlign="center end">
+        <button mat-icon-button mat-dialog-close color="primary">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-dialog-content class="mat-typography" appFocusElement>
+      <div>
+        <strong>{{ data?.report?.name_last}}, {{ data?.report?.name_first}}</strong><br>
+        {{ getReportTitle() }} - {{ getReportDate() | date:'MM/dd/yyyy hh:mm a' }}
+      </div>
+      <form class="full-width" [formGroup]="agencyNotesForm" (ngSubmit)="onSubmit()">
+        <mat-form-field class="full-width" appearance="outline">
+          <mat-label>Note</mat-label>
+          <textarea matInput placeholder="" formControlName="note" [maxlength]="maxLength" row="2"></textarea>
+          <mat-hint *ngIf="notes">{{ remainingChars() }}</mat-hint>
+        </mat-form-field>
+      </form>
+    </mat-dialog-content>
+    <mat-divider></mat-divider>
+    <mat-dialog-actions fxLayout="row" fxLayoutGap="10px" fxLayoutAlign="end" fxFlex>
+        <button mat-flat-button color="primary" class="submit-button" type="submit" [disabled]="!agencyNotesForm.valid || submitting" (click)="submitAddNote()">
+          <mat-icon *ngIf="submitting"><mat-spinner diameter="20"
+            mode="indeterminate"></mat-spinner></mat-icon>
+          Submit</button>
+        <button mat-stroked-button type="button" [disabled]="submitting" (click)="cancel()">Cancel</button>
+    </mat-dialog-actions>
+  </div>
+</div>

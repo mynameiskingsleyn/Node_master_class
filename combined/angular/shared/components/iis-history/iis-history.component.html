@@ -1,0 +1,57 @@
+<div class="iis-history-container">
+    <ng-container>
+        <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z0 full-width-table"
+            aria-label="History Reports" aria-describedby="History Reports" multiTemplateDataRows [trackBy]="trackBy">
+
+            <ng-container matColumnDef="triggered_space">
+              <td mat-cell *matCellDef="let element">&nbsp;</td>
+            </ng-container>
+
+            <ng-container matColumnDef="lexid">
+              <td mat-cell *matCellDef="let element">LexId: {{element.lexid}}</td>
+            </ng-container>
+
+            <ng-container *canAccess="[permissions.publicRecordsFcraEnabled]" matColumnDef="public_record">
+                <td mat-cell *matCellDef="let element">
+                  <button class="link" [routerLink]="[reportView(element.output_type, element)]" *ngIf="element.status!==reportStatus.NO_RECORD && element.output_type ==='PR'">
+                    {{ element.date_added | date:'MM/dd/yyyy' }}
+                  </button>
+                  <a href="#" (click)="crNoRecord(element, $event)" *ngIf="element.status===reportStatus.NO_RECORD && element.output_type ==='PR'">{{ element.date_added | date:'MM/dd/yyyy' }}</a>
+                  <br>
+                  <span *ngIf="element.status && element.output_type ==='PR'">{{ element.status }}</span>
+                  <span *ngIf="!element.status && element.output_type !=='PR'">&nbsp;</span>
+                </td>
+            </ng-container>
+
+            <ng-container *canAccess="[permissions.creditReportEnabled]" matColumnDef="credit_record">
+              <td mat-cell *matCellDef="let element">
+                <button class="link" [routerLink]="[reportView(element.output_type, element)]" *ngIf="element.status!==reportStatus.NO_RECORD && element.output_type ==='CR'">
+                  {{ element.date_added | date:'MM/dd/yyyy' }}
+                </button>
+                <a href="#" (click)="crNoRecord(element, $event)" *ngIf="element.status===reportStatus.NO_RECORD && element.output_type ==='CR'">{{ element.date_added | date:'MM/dd/yyyy' }}</a>
+                <br>
+                <span *ngIf="element.status && element.output_type ==='CR'">{{ element.status }}</span>
+                <span *ngIf="!element.status && element.output_type !=='CR'">&nbsp;</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="combined_record">
+              <td mat-cell *matCellDef="let element">
+                <span>&nbsp;</span></td>
+            </ng-container>
+
+            <ng-container matColumnDef="action_space">
+              <td mat-cell *matCellDef="let element">
+                <span>&nbsp;</span>
+              </td>
+            </ng-container>
+
+            <!-- <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr> -->
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+        <div  class="progress-space">
+          <mat-progress-bar *ngIf="!loaded" mode="indeterminate"></mat-progress-bar>
+        </div>
+    </ng-container>
+</div>

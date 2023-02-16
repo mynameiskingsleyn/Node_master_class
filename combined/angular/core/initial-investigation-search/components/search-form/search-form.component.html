@@ -1,0 +1,31 @@
+<div class="iis-form-page">
+  <div class="page-label">
+      {{pageLabel}}
+  </div>
+  <div fxLayout="row" class="iis-form-section">
+    <div fxLayout="column" [fxFlex]="formSpan">
+      <div>
+        <!-- Search Panel -->
+        <ng-container *ngIf="resultSearch === 'FAIL' || resultSearch === ''">
+            <div style="padding:0 5px 0 5px; margin-right:10px;">
+                <app-advanced-search-form (loaded)="loadedActions($event)" [actions]="searchActions"
+                [filters]="fields" [progress]="loading" [columns]="gridColumns" [gutterSize]="gutterSize"
+                [rowHeight]="rowHeight" [elevation]="elevation"></app-advanced-search-form>
+              </div>
+            </ng-container>
+        <!-- End Search Panel -->
+      </div>
+    </div>
+  </div>
+
+  <div fxLayout="row">
+    <div fxLayout="column" [fxFlex]="resultSpan" *ngIf="!showEnroll">
+      <!-- Reports Panel -->
+      <ng-container *ngIf="resultsLoaded">
+          <app-results [results]="results"></app-results>
+      </ng-container>
+      <!-- End Reports Panel -->
+    </div>
+
+  </div>
+</div>

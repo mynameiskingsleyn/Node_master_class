@@ -1,0 +1,16 @@
+<mat-dialog-content>
+    <ng-container *ngIf="showEnrollMsg">
+        <p>The individual was not found in the monitoring system.</p>
+        <p>Would you like to enroll them?</p>
+    </ng-container>
+    <ng-container *ngIf="!showEnrollMsg">
+        <p>No report history was not found for this individual.</p>
+        <p>Would you like to process new reports?</p>
+    </ng-container>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center" fxFlex>
+        <button mat-flat-button color="primary" type="submit" (click)="confirmToEnroll()">Yes</button>
+        <button mat-stroked-button type="button" (click)="cancelDialog()">Cancel</button>
+    </div>
+</mat-dialog-actions>

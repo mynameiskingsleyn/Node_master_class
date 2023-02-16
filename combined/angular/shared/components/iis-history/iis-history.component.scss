@@ -1,0 +1,38 @@
+// variables
+$iis-table-border-color: #666666 !default;
+
+.iis-history-container {
+  border-top: 1px solid $iis-table-border-color;
+  border-bottom: none;
+  background-color: #ffffec;
+  table {
+    background-color: transparent;
+    td.mat-cell:first-of-type {
+      border-left: 1px solid $iis-table-border-color;
+    }
+  }
+  mat-paginator {
+    background-color: transparent;
+  }
+  tr.mat-row:last-of-type {
+    .mat-cell {
+      border-bottom: none;
+    }
+  }
+  .mat-cell {
+    width: 18%;
+    border-right: none;
+  }
+  .mat-column-triggered_space {
+     width: 3.9%;
+  }
+  .mat-column-lexid {
+    width: 29.4%;
+    text-align: left;
+    padding-left:8px;
+  }
+  .mat-column-action_space {
+    width: 9%;
+  }
+
+}

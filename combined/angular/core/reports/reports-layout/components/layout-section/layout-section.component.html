@@ -1,0 +1,16 @@
+<mat-expansion-panel [id]="id" [expanded]="expanded" class="report-panel layout-section mat-elevation-z0" #panel>
+  <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon class="md-18">{{ panel.expanded ? 'indeterminate_check_box' : 'add_box'}}</mat-icon> {{ title }}
+      </mat-panel-title>
+  </mat-expansion-panel-header>
+  <ng-template #loader>
+    <div *ngIf="!printable" class="loading-box">
+      <div *ngIf="loading" class="loading-area">
+        <mat-spinner strokeWidth="2" diameter="100"></mat-spinner>
+      </div>
+    </div>
+  </ng-template>
+  <ng-container *ngTemplateOutlet="loader"></ng-container>
+  <ng-content></ng-content>
+</mat-expansion-panel>

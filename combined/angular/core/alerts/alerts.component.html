@@ -1,0 +1,20 @@
+<!-- Accordion -->
+<mat-accordion [displayMode]="'flat'" fxFlex="1 1 auto" fxFlexAlign="start" hideToggle="true">
+    <!-- Alerts Panel -->
+    <mat-expansion-panel [expanded]="true" class="mat-elevation-z0" #alertsPanel>
+        <mat-expansion-panel-header>
+        <h1>
+            <mat-icon *ngIf="!alertsPanel.expanded" class="md-18">add_box</mat-icon>
+            <mat-icon *ngIf="alertsPanel.expanded" class="md-18">indeterminate_check_box</mat-icon> My Alerts
+        </h1>
+        </mat-expansion-panel-header>
+        <!-- Progress Bar -->
+        <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+        <!-- End Progress Bar -->
+        <ng-container *ngIf="!loading">
+            <app-alerts-list fxFlex="1 1 auto" [results]="results"></app-alerts-list>
+        </ng-container>
+    </mat-expansion-panel>
+    <!-- End Alerts Panel -->
+</mat-accordion>
+<!-- End Accordion -->

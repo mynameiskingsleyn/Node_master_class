@@ -1,0 +1,53 @@
+<div class="login-content" *ngIf="viewReady">
+    <form [formGroup]="loginForm" novalidate>
+        <mat-card class="login-card">
+            <mat-card-header>
+                <mat-card-title>Sign In (Step {{ passwordStep ? '2' : '1' }} of 2)</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div fxLayout="column" gdAlignRows="center center" fxLayoutGap="20px">
+                    <!-- Username controls -->
+                    <ng-container *ngIf="!passwordStep">
+                        <app-text-error [errors]="errors"></app-text-error>
+                        <p>
+                            Please enter your Username and verify that you are not a robot.
+                        </p>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Username</mat-label>
+                            <input matInput placeholder="" formControlName="username" required aria-required="true" appFocusElement>
+                            <mat-icon matPrefix>person</mat-icon>
+                            <mat-error *ngIf="username.invalid">Username is required</mat-error>
+                        </mat-form-field>
+                        <ng-template *ngIf="captchaRequired" [cdkPortalOutlet]="captchaPortal" (attached)="receiveReference($event)"></ng-template>
+                    </ng-container>
+                    <!-- End Username controls -->
+                    <!-- Password controls -->
+                    <ng-container *ngIf="passwordStep">
+                        <p>
+                            Please enter your Password. If you have forgotten your password, select the Reset Password link below.
+                        </p>
+                        <mat-form-field appearance="outline">
+                            <mat-label>Password</mat-label>
+                            <input matInput placeholder="" formControlName="password" type="password" required appFocusElement autocomplete="new-password">
+                            <mat-icon matPrefix>vpn_key</mat-icon>
+                            <mat-error *ngIf="password.invalid">Password is required</mat-error>
+                        </mat-form-field>
+                    </ng-container>
+                    <!-- End Password controls -->
+                    <!-- Acctions buttons -->
+                    <button mat-flat-button color="primary" type="submit" [disabled]="username.invalid || (captchaRequired && !captchaSolved)"
+                        (click)="showPasswordStep(true)" *ngIf="!passwordStep">Next<mat-icon matPrefix class="md-18">navigate_next</mat-icon>
+                    </button>
+                    <button mat-flat-button color="primary" type="submit" [disabled]="loginForm.invalid || loading"
+                        *ngIf="passwordStep" (click)="doLogin()">Sign In<mat-icon matPrefix class="md-18">lock</mat-icon>
+                    </button>
+                    <!-- End Acctions buttons -->
+                    <!-- Links -->
+                    <app-auth-actions [authActions]="true"></app-auth-actions>
+                    <!-- End Links -->
+                </div>
+            </mat-card-content>
+        </mat-card>
+        <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+    </form>
+</div>

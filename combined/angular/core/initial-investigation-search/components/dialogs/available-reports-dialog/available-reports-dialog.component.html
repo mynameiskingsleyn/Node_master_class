@@ -1,0 +1,39 @@
+<mat-dialog-content class="mat-typography">
+  <div class="available-report-dialog">
+    <h2> Available Reports </h2>
+    <div class="" *ngIf="available.length > 0; else no_report">
+      The following reports are available for viewing or PDF download and have been
+      added to your "My Records" tab.
+    </div>
+    <ng-template #no_report>
+      <div>
+        No reports available for viewing or PDF download.
+      </div>
+    </ng-template>
+    <div class="available-reports">
+      <div fxLayout="row">
+        <div fxLayout="column" [fxFlex]="col" fxLayoutGap="20px" *ngFor="let el of available; let i=index;" fxFlex>
+          <ng-container *ngIf="hasData(el)">
+            <div (click)="setSelected(el)" [ngClass]="el.type===selectedType ? 'available-report-selected': 'available-report' ">
+              <mat-icon class="description">description</mat-icon>
+            </div>
+            <div class="report-type">
+                {{ el.name }}
+            </div>
+            <div class="report-pending-verification" *ngIf="el.status===reportStatus.PENDING">
+              (pending verification)
+            </div>
+          </ng-container>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div fxLayout="row" fxLayoutGap="15px" fxLayoutAlign="center" fxFlex>
+      <button mat-flat-button color="primary" type="button" (click)="confirmToView('view')" [disabled]="available.length < 1" >View</button>
+      <button mat-stroked-button type="button" (click)="confirmToDownLoad('download')" [disabled]="available.length < 1" >Download</button>
+  </div>
+</mat-dialog-actions>

@@ -1,0 +1,43 @@
+import { BorrowerSubject } from './credit/borrower-subject.model';
+import { CreditCollections } from './credit/credit-collections.model';
+import { CreditConsumerReferral } from './credit/credit-consumer-referral.model';
+import { CreditFile } from './credit/credit-file.model';
+import { CreditInquiry } from './credit/credit-inquiry.model';
+import { CreditPublicRecord } from './credit/credit-public-record.model';
+import { CreditReportKeys } from './credit/credit-report-keys.model';
+import { CreditTrades } from './credit/credit-trades.model';
+import { SubjectInformation } from './subject/subject-information.model';
+
+export interface CreditReport {
+  Notes: string;
+  BorrowerSubject: BorrowerSubject;
+  PoID: string;
+  CaseNumber: string;
+  Keys: CreditReportKeys;
+  SubjectInformation: SubjectInformation;
+  CreditFile: CreditFile[];
+  CreditCode: string;
+  NoHitFlag: string;
+  ReportsCombined: string;
+  CreditBureau: string;
+  TradesCount: string[];
+  Inquiries: CreditInquiry[];
+  NumberInquiries: string;
+  Trades: CreditTrades[];
+  Collections: CreditCollections[];
+  PublicRecords: CreditPublicRecord[];
+  CreditConsumerReferral: CreditConsumerReferral;
+  CreditPercentUtilization: number;
+  TotalPaymentAmount: number;
+  TotalBalance: number;
+  TotalAmountPastDue: number;
+  TradesInstallment: number;
+  TradesRevolving: number;
+  TradesMortgage: number;
+  TradesOther: number;
+  TimeReportProcessed: string;
+  DateReportProcessed: string;
+  DateofFirstTradeline: string;
+  DateofLastTradelineActivity: string;
+  ReportStatus?: string;
+}

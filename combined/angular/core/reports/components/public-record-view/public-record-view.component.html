@@ -1,0 +1,2995 @@
+<div [ngClass]="{'printable': printable}">
+<mat-accordion displayMode="default" multi="true" hideToggle="true">
+  <h1 class="mat-title blue-color">
+    FCRA Public Records
+    <ng-container *ngIf="report?.ReportDate">
+      - {{ report?.ReportDate | date: titleDateFormat }}
+    </ng-container>
+  </h1>
+  <mat-expansion-panel
+    expanded="true"
+    class="report-panel mat-elevation-z0"
+    #prSubjectInfoPanel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h3 fxFlex>
+          <mat-icon *ngIf="!prSubjectInfoPanel.expanded" class="md-18">add_box</mat-icon>
+          <mat-icon *ngIf="prSubjectInfoPanel.expanded" class="md-18">indeterminate_check_box</mat-icon>
+          Individual Information
+        </h3>
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <ng-template #loader>
+      <div *ngIf="!printable" class="loading-box">
+        <div *ngIf="loading" class="loading-area">
+          <mat-spinner strokeWidth="2" diameter="100"></mat-spinner>
+        </div>
+      </div>
+    </ng-template>
+    <ng-container *ngTemplateOutlet="loader"></ng-container>
+    <table aria-describedby="SubjectInformation" *ngIf="report?.SubjectInformation">
+      <tr>
+        <td class="table-header">{{ "SSN" | mapField }}</td>
+        <td>{{ report?.SubjectInformation?.SSN }}</td>
+        <td class="table-header">{{ "Unique ID" | mapField }}</td>
+        <td>{{ report?.SubjectEcho?.SubjectId }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">Name</td>
+        <td>
+          {{ report?.SubjectInformation?.Name?.First }}
+          {{ report?.SubjectInformation?.Name?.Last }}
+        </td>
+        <td class="table-header">{{ "LexID" | mapField }}</td>
+        <td>{{ report?.SubjectEcho?.Lexid }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">{{ "DOB" | mapField }}</td>
+        <td>
+          {{ report?.SubjectInformation?.DOB?.Month }}/{{
+          report?.SubjectInformation?.DOB?.Day
+          }}/{{ report?.SubjectInformation?.DOB?.Year }}
+        </td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="table-header">{{ "Address" | mapField }}</td>
+        <td>{{ report?.SubjectInformation?.Address?.StreetAddress1 }}</td>
+        <td class="table-header">{{ "Address 2" | mapField }}</td>
+        <td>{{ report?.SubjectInformation?.Address?.StreetAddress2 }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">{{ "City" | mapField }}</td>
+        <td>{{ report?.SubjectInformation?.Address?.City }}</td>
+        <td class="table-header">{{ "State" | mapField }}</td>
+        <td>{{ report?.SubjectInformation?.Address?.State }}</td>
+      </tr>
+      <tr>
+        <td class="table-header">{{ "Zip" | mapField }}</td>
+        <td>{{ report?.SubjectInformation?.Address?.Zip5 }}</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr *ngIf="!hideAgencyNotes">
+        <td class="table-header">Agency Notes</td>
+        <td colspan="3">{{ report?.Notes }}</td>
+      </tr>
+    </table>
+  </mat-expansion-panel>
+  <mat-expansion-panel
+    [expanded]="expanded"
+    class="report-panel mat-elevation-z0"
+    #prlAndJPanel
+    *ngIf="report?.JudgmentAndLienRecords">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h3 fxFlex>
+          <mat-icon *ngIf="!prlAndJPanel.expanded" class="md-18">add_box</mat-icon>
+          <mat-icon *ngIf="prlAndJPanel.expanded" class="md-18">indeterminate_check_box</mat-icon>
+          Judgments & Liens
+        </h3>
+      </mat-panel-title>
+      <mat-panel-description>
+        {{
+        report.JudgmentAndLienRecords.JudgmentAndLienRecord
+        | verDate: "jnl_ver_date":verificationDateFormat
+        }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-container *ngTemplateOutlet="loader"></ng-container>
+    <div
+      *ngFor="let JudgmentAndLienRecord of report?.JudgmentAndLienRecords
+      ?.JudgmentAndLienRecord;
+      let i= index"style="padding: 20px;">
+      <mat-expansion-panel
+        [expanded]="expanded"
+        class="report-panel mat-elevation-z0"
+        hideToggle="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4>Judgment & Lien Record {{ i + 1 }}</h4>
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ JudgmentAndLienRecord?.jnl_ver_date | reportDate: dateFormat }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <table aria-describedby="JudgmentAndLienRecord">
+          <tr>
+            <td class="table-header">{{ "jnl_ver_date" | mapField }}</td>
+            <td>
+              {{ JudgmentAndLienRecord?.jnl_ver_date | reportDate: dateFormat }}
+            </td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Judgment & Lien Information</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "jnl_orig_filing_date" | mapField }}</td>
+            <td>
+              {{
+              JudgmentAndLienRecord?.jnl_orig_filing_date
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "jnl_orig_filing_type" | mapField }}</td>
+            <td>{{ JudgmentAndLienRecord?.jnl_orig_filing_type }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "jnl_party_names" | mapField }}</td>
+            <td>{{ JudgmentAndLienRecord?.jnl_party_names }}</td>
+            <td class="table-header">{{ "jnl_orig_case_number" | mapField }}</td>
+            <td>{{ JudgmentAndLienRecord?.jnl_orig_case_number }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "jnl_filing_date" | mapField }}</td>
+            <td>
+              {{
+              JudgmentAndLienRecord?.jnl_filing_date | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "jnl_filing_number" | mapField }}</td>
+            <td>{{ JudgmentAndLienRecord?.jnl_filing_number }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "jnl_filing_type_desc" | mapField }}</td>
+            <td>{{ JudgmentAndLienRecord?.jnl_filing_type_desc }}</td>
+            <td class="table-header">{{ "jnl_case_number" | mapField }}</td>
+            <td>{{ JudgmentAndLienRecord?.jnl_case_number }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "jnl_case_amount" | mapField }}</td>
+            <td>{{ JudgmentAndLienRecord?.jnl_case_amount }}</td>
+            <td class="table-header">{{ "jnl_eviction" | mapField }}</td>
+            <td>{{ JudgmentAndLienRecord?.jnl_eviction }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "jnl_vacated_date" | mapField }}</td>
+            <td>
+              {{
+              JudgmentAndLienRecord?.jnl_vacated_date | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "jnl_satisfied_date" | mapField }}</td>
+            <td>
+              {{
+              JudgmentAndLienRecord?.jnl_satisfied_date
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "jnl_release_date" | mapField }}</td>
+            <td>
+              {{
+              JudgmentAndLienRecord?.jnl_release_date | reportDate: dateFormat
+              }}
+            </td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Court Information</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "jnl_state_filing_jurisdiction" | mapField }}</td>
+            <td>{{ JudgmentAndLienRecord?.jnl_state_filing_jurisdiction }}</td>
+            <td class="table-header">{{ "jnl_case_county" | mapField }}</td>
+            <td>{{ JudgmentAndLienRecord?.jnl_case_county }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "jnl_agency" | mapField }}</td>
+            <td>{{ JudgmentAndLienRecord?.jnl_agency }}</td>
+            <td class="table-header">{{ "jnl_agency_state" | mapField }}</td>
+            <td>{{ JudgmentAndLienRecord?.jnl_agency_state }}</td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel
+    [expanded]="expanded"
+    class="report-panel mat-elevation-z0"
+    #prBankruptcyPanel
+    *ngIf="report?.BankruptcyRecords">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h3 fxFlex>
+          <mat-icon *ngIf="!prBankruptcyPanel.expanded" class="md-18">add_box</mat-icon>
+          <mat-icon *ngIf="prBankruptcyPanel.expanded" class="md-18">indeterminate_check_box</mat-icon>
+          Bankruptcy
+        </h3>
+      </mat-panel-title>
+      <mat-panel-description>
+        {{
+        report.BankruptcyRecords.BankruptcyRecord
+        | verDate: "bkt_most_recent_date":verificationDateFormat
+        }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-container *ngTemplateOutlet="loader"></ng-container>
+    <div
+      *ngFor="let BankruptcyRecord of
+      report?.BankruptcyRecords?.BankruptcyRecord;
+      let i= index"style="padding: 20px;">
+      <mat-expansion-panel
+        [expanded]="expanded"
+        class="report-panel mat-elevation-z0"
+        hideToggle="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4>Bankruptcy Record {{ i + 1 }}</h4>
+          </mat-panel-title>
+          <mat-panel-description>
+            {{
+              BankruptcyRecord | verDate: "bkt_most_recent_date":verificationDateFormat
+            }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <table aria-describedby="BankruptcyRecord">
+          <tr>
+            <td class="table-header">{{ "bkt_ver_date" | mapField }}</td>
+            <td>
+              {{ BankruptcyRecord?.bkt_ver_date | reportDate: dateFormat }}
+            </td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Filing</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "bkt_court_code" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_court_code }}</td>
+            <td class="table-header">{{ "bkt_record_type" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_record_type }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "bkt_orig_filing_date" | mapField }}</td>
+            <td>
+              {{
+              BankruptcyRecord?.bkt_orig_filing_date | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "bkt_court_date_filed" | mapField }}</td>
+            <td>
+              {{
+              BankruptcyRecord?.bkt_court_date_filed | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "bkt_original_case_number" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_original_case_number }}</td>
+            <td class="table-header">{{ "bkt_case_number" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_case_number }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "bkt_orig_chapter" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_orig_chapter }}</td>
+            <td class="table-header">{{ "bkt_case_chapter" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_case_chapter }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "bkt_converted_date" | mapField }}</td>
+            <td>
+              {{
+              BankruptcyRecord?.bkt_converted_date | reportDate: dateFormat
+              }}
+            </td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "bkt_reopen_date" | mapField }}</td>
+            <td>
+              {{ BankruptcyRecord?.bkt_reopen_date | reportDate: dateFormat }}
+            </td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "bkt_orig_closing_date" | mapField }}</td>
+            <td>
+              {{
+              BankruptcyRecord?.bkt_orig_closing_date | reportDate: dateFormat
+              }}
+            </td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "bkt_disposed_date" | mapField }}</td>
+            <td>
+              {{ BankruptcyRecord?.bkt_disposed_date | reportDate: dateFormat }}
+            </td>
+            <td class="table-header">{{ "bkt_case_disposition" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_case_disposition }}</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Details</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "bkt_debtor_1_cname" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_debtor_1_cname }}</td>
+            <td class="table-header">{{ "bkt_is_corporation" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_is_corporation }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "bkt_case_type" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_case_type }}</td>
+            <td class="table-header">{{ "bkt_orig_filing_type" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_orig_filing_type }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "bkt_orig_asset_indicator" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_orig_asset_indicator }}</td>
+            <td class="table-header">{{ "bkt_filing_status" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_filing_status }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "bkt_case_assets" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_case_assets }}</td>
+            <td class="table-header">{{ "bkt_case_liabilities" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_case_liabilities }}</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Court Information</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "bkt_filing_jurisdiction" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_filing_jurisdiction }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "bkt_court_name" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_court_name }}</td>
+            <td class="table-header">{{ "bkt_court_location" | mapField }}</td>
+            <td>{{ BankruptcyRecord?.bkt_court_location }}</td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel
+    [expanded]="expanded"
+    class="report-panel mat-elevation-z0"
+    #prForeclosurePanel
+    *ngIf="report?.ForeclosureRecords">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h3 fxFlex>
+          <mat-icon *ngIf="!prForeclosurePanel.expanded" class="md-18">add_box</mat-icon>
+          <mat-icon *ngIf="prForeclosurePanel.expanded" class="md-18">indeterminate_check_box</mat-icon>
+          Foreclosure
+        </h3>
+      </mat-panel-title>
+      <mat-panel-description>
+        {{
+        report.ForeclosureRecords.ForeclosureRecord
+        | verDate: "fo_ver_date":verificationDateFormat
+        }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-container *ngTemplateOutlet="loader"></ng-container>
+    <div
+      *ngFor="let ForeclosureRecord of
+      report?.ForeclosureRecords?.ForeclosureRecord;
+      let i= index"style="padding: 20px;">
+      <mat-expansion-panel
+        [expanded]="expanded"
+        class="report-panel mat-elevation-z0"
+        hideToggle="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4>Foreclosure Records {{ i + 1 }}</h4>
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ ForeclosureRecord?.fo_ver_date | reportDate: dateFormat }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <table aria-describedby="ForeclosureRecord">
+          <tr>
+            <td class="table-header">{{ "fo_ver_date" | mapField }}</td>
+            <td>
+              {{ ForeclosureRecord?.fo_ver_date | reportDate: dateFormat }}
+            </td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Foreclosure Information</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "fo_orig_filing_date" | mapField }}</td>
+            <td>
+              {{
+              ForeclosureRecord?.fo_orig_filing_date | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "fo_orig_filing_type" | mapField }}</td>
+            <td>{{ ForeclosureRecord?.fo_orig_filing_type }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "fo_party_names" | mapField }}</td>
+            <td>{{ ForeclosureRecord?.fo_party_names }}</td>
+            <td class="table-header">{{ "fo_orig_case_number" | mapField }}</td>
+            <td>{{ ForeclosureRecord?.fo_orig_case_number }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "fo_filing_date" | mapField }}</td>
+            <td>
+              {{ ForeclosureRecord?.fo_filing_date | reportDate: dateFormat }}
+            </td>
+            <td class="table-header">{{ "fo_filing_number" | mapField }}</td>
+            <td>{{ ForeclosureRecord?.fo_filing_number }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "fo_filing_type_desc" | mapField }}</td>
+            <td>{{ ForeclosureRecord?.fo_filing_type_desc }}</td>
+            <td class="table-header">{{ "fo_case_number" | mapField }}</td>
+            <td>{{ ForeclosureRecord?.fo_case_number }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "fo_case_amount" | mapField }}</td>
+            <td>{{ ForeclosureRecord?.fo_case_amount }}</td>
+            <td class="table-header">{{ "fo_eviction" | mapField }}</td>
+            <td>{{ ForeclosureRecord?.fo_eviction }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "fo_vacated_date" | mapField }}</td>
+            <td>
+              {{ ForeclosureRecord?.fo_vacated_date | reportDate: dateFormat }}
+            </td>
+            <td class="table-header">{{ "fo_satisfied_date" | mapField }}</td>
+            <td>
+              {{
+              ForeclosureRecord?.fo_satisfied_date | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "fo_release_date" | mapField }}</td>
+            <td>
+              {{ ForeclosureRecord?.fo_release_date | reportDate: dateFormat }}
+            </td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Court Information</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "fo_state_filing_jurisdiction" | mapField }}</td>
+            <td>{{ ForeclosureRecord?.fo_state_filing_jurisdiction }}</td>
+            <td class="table-header">{{ "fo_case_county" | mapField }}</td>
+            <td>{{ ForeclosureRecord?.fo_case_county }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "fo_agency" | mapField }}</td>
+            <td>{{ ForeclosureRecord?.fo_agency }}</td>
+            <td class="table-header">{{ "fo_agency_state" | mapField }}</td>
+            <td>{{ ForeclosureRecord?.fo_agency_state }}</td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel
+    [expanded]="expanded"
+    class="report-panel mat-elevation-z0"
+    #prCriminalRecordsPanel
+    *ngIf="report?.CriminalRecords">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h3 fxFlex>
+          <mat-icon *ngIf="!prCriminalRecordsPanel.expanded" class="md-18">add_box</mat-icon>
+          <mat-icon *ngIf="prCriminalRecordsPanel.expanded" class="md-18">indeterminate_check_box</mat-icon>
+          Criminal Records
+        </h3>
+      </mat-panel-title>
+      <mat-panel-description>
+        {{
+        report.CriminalRecords.CriminalRecord
+        | verDate: "crim_ver_date":verificationDateFormat
+        }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-container *ngTemplateOutlet="loader"></ng-container>
+    <div
+      *ngFor="let CriminalRecord of report?.CriminalRecords?.CriminalRecord;
+      let i= index"style="padding: 20px;">
+      <mat-expansion-panel
+        [expanded]="expanded"
+        class="report-panel mat-elevation-z0"
+        hideToggle="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4>Criminal Record {{ i + 1 }}</h4>
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ CriminalRecord?.crim_ver_date | reportDate: dateFormat }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <table aria-describedby="CriminalRecord">
+          <tr>
+            <td class="table-header">{{ "crim_ver_date" | mapField }}</td>
+            <td>
+              {{ CriminalRecord?.crim_ver_date | reportDate: dateFormat }}
+            </td>
+            <td class="table-header">{{ "crim_source_state" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_source_state }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_data_type" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_data_type }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Offense 1</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_case_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_case_1 }}</td>
+            <td class="table-header">{{ "crim_offense_date_1" | mapField }}</td>
+            <td>
+              {{ CriminalRecord?.crim_offense_date_1 | reportDate: dateFormat }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_arrest_date_1" | mapField }}</td>
+            <td>
+              {{ CriminalRecord?.crim_arrest_date_1 | reportDate: dateFormat }}
+            </td>
+            <td class="table-header">{{ "crim_num_of_counts_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_num_of_counts_1 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_offense_code_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_code_1 }}</td>
+            <td class="table-header">{{ "crim_charge_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_charge_1 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_offense_desc_1_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_desc_1_1 }}</td>
+            <td class="table-header">{{ "crim_offense_desc_2_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_desc_2_1 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_add_offense_code_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_add_offense_code_1 }}</td>
+            <td class="table-header">{{ "crim_add_offense_desc_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_add_offense_desc_1 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_offense_type_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_type_1 }}</td>
+            <td class="table-header">{{ "crim_offense_level_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_level_1 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_court_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_court_1 }}</td>
+            <td class="table-header">{{ "crim_sentence_date_1" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_sentence_date_1 | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_sentence_desc_1_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_desc_1_1 }}</td>
+            <td class="table-header">{{ "crim_sentence_desc_2_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_desc_2_1 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_sentence_desc_3_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_desc_3_1 }}</td>
+            <td class="table-header">{{ "crim_sentence_desc_4_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_desc_4_1 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_sentence_jail_time_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_jail_time_1 }}</td>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">
+              Offense 1 Sentencing/Incarceration/Probation/Parole
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_sentence_status_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_status_1 }}</td>
+            <td class="table-header">{{ "crim_admin_date_1" | mapField }}</td>
+            <td>
+              {{ CriminalRecord?.crim_admin_date_1 | reportDate: dateFormat }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_event_date_1" | mapField }}</td>
+            <td>
+              {{ CriminalRecord?.crim_event_date_1 | reportDate: dateFormat }}
+            </td>
+            <td class="table-header">{{ "crim_current_inmate_status_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_current_inmate_status_1 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_latest_admin_date_1" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_latest_admin_date_1
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_scheduled_release_date_1" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_scheduled_release_date_1
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_actual_release_date_1" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_actual_release_date_1
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_control_release_date_1" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_control_release_date_1
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_parole_sentence_date_1" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_sentence_date_1
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_parole_event_date_1" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_event_date_1
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_parole_release_date_1" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_scheduled_end_date_1
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_parole_scheduled_end_date_1" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_scheduled_end_date_1
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_parole_actual_end_date_1" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_actual_end_date_1
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_parole_location_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_parole_location_1 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_parole_current_status_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_parole_current_status_1 }}</td>
+            <td class="table-header">{{ "crim_parole_current_status_desc_1" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_parole_current_status_desc_1 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Offense 2</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_case_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_case_2 }}</td>
+            <td class="table-header">{{ "crim_offense_date_2" | mapField }}</td>
+            <td>
+              {{ CriminalRecord?.crim_offense_date_2 | reportDate: dateFormat }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_arrest_date_2" | mapField }}</td>
+            <td>
+              {{ CriminalRecord?.crim_arrest_date_2 | reportDate: dateFormat }}
+            </td>
+            <td class="table-header">{{ "crim_num_of_counts_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_num_of_counts_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_offense_code_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_code_2 }}</td>
+            <td class="table-header">{{ "crim_charge_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_charge_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_offense_desc_1_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_desc_1_2 }}</td>
+            <td class="table-header">{{ "crim_offense_desc_2_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_desc_2_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_add_offense_code_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_add_offense_code_2 }}</td>
+            <td class="table-header">{{ "crim_add_offense_desc_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_add_offense_desc_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_offense_type_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_type_2 }}</td>
+            <td class="table-header">{{ "crim_offense_level_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_level_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_court_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_court_2 }}</td>
+            <td class="table-header">{{ "crim_sentence_date_2" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_sentence_date_2 | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_sentence_desc_1_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_desc_1_2 }}</td>
+            <td class="table-header">{{ "crim_sentence_desc_2_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_desc_2_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_sentence_desc_3_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_desc_3_2 }}</td>
+            <td class="table-header">{{ "crim_sentence_desc_4_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_desc_4_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_sentence_jail_time_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_jail_time_2 }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">
+              Offense 2 Sentencing/Incarceration/Probation/Parole
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_sentence_status_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_status_2 }}</td>
+            <td class="table-header">{{ "crim_admin_date_2" | mapField }}</td>
+            <td>
+              {{ CriminalRecord?.crim_admin_date_2 | reportDate: dateFormat }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_event_date_2" | mapField }}</td>
+            <td>
+              {{ CriminalRecord?.crim_event_date_2 | reportDate: dateFormat }}
+            </td>
+            <td class="table-header">{{ "crim_current_inmate_status_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_current_inmate_status_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_latest_admin_date_2" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_latest_admin_date_2
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_scheduled_release_date_2" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_scheduled_release_date_2
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_actual_release_date_2" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_actual_release_date_2
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_control_release_date_2" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_control_release_date_2
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_parole_sentence_date_2" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_sentence_date_2
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_parole_event_date_2" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_event_date_2
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_parole_scheduled_end_date_2" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_scheduled_end_date_2
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_parole_release_date_2" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_release_date_2
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_parole_actual_end_date_2" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_actual_end_date_2
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_parole_location_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_parole_location_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_parole_current_status_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_parole_current_status_2 }}</td>
+            <td class="table-header">{{ "crim_parole_current_status_desc_2" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_parole_current_status_desc_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Offense 3</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_case_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_case_3 | reportDate: dateFormat }}</td>
+            <td class="table-header">{{ "crim_offense_date_3" | mapField }}</td>
+            <td>
+              {{ CriminalRecord?.crim_offense_date_3 | reportDate: dateFormat }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_arrest_date_3" | mapField }}</td>
+            <td>
+              {{ CriminalRecord?.crim_arrest_date_3 | reportDate: dateFormat }}
+            </td>
+            <td class="table-header">{{ "crim_num_of_counts_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_num_of_counts_3 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_offense_code_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_code_3 }}</td>
+            <td class="table-header">{{ "crim_charge_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_charge_3 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_offense_desc_1_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_desc_3_3 }}</td>
+            <td class="table-header">{{ "crim_offense_desc_2_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_desc_2_3 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_add_offense_code_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_add_offense_code_3 }}</td>
+            <td class="table-header">{{ "crim_add_offense_desc_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_add_offense_desc_3 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_offense_type_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_type_3 }}</td>
+            <td class="table-header">{{ "crim_offense_level_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_offense_level_3 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_court_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_court_3 }}</td>
+            <td class="table-header">{{ "crim_sentence_date_3" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_sentence_date_3 | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_sentence_desc_1_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_desc_3_3 }}</td>
+            <td class="table-header">{{ "crim_sentence_desc_2_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_desc_2_3 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_sentence_desc_3_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_desc_3_3 }}</td>
+            <td class="table-header">{{ "crim_sentence_desc_4_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_desc_4_3 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_sentence_jail_time_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_jail_time_3 }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">
+              Offense 3 Sentencing/Incarceration/Probation/Parole
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_sentence_status_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_sentence_status_3 }}</td>
+            <td class="table-header">{{ "crim_admin_date_3" | mapField }}</td>
+            <td>
+              {{ CriminalRecord?.crim_admin_date_3 | reportDate: dateFormat }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_event_date_3" | mapField }}</td>
+            <td>
+              {{ CriminalRecord?.crim_event_date_3 | reportDate: dateFormat }}
+            </td>
+            <td class="table-header">{{ "crim_current_inmate_status_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_current_inmate_status_3 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_latest_admin_date_3" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_latest_admin_date_3
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_scheduled_release_date_3" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_scheduled_release_date_3
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_actual_release_date_3" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_actual_release_date_3
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_control_release_date_3" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_control_release_date_3
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_parole_sentence_date_3" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_sentence_date_3
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_parole_event_date_3" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_event_date_3
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_parole_release_date_3" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_release_date_3
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_parole_scheduled_end_date_3" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_scheduled_end_date_3
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_parole_actual_end_date_3" | mapField }}</td>
+            <td>
+              {{
+              CriminalRecord?.crim_parole_actual_end_date_3
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "crim_parole_location_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_parole_location_3 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "crim_parole_current_status_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_parole_current_status_3 }}</td>
+            <td class="table-header">{{ "crim_parole_current_status_desc_3" | mapField }}</td>
+            <td>{{ CriminalRecord?.crim_parole_current_status_desc_3 }}</td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel
+    [expanded]="expanded"
+    class="report-panel mat-elevation-z0"
+    #prSexualOffendersPanel
+    *ngIf="report?.SexOffenderRecords">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h3 fxFlex>
+          <mat-icon *ngIf="!prSexualOffendersPanel.expanded" class="md-18">add_box</mat-icon>
+          <mat-icon *ngIf="prSexualOffendersPanel.expanded" class="md-18">indeterminate_check_box</mat-icon>
+          Sexual Offenders
+        </h3>
+      </mat-panel-title>
+      <mat-panel-description>
+        {{
+        report.SexOffenderRecords.SexOffenderRecord
+        | verDate: "sof_ver_date":verificationDateFormat
+        }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-container *ngTemplateOutlet="loader"></ng-container>
+    <div
+      *ngFor="let SexOffenderRecord of
+      report?.SexOffenderRecords?.SexOffenderRecord;
+      let i= index"style="padding: 20px;">
+      <mat-expansion-panel
+        [expanded]="expanded"
+        class="report-panel mat-elevation-z0"
+        hideToggle="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4>Sex Offender Record {{ i + 1 }}</h4>
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ SexOffenderRecord?.sof_ver_date | reportDate: dateFormat }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <table aria-describedby="SexOffenderRecord">
+          <tr>
+            <td class="table-header">{{ "sof_ver_date" | mapField }}</td>
+            <td>
+              {{ SexOffenderRecord?.sof_ver_date | reportDate: dateFormat }}
+            </td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Offense 1</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_offense_1" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_offense_1 }}</td>
+            <td class="table-header">{{ "sof_offense_date_1" | mapField }}</td>
+            <td>
+              {{
+              SexOffenderRecord?.sof_offense_date_1 | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_case_number_1" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_case_number_1 }}</td>
+            <td class="table-header">{{ "sof_conviction_date_1" | mapField }}</td>
+            <td>
+              {{
+              SexOffenderRecord?.sof_conviction_date_1
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_conviction_place_1" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_conviction_place_1 }}</td>
+            <td class="table-header">{{ "sof_conviction_jurisdiction_1" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_conviction_jurisdiction_1 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_victim_minor_1" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_victim_minor_1 }}</td>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Offense 2</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_offense_2" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_offense_2 }}</td>
+            <td class="table-header">{{ "sof_offense_date_2" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_offense_date_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_case_number_2" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_case_number_2 }}</td>
+            <td class="table-header">{{ "sof_conviction_date_2" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_conviction_date_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_conviction_place_2" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_conviction_place_2 }}</td>
+            <td class="table-header">{{ "sof_conviction_jurisdiction_2" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_conviction_jurisdiction_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_victim_minor_2" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_victim_minor_2 }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Offense 3</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_offense_3" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_offense_3 }}</td>
+            <td class="table-header">{{ "sof_offense_date_3" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_offense_date_3 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_court_case_number_3" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_court_case_number_3 }}</td>
+            <td class="table-header">{{ "sof_conviction_date_3" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_conviction_date_3 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_conviction_place_3" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_conviction_place_3 }}</td>
+            <td class="table-header">{{ "sof_conviction_jurisdiction_3" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_conviction_jurisdiction_3 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_victim_minor_3" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_victim_minor_3 }}</td>
+            <td colspan="4">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Offender Information</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_orig_state" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_orig_state }}</td>
+            <td class="table-header">{{ "sof_docket_number" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_docket_number }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_offender_id" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_offender_id }}</td>
+            <td class="table-header">{{ "sof_registration_address" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_registration_address }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_first_name" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_first_name }}</td>
+            <td class="table-header">{{ "sof_registration_city" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_registration_city }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_middle_name" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_middle_name }}</td>
+            <td class="table-header">{{ "sof_registration_state" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_registration_state }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_last_name" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_last_name }}</td>
+            <td class="table-header">{{ "sof_registration_zip" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_registration_zip }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_suffix_name" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_suffix_name }}</td>
+            <td class="table-header">{{ "sof_registration_county" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_registration_county }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "sof_dob" | mapField }}</td>
+            <td>{{ SexOffenderRecord?.sof_dob | reportDate: dateFormat }}</td>
+            <td class="table-header">{{ "sof_address_last_seen" | mapField }}</td>
+            <td>
+              {{
+              SexOffenderRecord?.sof_address_last_seen
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel
+    [expanded]="expanded"
+    class="report-panel mat-elevation-z0"
+    #prPropertyRecordsPanel
+    *ngIf="report?.PropertyRecords">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h3 fxFlex>
+          <mat-icon *ngIf="!prPropertyRecordsPanel.expanded" class="md-18">add_box</mat-icon>
+          <mat-icon *ngIf="prPropertyRecordsPanel.expanded" class="md-18">indeterminate_check_box</mat-icon>
+          Property Records
+        </h3>
+      </mat-panel-title>
+      <mat-panel-description>
+        {{
+        report.PropertyRecords.PropertyRecord
+        | verDate: "prop_ver_date":verificationDateFormat
+        }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-container *ngTemplateOutlet="loader"></ng-container>
+    <div
+      *ngFor="let PropertyRecord of report?.PropertyRecords?.PropertyRecord;
+      let i= index"style="padding: 20px;">
+      <mat-expansion-panel
+        [expanded]="expanded"
+        class="report-panel mat-elevation-z0"
+        hideToggle="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4>Property Record {{ i + 1 }}</h4>
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ PropertyRecord?.prop_ver_date | reportDate: dateFormat }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <table aria-describedby="PropertyRecord">
+          <tr>
+            <td class="table-header">{{ "prop_ver_date" | mapField }}</td>
+            <td>
+              {{ PropertyRecord?.prop_ver_date | reportDate: dateFormat }}
+            </td>
+            <td class="table-header">{{ "prop_LN_Date_Last_Seen" | mapField }}</td>
+            <td>
+              {{
+              PropertyRecord?.prop_LN_Date_Last_Seen | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Property Details</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "property_address1" | mapField }}</td>
+            <td>{{ PropertyRecord?.property_address1 }}</td>
+            <td class="table-header">{{ "property_address2" | mapField }}</td>
+            <td>{{ PropertyRecord?.property_address2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "property_p_city_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.property_p_city_name }}</td>
+            <td class="table-header">{{ "property_v_city_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.property_v_city_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "property_st" | mapField }}</td>
+            <td>{{ PropertyRecord?.property_st }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "property_zip" | mapField }}</td>
+            <td>{{ PropertyRecord?.property_zip }}</td>
+            <td class="table-header">{{ "property_zip4" | mapField }}</td>
+            <td>{{ PropertyRecord?.property_zip4 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "property_geo_lat" | mapField }}</td>
+            <td>{{ PropertyRecord?.property_geo_lat }}</td>
+            <td class="table-header">{{ "property_geo_long" | mapField }}</td>
+            <td>{{ PropertyRecord?.property_geo_long }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "property_county_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.property_county_name }}</td>
+            <td class="table-header">{{ "property_msa" | mapField }}</td>
+            <td>{{ PropertyRecord?.property_msa }}</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Deed</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_state" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_state }}</td>
+            <td class="table-header">{{ "deed_sales_price" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_sales_price }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_county_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_county_name }}</td>
+            <td class="table-header">{{ "deed_sales_price_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_sales_price_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_apnt_or_pin_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_apnt_or_pin_number }}</td>
+            <td class="table-header">{{ "deed_property_use_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_property_use_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_fips_code" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_fips_code }}</td>
+            <td class="table-header">{{ "deed_record_type" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_record_type }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_record_type_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_record_type_desc }}</td>
+            <td class="table-header">{{ "deed_condo_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_condo_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_multi_apn_flag" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_multi_apn_flag }}</td>
+            <td class="table-header">{{ "deed_timeshare_flag" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_timeshare_flag }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_buyer_addendum_flag" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_buyer_addendum_flag }}</td>
+            <td class="table-header">{{ "deed_second_home_rider" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_second_home_rider }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_seller_addendum_flag" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_seller_addendum_flag }}</td>
+            <td class="table-header">{{ "deed_lender_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_lender_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_lender_name_id" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_lender_name_id }}</td>
+            <td class="table-header">{{ "deed_lender_dba_aka_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_lender_dba_aka_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_first_td_interest_rate" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_first_td_interest_rate }}</td>
+            <td class="table-header">{{ "deed_lender_full_street_address" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_lender_full_street_address }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_first_td_due_date" | mapField }}</td>
+            <td>
+              {{
+              PropertyRecord?.deed_first_td_due_date | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "deed_lender_address_unit_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_lender_address_unit_number }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_first_td_lender_type_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_first_td_lender_type_desc }}</td>
+            <td class="table-header">{{ "deed_lender_address_citystatezip" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_lender_address_citystatezip }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_first_td_loan_amount" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_first_td_loan_amount }}</td>
+            <td class="table-header">{{ "deed_second_td_loan_amount" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_second_td_loan_amount }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_first_td_loan_type_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_first_td_loan_type_desc }}</td>
+            <td class="table-header">{{ "deed_second_td_lender_type_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_second_td_lender_type_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_partial_interest_transferred" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_partial_interest_transferred }}</td>
+            <td class="table-header">{{ "deed_tax_id_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_tax_id_number }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_loan_term_months" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_loan_term_months }}</td>
+            <td class="table-header">{{ "deed_legal_brief_description" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_legal_brief_description }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_loan_term_years" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_loan_term_years }}</td>
+            <td class="table-header">{{ "deed_contract_date" | mapField }}</td>
+            <td>
+              {{ PropertyRecord?.deed_contract_date | reportDate: dateFormat }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_document_type_code" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_document_type_code }}</td>
+            <td class="table-header">{{ "deed_recording_date" | mapField }}</td>
+            <td>
+              {{ PropertyRecord?.deed_recording_date | reportDate: dateFormat }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_transaction_type_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_transaction_type_desc }}</td>
+            <td class="table-header">{{ "deed_document_type_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_document_type_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_document_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_document_number }}</td>
+            <td class="table-header">{{ "deed_arm_reset_date" | mapField }}</td>
+            <td>
+              {{ PropertyRecord?.deed_arm_reset_date | reportDate: dateFormat }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_land_lot_size" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_land_lot_size }}</td>
+            <td class="table-header">{{ "deed_mortgage_term" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_mortgage_term }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_legal_lot_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_legal_lot_desc }}</td>
+            <td class="table-header">{{ "deed_lender_address" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_lender_address }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_legal_lot_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_legal_lot_number }}</td>
+            <td class="table-header">{{ "deed_mortgage_date" | mapField }}</td>
+            <td>
+              {{ PropertyRecord?.deed_mortgage_date | reportDate: dateFormat }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_legal_city_municipality_township" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_legal_city_municipality_township }}</td>
+            <td class="table-header">{{ "deed_building_square_feet" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_building_square_feet }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_loan_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_loan_number }}</td>
+            <td class="table-header">{{ "deed_foreclosure_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_foreclosure_desc }}</td>
+          </tr>
+          <tr></tr>
+          <tr>
+            <td class="table-header">{{ "deed_hawaii_condo_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_hawaii_condo_name }}</td>
+            <td class="table-header">{{ "deed_refi_flag_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_refi_flag_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_assessment_match_land_use_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_assessment_match_land_use_desc }}</td>
+            <td class="table-header">{{ "deed_equity_flag_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_equity_flag_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "deed_type_financing" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_type_financing }}</td>
+            <td class="table-header">{{ "deed_type_financing_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.deed_type_financing_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Assessment</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_state_code" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_state_code }}</td>
+            <td class="table-header">{{ "assess_assessed_total_value" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_assessed_total_value }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_mortgage_lender_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_mortgage_lender_name }}</td>
+            <td class="table-header">{{ "assess_assessed_value_year" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_assessed_value_year }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_mortgage_lender_type_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_mortgage_lender_type_desc }}</td>
+            <td class="table-header">{{ "assess_mortgage_loan_amount" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_mortgage_loan_amount }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_mortgage_loan_type_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_mortgage_loan_type_desc }}</td>
+            <td class="table-header">{{ "assess_market_land_value" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_market_land_value }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_county_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_county_name }}</td>
+            <td class="table-header">{{ "assess_market_improvement_value" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_market_improvement_value }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_apna_or_pin_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_apna_or_pin_number }}</td>
+            <td class="table-header">{{ "assess_market_total_value" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_market_total_value }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_fips_code" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_fips_code }}</td>
+            <td class="table-header">{{ "assess_market_value_year" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_market_value_year }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_duplicate_apn_multiple_address_id" | mapField }}</td>
+            <td>
+              {{ PropertyRecord?.assess_duplicate_apn_multiple_address_id }}
+            </td>
+            <td class="table-header">{{ "assess_assessed_land_value" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_assessed_land_value }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_tape_cut_date" | mapField }}</td>
+            <td>
+              {{
+              PropertyRecord?.assess_tape_cut_date | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "assess_tax_exemption1_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_tax_exemption1_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_edition_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_edition_number }}</td>
+            <td class="table-header">{{ "assess_tax_exemption2_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_tax_exemption2_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_assessee_ownership_rights_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_assessee_ownership_rights_desc }}</td>
+            <td class="table-header">{{ "assess_tax_exemption3_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_tax_exemption3_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_assessee_relationship_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_assessee_relationship_desc }}</td>
+            <td class="table-header">{{ "assess_tax_exemption4_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_tax_exemption4_desc }}</td>
+          </tr>
+
+          <tr>
+            <td class="table-header">{{ "assess_assessee_phone_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_assessee_phone_number }}</td>
+            <td class="table-header">{{ "assess_assessee_name_type_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_assessee_name_type_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_contract_owner" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_contract_owner }}</td>
+            <td class="table-header">{{ "assess_second_assessee_name_type_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_second_assessee_name_type_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_tax_delinquent_year" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_tax_delinquent_year }}</td>
+            <td class="table-header">{{ "assess_mail_care_of_name_type_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_mail_care_of_name_type_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_land_square_footage" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_land_square_footage }}</td>
+            <td class="table-header">{{ "assess_mailing_care_of_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_mailing_care_of_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_year_built" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_year_built }}</td>
+            <td class="table-header">{{ "assess_recording_date" | mapField }}</td>
+            <td>
+              {{
+              PropertyRecord?.assess_recording_date | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_no_of_stories" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_no_of_stories }}</td>
+            <td class="table-header">{{ "assess_prior_recording_date" | mapField }}</td>
+            <td>
+              {{
+              PropertyRecord?.assess_prior_recording_date
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_no_of_stories_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_no_of_stories_desc }}</td>
+            <td class="table-header">{{ "assess_county_land_use_description" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_county_land_use_description }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_no_of_bedrooms" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_no_of_bedrooms }}</td>
+            <td class="table-header">{{ "assess_standardized_land_use_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_standardized_land_use_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_no_of_baths" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_no_of_baths }}</td>
+            <td class="table-header">{{ "assess_legal_lot_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_legal_lot_number }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_no_of_full_baths" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_no_of_full_baths }}</td>
+            <td class="table-header">{{ "assess_legal_subdivision_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_legal_subdivision_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_no_of_half_baths" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_no_of_half_baths }}</td>
+            <td class="table-header">{{ "assess_legal_brief_description" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_legal_brief_description }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_no_of_buildings" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_no_of_buildings }}</td>
+            <td class="table-header">{{ "assess_record_type_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_record_type_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_no_of_units" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_no_of_units }}</td>
+            <td class="table-header">{{ "assess_legal_city_municipality_township" | mapField }}</td>
+            <td>
+              {{ PropertyRecord?.assess_legal_city_municipality_township }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_no_of_rooms" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_no_of_rooms }}</td>
+            <td class="table-header">{{ "assess_census_tract" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_census_tract }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_land_acres" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_land_acres }}</td>
+            <td class="table-header">{{ "assess_timeshare_code" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_timeshare_code }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_land_dimensions" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_land_dimensions }}</td>
+            <td class="table-header">{{ "assess_condo_project_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_condo_project_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_effective_year_built" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_effective_year_built }}</td>
+            <td class="table-header">{{ "assess_building_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_building_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_building_class_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_building_class_desc }}</td>
+            <td class="table-header">{{ "assess_document_type_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_document_type_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_zoning" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_zoning }}</td>
+            <td class="table-header">{{ "assess_prior_transfer_date" | mapField }}</td>
+            <td>
+              {{
+              PropertyRecord?.assess_prior_transfer_date
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_transfer_date" | mapField }}</td>
+            <td>
+              {{
+              PropertyRecord?.assess_transfer_date | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "assess_sale_date" | mapField }}</td>
+            <td>
+              {{ PropertyRecord?.assess_sale_date | reportDate: dateFormat }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_document_type" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_document_type }}</td>
+            <td class="table-header">{{ "assess_sales_price" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_sales_price }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_comments" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_comments }}</td>
+            <td class="table-header">{{ "assess_sales_price_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_sales_price_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_neighborhood_code" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_neighborhood_code }}</td>
+            <td class="table-header">{{ "assess_prior_sales_price" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_prior_sales_price }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_calculated_land_value" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_calculated_land_value }}</td>
+            <td class="table-header">{{ "assess_prior_sales_price_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_prior_sales_price_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_calculated_improvement_value" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_calculated_improvement_value }}</td>
+            <td class="table-header">{{ "assess_calculated_total_value" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_calculated_total_value }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assess_adjusted_gross_square_feet" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_adjusted_gross_square_feet }}</td>
+            <td class="table-header">{{ "assess_condition_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.assess_condition_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Buyer</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_address1" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_address1 }}</td>
+            <td class="table-header">{{ "buyer_address2" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_address2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_p_city_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_p_city_name }}</td>
+            <td class="table-header">{{ "buyer_v_city_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_v_city_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_st" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_st }}</td>
+            <td class="table-header">{{ "buyer_zip" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_zip }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_phone_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_phone_number }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_1_title" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_1_title }}</td>
+            <td class="table-header">{{ "buyer_1_name_suffix" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_1_name_suffix }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_1_orig_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_1_orig_name }}</td>
+            <td class="table-header">{{ "buyer_1_company_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_1_company_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_1_first_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_1_first_name }}</td>
+            <td class="table-header">{{ "buyer_1_id_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_1_id_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_1_middle_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_1_middle_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_1_last_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_1_last_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_vesting_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_vesting_desc }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_2_title" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_2_title }}</td>
+            <td class="table-header">{{ "buyer_2_name_suffix" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_2_name_suffix }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_2_orig_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_2_orig_name }}</td>
+            <td class="table-header">{{ "buyer_2_company_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_2_company_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_2_first_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_2_first_name }}</td>
+            <td class="table-header">{{ "buyer_2_id_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_2_id_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_2_middle_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_2_middle_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "buyer_2_last_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.buyer_2_last_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Seller</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "seller_address1" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_address1 }}</td>
+            <td class="table-header">{{ "seller_address2" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_address2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "seller_p_city_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_p_city_name }}</td>
+            <td class="table-header">{{ "seller_v_city_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_v_city_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "seller_st" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_st }}</td>
+            <td class="table-header">{{ "seller_zip" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_zip }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "seller_phone_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_phone_number }}</td>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "seller_1_title" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_1_title }}</td>
+            <td class="table-header">{{ "seller_1_name_suffix" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_1_name_suffix }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "seller_1_orig_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_1_orig_name }}</td>
+            <td class="table-header">{{ "seller_1_company_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_1_company_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "seller_1_first_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_1_first_name }}</td>
+            <td class="table-header">{{ "seller_1_id_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_1_id_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "seller_1_middle_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_1_middle_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "seller_1_last_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_1_last_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "seller_2_title" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_2_title }}</td>
+            <td class="table-header">{{ "seller_2_name_suffix" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_2_name_suffix }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "seller_2_orig_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_2_orig_name }}</td>
+            <td class="table-header">{{ "seller_2_company_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_2_company_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "seller_2_first_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_2_first_name }}</td>
+            <td class="table-header">{{ "seller_2_id_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_2_id_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "seller_2_middle_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_2_middle_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "seller_2_last_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.seller_2_last_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Borrower</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_address1" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_address1 }}</td>
+            <td class="table-header">{{ "borrower_address2" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_address2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_p_city_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_p_city_name }}</td>
+            <td class="table-header">{{ "borrower_v_city_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_v_city_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_st" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_st }}</td>
+            <td class="table-header">{{ "borrower_zip" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_zip }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_phone_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_phone_number }}</td>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_1_title" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_1_title }}</td>
+            <td class="table-header">{{ "borrower_1_name_suffix" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_1_name_suffix }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_1_orig_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_1_orig_name }}</td>
+            <td class="table-header">{{ "borrower_1_company_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_1_company_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_1_first_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_1_first_name }}</td>
+            <td class="table-header">{{ "borrower_1_id_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_1_id_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_1_middle_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_1_middle_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_1_last_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_1_last_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_vesting_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_vesting_desc }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_2_title" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_2_title }}</td>
+            <td class="table-header">{{ "borrower_2_name_suffix" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_2_name_suffix }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_2_orig_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_2_orig_name }}</td>
+            <td class="table-header">{{ "borrower_2_company_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_2_company_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_2_first_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_2_first_name }}</td>
+            <td class="table-header">{{ "borrower_2_id_desc" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_2_id_desc }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_2_middle_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_2_middle_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "borrower_2_last_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.borrower_2_last_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Owner</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "owner_address1" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_address1 }}</td>
+            <td class="table-header">{{ "owner_address2" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_address2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "owner_p_city_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_p_city_name }}</td>
+            <td class="table-header">{{ "owner_v_city_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_v_city_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "owner_st" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_st }}</td>
+            <td class="table-header">{{ "owner_zip" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_zip }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "owner_phone_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_phone_number }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "owner_1_title" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_1_title }}</td>
+            <td class="table-header">{{ "owner_1_name_suffix" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_1_name_suffix }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "owner_1_orig_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_1_orig_name }}</td>
+            <td class="table-header">{{ "owner_1_company_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_1_company_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "owner_1_first_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_1_first_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "owner_1_middle_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_1_middle_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "owner_1_last_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_1_last_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "owner_2_title" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_2_title }}</td>
+            <td class="table-header">{{ "owner_2_name_suffix" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_2_name_suffix }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "owner_2_orig_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_2_orig_name }}</td>
+            <td class="table-header">{{ "owner_2_company_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_2_company_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "owner_2_first_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_2_first_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "owner_2_middle_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_2_middle_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "owner_2_last_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.owner_2_last_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Assessee</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assessee_address1" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_address1 }}</td>
+            <td class="table-header">{{ "assessee_address2" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_address2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assessee_p_city_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_p_city_name }}</td>
+            <td class="table-header">{{ "assessee_v_city_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_v_city_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assessee_st" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_st }}</td>
+            <td class="table-header">{{ "assessee_zip" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_zip }}</td>
+          </tr>
+
+          <tr>
+            <td class="table-header">{{ "assessee_phone_number" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_phone_number }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assessee_1_title" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_1_title }}</td>
+            <td class="table-header">{{ "assessee_1_name_suffix" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_1_name_suffix }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assessee_1_orig_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_1_orig_name }}</td>
+            <td class="table-header">{{ "assessee_1_company_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_1_company_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assessee_1_first_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_1_first_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assessee_1_middle_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_1_middle_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assessee_1_last_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_1_last_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assessee_2_title" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_2_title }}</td>
+            <td class="table-header">{{ "assessee_2_name_suffix" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_2_name_suffix }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assessee_2_orig_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_2_orig_name }}</td>
+            <td class="table-header">{{ "assessee_2_company_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_2_company_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assessee_2_first_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_2_first_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assessee_2_middle_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_2_middle_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "assessee_2_last_name" | mapField }}</td>
+            <td>{{ PropertyRecord?.assessee_2_last_name }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel
+    [expanded]="expanded"
+    class="report-panel mat-elevation-z0"
+    #prProfessionalLicenseRecordPanel
+    *ngIf="report?.ProfessionalLicenseRecords">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h3 fxFlex>
+          <mat-icon
+            *ngIf="!prProfessionalLicenseRecordPanel.expanded"
+            class="md-18">add_box</mat-icon>
+          <mat-icon
+            *ngIf="prProfessionalLicenseRecordPanel.expanded"
+            class="md-18">indeterminate_check_box
+          </mat-icon>
+          Professional License
+        </h3>
+      </mat-panel-title>
+      <mat-panel-description>
+        {{
+        report.ProfessionalLicenseRecords.ProfessionalLicenseRecord
+        | verDate: "pro_ver_date":verificationDateFormat
+        }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-container *ngTemplateOutlet="loader"></ng-container>
+    <div
+      *ngFor="let ProfessionalLicenseRecord of
+      report?.ProfessionalLicenseRecords
+      ?.ProfessionalLicenseRecord;
+      let i= index"style="padding: 20px;">
+      <mat-expansion-panel
+        [expanded]="expanded"
+        class="report-panel mat-elevation-z0"
+        hideToggle="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4>License {{ i + 1 }}</h4>
+          </mat-panel-title>
+          <mat-panel-description>
+            {{
+            ProfessionalLicenseRecord?.pro_ver_date | reportDate: dateFormat
+            }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <table aria-describedby="ProfessionalLicenseRecord">
+          <tr>
+            <td class="table-header">{{ "pro_ver_date" | mapField }}</td>
+            <td>
+              {{
+              ProfessionalLicenseRecord?.pro_ver_date | reportDate: dateFormat
+              }}
+            </td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pro_date_first_seen" | mapField }}</td>
+            <td>
+              {{
+              ProfessionalLicenseRecord?.pro_date_first_seen
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "pro_LN_Date_Last_Seen" | mapField }}</td>
+            <td>
+              {{
+              ProfessionalLicenseRecord?.pro_LN_Date_Last_Seen
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">License Information</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pro_license_number" | mapField }}</td>
+            <td>{{ ProfessionalLicenseRecord?.pro_license_number }}</td>
+            <td class="table-header">{{ "pro_license_type" | mapField }}</td>
+            <td>{{ ProfessionalLicenseRecord?.pro_license_type }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pro_source_st" | mapField }}</td>
+            <td>{{ ProfessionalLicenseRecord?.pro_source_st }}</td>
+            <td class="table-header">{{ "pro_profession_or_board" | mapField }}</td>
+            <td>{{ ProfessionalLicenseRecord?.pro_profession_or_board }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pro_license_status" | mapField }}</td>
+            <td>{{ ProfessionalLicenseRecord?.pro_license_status }}</td>
+            <td class="table-header">{{ "pro_status_effective_dt" | mapField }}</td>
+            <td>
+              {{
+              ProfessionalLicenseRecord?.pro_status_effective_dt
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pro_issue_date" | mapField }}</td>
+            <td>
+              {{
+              ProfessionalLicenseRecord?.pro_issue_date
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "pro_expiration_date" | mapField }}</td>
+            <td>
+              {{
+              ProfessionalLicenseRecord?.pro_expiration_date
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pro_last_renewal_date" | mapField }}</td>
+            <td>
+              {{
+              ProfessionalLicenseRecord?.pro_last_renewal_date
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "pro_vendor" | mapField }}</td>
+            <td>{{ ProfessionalLicenseRecord?.pro_vendor }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pro_board_action_indicator" | mapField }}</td>
+            <td>{{ ProfessionalLicenseRecord?.pro_board_action_indicator }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Licensee Information</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "phone" | mapField }}</td>
+            <td>{{ ProfessionalLicenseRecord?.phone }}</td>
+            <td class="table-header">{{ "pro_education_1_degree" | mapField }}</td>
+            <td>{{ ProfessionalLicenseRecord?.pro_education_1_degree }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pro_education_1_school_attended" | mapField }}</td>
+            <td>
+              {{ ProfessionalLicenseRecord?.pro_education_1_school_attended }}
+            </td>
+            <td class="table-header">{{ "pro_education_1_dates_attended" | mapField }}</td>
+            <td>
+              {{
+              ProfessionalLicenseRecord?.pro_education_1_dates_attended
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel
+    [expanded]="expanded"
+    class="report-panel mat-elevation-z0"
+    #prWatercraftRecordPanel
+    *ngIf="report?.WatercraftRecords">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h3 fxFlex>
+          <mat-icon *ngIf="!prWatercraftRecordPanel.expanded" class="md-18">add_box</mat-icon>
+          <mat-icon *ngIf="prWatercraftRecordPanel.expanded" class="md-18">indeterminate_check_box</mat-icon>
+          Watercraft
+        </h3>
+      </mat-panel-title>
+      <mat-panel-description>
+        {{
+        report.WatercraftRecords.WatercraftRecord
+        | verDate: "boat_ver_date":verificationDateFormat
+        }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-container *ngTemplateOutlet="loader"></ng-container>
+    <div
+      *ngFor="let WatercraftRecord of
+      report?.WatercraftRecords?.WatercraftRecord;
+      let i= index"style="padding: 20px;">
+      <mat-expansion-panel
+        [expanded]="expanded"
+        class="report-panel mat-elevation-z0"
+        hideToggle="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4>Watercraft record {{ i + 1 }}</h4>
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ WatercraftRecord?.boat_ver_date | reportDate: dateFormat }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <table aria-describedby="WatercraftRecord">
+          <tr>
+            <td class="table-header">{{ "boat_ver_date" | mapField }}</td>
+            <td>
+              {{ WatercraftRecord?.boat_ver_date | reportDate: dateFormat }}
+            </td>
+            <td class="table-header">{{ "boat_state_origin" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_state_origin }}</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Watercraft Details</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_watercraft_id" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_watercraft_id }}</td>
+            <td class="table-header">{{ "boat_watercraft_name" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_watercraft_name }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_watercraft_make_description" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_watercraft_make_description }}</td>
+            <td class="table-header">{{ "boat_watercraft_model_description" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_watercraft_model_description }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_model_year" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_model_year }}</td>
+            <td class="table-header">{{ "boat_hull_number" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_hull_number }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_watercraft_length" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_watercraft_length }}</td>
+            <td class="table-header">{{ "boat_watercraft_number_of_engines" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_watercraft_number_of_engines }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_use_code" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_use_code }}</td>
+            <td class="table-header">{{ "boat_use_description" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_use_description }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_propulsion_code" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_propulsion_code }}</td>
+            <td class="table-header">{{ "boat_propulsion_description" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_propulsion_description }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_purchase_price" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_purchase_price }}</td>
+            <td class="table-header">{{ "boat_dealer" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_dealer }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_new_used_flag" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_new_used_flag }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_vehicle_type_code" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_vehicle_type_code }}</td>
+            <td class="table-header">{{ "boat_vehicle_type_description" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_vehicle_type_description }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_watercraft_class_code" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_watercraft_class_code }}</td>
+            <td class="table-header">{{ "boat_watercraft_class_description" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_watercraft_class_description }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_coast_guard_documented_flag" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_coast_guard_documented_flag }}</td>
+            <td class="table-header">{{ "boat_coast_guard_number" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_coast_guard_number }}</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Title/Registration</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_title_state" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_title_state }}</td>
+            <td class="table-header">{{ "boat_title_issue_date" | mapField }}</td>
+            <td>
+              {{
+              WatercraftRecord?.boat_title_issue_date | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_title_status_code" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_title_status_code }}</td>
+            <td class="table-header">{{ "boat_title_status_description" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_title_status_description }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_title_type_code" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_title_type_code }}</td>
+            <td class="table-header">{{ "boat_title_type_description" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_title_type_description }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_purchase_date" | mapField }}</td>
+            <td>
+              {{
+              WatercraftRecord?.boat_purchase_date | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "boat_state_purchased" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_state_purchased }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_county_registration" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_county_registration }}</td>
+            <td class="table-header">{{ "boat_st_registration" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_st_registration }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_registration_status_date" | mapField }}</td>
+            <td>
+              {{
+              WatercraftRecord?.boat_registration_status_date
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "boat_registration_number" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_registration_number }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_registration_date" | mapField }}</td>
+            <td>
+              {{
+              WatercraftRecord?.boat_registration_date
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "boat_registration_expiration_date" | mapField }}</td>
+            <td>
+              {{
+              WatercraftRecord?.boat_registration_expiration_date
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_registration_status_code" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_registration_status_code }}</td>
+            <td class="table-header">{{ "boat_registration_status_description" | mapField }}</td>
+            <td>
+              {{ WatercraftRecord?.boat_registration_status_description }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Lien(s)</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_lien_indicator_1" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_lien_indicator_1 }}</td>
+            <td class="table-header">{{ "boat_lien_indicator_2" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_lien_indicator_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_lien_date_1" | mapField }}</td>
+            <td>
+              {{ WatercraftRecord?.boat_lien_date_1 | reportDate: dateFormat }}
+            </td>
+            <td class="table-header">{{ "boat_lien_date_2" | mapField }}</td>
+            <td>
+              {{ WatercraftRecord?.boat_lien_date_2 | reportDate: dateFormat }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_lien_name_1" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_lien_name_1 }}</td>
+            <td class="table-header">{{ "boat_lien_name_2" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_lien_name_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_lien_address_1_1" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_lien_address_1_1 }}</td>
+            <td class="table-header">{{ "boat_lien_address_1_2" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_lien_address_1_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_lien_address_2_1" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_lien_address_2_1 }}</td>
+            <td class="table-header">{{ "boat_lien_address_2_2" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_lien_address_2_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_lien_city_1" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_lien_city_1 }}</td>
+            <td class="table-header">{{ "boat_lien_city_2" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_lien_city_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_lien_state_1" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_lien_state_1 }}</td>
+            <td class="table-header">{{ "boat_lien_state_2" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_lien_state_2 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "boat_lien_zip_1" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_lien_zip_1 }}</td>
+            <td class="table-header">{{ "boat_lien_zip_2" | mapField }}</td>
+            <td>{{ WatercraftRecord?.boat_lien_zip_2 }}</td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel
+    [expanded]="expanded"
+    class="report-panel mat-elevation-z0"
+    #prEmailRecordsPanel
+    *ngIf="report?.EmailAddressRecords">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h3 fxFlex>
+          <mat-icon *ngIf="!prEmailRecordsPanel.expanded" class="md-18">add_box</mat-icon>
+          <mat-icon *ngIf="prEmailRecordsPanel.expanded" class="md-18">indeterminate_check_box</mat-icon>
+          Email
+        </h3>
+      </mat-panel-title>
+      <mat-panel-description>
+        {{
+        report.EmailAddressRecords.EmailAddressRecord
+        | verDate: "email_ver_date":verificationDateFormat
+        }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-container *ngTemplateOutlet="loader"></ng-container>
+    <div
+      *ngFor="let EmailAddressRecord of report?.EmailAddressRecords
+      ?.EmailAddressRecord;
+      let i= index"style="padding: 20px;">
+      <mat-expansion-panel
+        [expanded]="expanded"
+        class="report-panel mat-elevation-z0"
+        hideToggle="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4>Email Record {{ i + 1 }}</h4>
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ EmailAddressRecord?.email_ver_date | reportDate: dateFormat }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <table aria-describedby="EmailAddressRecord">
+          <tr>
+            <td class="table-header">{{ "email_ver_date" | mapField }}</td>
+            <td>
+              {{ EmailAddressRecord?.email_ver_date | reportDate: dateFormat }}
+            </td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "email_date_first_seen" | mapField }}</td>
+            <td>
+              {{
+              EmailAddressRecord?.email_date_first_seen
+              | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "eml_LN_Date_Last_Seen" | mapField }}</td>
+            <td>
+              {{
+              EmailAddressRecord?.eml_LN_Date_Last_Seen
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Email Information</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "email_email_address" | mapField }}</td>
+            <td>{{ EmailAddressRecord?.email_email_address }}</td>
+            <td class="table-header">{{ "email_orig_login_date" | mapField }}</td>
+            <td>
+              {{
+              EmailAddressRecord?.email_orig_login_date
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "email_orig_site" | mapField }}</td>
+            <td>{{ EmailAddressRecord?.email_orig_site }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Email Address Owner</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "email_fname" | mapField }}</td>
+            <td>{{ EmailAddressRecord?.email_fname }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "email_mname" | mapField }}</td>
+            <td>{{ EmailAddressRecord?.email_mname }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "email_lname" | mapField }}</td>
+            <td>{{ EmailAddressRecord?.email_lname }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel
+    [expanded]="expanded"
+    class="report-panel mat-elevation-z0"
+    #prPhoneRecordsPanel
+    *ngIf="report?.PhoneRecords">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h3 fxFlex>
+          <mat-icon *ngIf="!prPhoneRecordsPanel.expanded" class="md-18">add_box</mat-icon>
+          <mat-icon *ngIf="prPhoneRecordsPanel.expanded" class="md-18">indeterminate_check_box</mat-icon>
+          Phone
+        </h3>
+      </mat-panel-title>
+      <mat-panel-description>
+        {{
+        report.PhoneRecords.PhoneRecord
+        | verDate: "pho_ver_date":verificationDateFormat
+        }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-container *ngTemplateOutlet="loader"></ng-container>
+    <div
+      *ngFor="let PhoneRecord of report?.PhoneRecords?.PhoneRecord;
+      let i= index"style="padding: 20px;">
+      <mat-expansion-panel
+        [expanded]="expanded"
+        class="report-panel mat-elevation-z0"
+        hideToggle="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4>Phone Record {{ i + 1 }}</h4>
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ PhoneRecord?.pho_ver_date | reportDate: dateFormat }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <table aria-describedby="PhoneRecord">
+          <tr>
+            <td class="table-header">{{ "pho_ver_date" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_ver_date | reportDate: dateFormat }}</td>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pho_dt_first_seen" | mapField }}</td>
+            <td>
+              {{ PhoneRecord?.pho_dt_first_seen | reportDate: dateFormat }}
+            </td>
+            <td class="table-header">{{ "pho_LN_Date_Last_Seen" | mapField }}</td>
+            <td>
+              {{ PhoneRecord?.pho_LN_Date_Last_Seen | reportDate: dateFormat }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Phone Information</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pho_phone" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_phone }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pho_listing_type_res" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_listing_type_res }}</td>
+            <td class="table-header">{{ "pho_publish_code" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_publish_code }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pho_listing_type_bus" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_listing_type_bus }}</td>
+            <td class="table-header">{{ "pho_disc_cnt12" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_disc_cnt12 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pho_listing_type_gov" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_listing_type_gov }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Subscriber Information</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pho_name_first" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_name_first }}</td>
+            <td class="table-header">{{ "pho_address" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_address }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pho_name_middle" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_name_middle }}</td>
+            <td class="table-header">{{ "pho_city" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_city }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pho_name_last" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_name_last }}</td>
+            <td class="table-header">{{ "pho_state" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_state }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "pho_name_suffix" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_name_suffix }}</td>
+            <td class="table-header">{{ "pho_zip" | mapField }}</td>
+            <td>{{ PhoneRecord?.pho_zip }}</td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+    </div>
+  </mat-expansion-panel>
+  <mat-expansion-panel
+    [expanded]="expanded"
+    class="report-panel mat-elevation-z0"
+    #prPeopleAtWorkPanel
+    *ngIf="report?.PeopleAtWorkRecords">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <h3 fxFlex>
+          <mat-icon *ngIf="!prPeopleAtWorkPanel.expanded" class="md-18">add_box</mat-icon>
+          <mat-icon *ngIf="prPeopleAtWorkPanel.expanded" class="md-18">indeterminate_check_box</mat-icon>
+          People At Work
+        </h3>
+      </mat-panel-title>
+      <mat-panel-description>
+        {{
+        report.PeopleAtWorkRecords.PeopleAtWorkRecord
+        | verDate: "paw_ver_date":verificationDateFormat
+        }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <ng-container *ngTemplateOutlet="loader"></ng-container>
+    <div
+      *ngFor="let PeopleAtWorkRecord of report?.PeopleAtWorkRecords
+      ?.PeopleAtWorkRecord;
+      let i= index"style="padding: 20px;">
+      <mat-expansion-panel
+        [expanded]="expanded"
+        class="report-panel mat-elevation-z0"
+        hideToggle="true">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <h4>People At Work Record {{ i + 1 }}</h4>
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ PeopleAtWorkRecord?.paw_ver_date | reportDate: dateFormat }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <table aria-describedby="PeopleAtWorkRecord">
+          <tr>
+            <td class="table-header">{{ "paw_ver_date" | mapField }}</td>
+            <td>
+              {{ PeopleAtWorkRecord?.paw_ver_date | reportDate: dateFormat }}
+            </td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_dt_first_seen" | mapField }}</td>
+            <td>
+              {{
+              PeopleAtWorkRecord?.paw_dt_first_seen | reportDate: dateFormat
+              }}
+            </td>
+            <td class="table-header">{{ "paw_LN_Date_Last_Seen" | mapField }}</td>
+            <td>
+              {{
+              PeopleAtWorkRecord?.paw_LN_Date_Last_Seen
+              | reportDate: dateFormat
+              }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Company Information</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_company_name" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_name }}</td>
+            <td class="table-header">{{ "paw_company_status" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_status }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_company_fein" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_fein }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_company_phone" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_phone }}</td>
+            <td class="table-header">{{ "paw_active_phone_flag" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_active_phone_flag }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_company_title" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_title }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_company_address" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_address }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_company_prim_range" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_prim_range }}</td>
+            <td class="table-header">{{ "paw_company_city" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_city }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_company_predir" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_predir }}</td>
+            <td class="table-header">{{ "paw_company_state" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_state }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_company_prim_name" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_prim_name }}</td>
+            <td class="table-header">{{ "paw_company_zip" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_zip }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_company_addr_suffix" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_addr_suffix }}</td>
+            <td class="table-header">{{ "paw_company_zip4" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_zip4 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_company_postdir" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_postdir }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_company_unit_desig" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_unit_desig }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_company_sec_range" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_company_sec_range }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header" colspan="4">Individual Information</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_address" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_address }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_prim_range" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_prim_range }}</td>
+            <td class="table-header">{{ "paw_city" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_city }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_predir" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_predir }}</td>
+            <td class="table-header">{{ "paw_state" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_state }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_prim_name" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_prim_name }}</td>
+            <td class="table-header">{{ "paw_zip" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_zip }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_addr_suffix" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_addr_suffix }}</td>
+            <td class="table-header">{{ "paw_zip4" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_zip4 }}</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_postdir" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_postdir }}</td>
+            <td colspan="4"></td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_unit_desig" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_unit_desig }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+          <tr>
+            <td class="table-header">{{ "paw_sec_range" | mapField }}</td>
+            <td>{{ PeopleAtWorkRecord?.paw_sec_range }}</td>
+            <td colspan="2">&nbsp;</td>
+          </tr>
+        </table>
+      </mat-expansion-panel>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
+</div>

@@ -1,0 +1,31 @@
+<div [ngClass]="{'printable': printable}">
+  <h1 class="mat-title green-color">
+    {{ report?.CreditBureau }} Credit Report
+    <ng-container *ngIf="report?.ReportDate">
+        - {{ report?.ReportDate | reportDate:dateFormats.display.default }}
+    </ng-container>
+  </h1>
+<mat-accordion displayMode="default" multi="true" hideToggle="true">
+  <app-echo-header title="Individual Information" [data]="report" [loading]="loading" [expanded]="true" [printable]="printable">
+  </app-echo-header>
+  <app-individual-information title="Individual Header" [data]="report" [loading]="loading" [expanded]="expanded" [printable]="printable">
+  </app-individual-information>
+  <app-layout-section title="Credit File Information" [loading]="loading" [expanded]="expanded" [printable]="printable">
+    <ng-container *ngFor="let file of report?.CreditFile; let i=index">
+      <app-credit-file [data]="file" [index]="index" [title]="'Credit File: ' + file?.SourceType" [loading]="loading" [expanded]="true" [printable]="printable"
+      [report]="report" [hideHeader]="true">
+      </app-credit-file>
+    </ng-container>
+  </app-layout-section>
+  <app-layout-section title="Tradelines" [loading]="loading" [expanded]="expanded" [printable]="printable">
+    <ng-container *ngFor="let trade of report?.Trades; let i=index">
+      <div style="width: 98%; padding: 5px 10px;">
+        <app-trade [data]="trade" [index]="i" [title]="'Tradeline ' + (i + 1)" [loading]="loading" [expanded]="true" [printable]="printable"></app-trade>
+    </div>
+    </ng-container>
+  </app-layout-section>
+  <app-collections title="Collections" [data]="report" [loading]="loading" [expanded]="expanded" [printable]="printable"></app-collections>
+  <app-inquiry [data]="report" title="Inquiry History" [loading]="loading" [expanded]="expanded" [printable]="printable"></app-inquiry>
+  <app-public-record title="Public Records" [data]="report" [loading]="loading" [expanded]="expanded" [printable]="printable"></app-public-record>
+</mat-accordion>
+</div>

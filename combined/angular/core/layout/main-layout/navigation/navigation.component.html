@@ -1,0 +1,27 @@
+<mat-nav-list role="navigation" aria-label="New report Menu Item"
+  class="iis-first-nav-list">
+    <button mat-list-item [routerLink]="[ACL.NEWREPORT, []]" routerLinkActive="active"
+    class="iis-nav-button">
+        <mat-icon>add_circle</mat-icon> NEW REPORTS
+    </button>
+</mat-nav-list>
+<mat-nav-list role="navigation" aria-label="New search Menu Item" >
+    <button mat-list-item [routerLink]="[ACL.INITIAL_INVESTIGATION_SEARCH, []]" routerLinkActive="active"
+    class="iis-nav-button">
+        <mat-icon>search</mat-icon> RECORD SEARCH
+    </button>
+</mat-nav-list>
+<mat-nav-list *canAccess="[permissions.monitoring]" role="navigation" aria-label="My Alerts Menu Item">
+    <button mat-list-item [routerLink]="[ACL.ALERTS, []]" routerLinkActive="active">
+        <mat-icon>star</mat-icon>
+        <span [matBadge]="numAlerts" [matBadgeHidden]="numAlerts===0" matBadgeOverlap="false" matBadgeColor="warn" matBadgePosition="after">MY ALERTS</span>
+    </button>
+</mat-nav-list>
+<ng-container *ngIf="showMyReports">
+<mat-nav-list *canAccess="[permissions.viewReports]" role="navigation" aria-label="My Reports Menu Item">
+  <button mat-list-item [routerLink]="[ACL.MYREPORTS, []]" routerLinkActive="active" class="iis-nav-button">
+      <mat-icon>description</mat-icon>
+      <span [matBadge]="numReports" [matBadgeHidden]="numReports===0" matBadgeOverlap="false" matBadgeColor="warn" matBadgePosition="after">MY REPORTS</span>
+  </button>
+</mat-nav-list>
+</ng-container>

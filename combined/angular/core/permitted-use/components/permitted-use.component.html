@@ -1,0 +1,62 @@
+<div class="permitted-use-content" fxLayout="column">
+    <mat-card class="permitted-use-card">
+        <mat-card-header>
+            <mat-card-title>Permitted Use Certification ({{ step }})</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <ng-template [ngIf]="stepId === 'accept-fcra'">
+              <p>
+                The public record and credit reports contained in this portal are consumer reporting agency products
+                provided by LexisNexis Risk Solutions, Inc and may only be accessed in compliance with the Fair Credit
+                Reporting Act, 15 U.S.C. 1681 et seq (the ‘FCRA’). When you obtain these reports, you are a “User” of
+                “Consumer Reports” as those are defined under the FCRA and as such certify as follows:
+              </p>
+              <ol>
+                  <li>
+                      User will use Consumer Reports for Employment Purpose under the FCRA and such reports will not be
+                      used for any other purpose.
+                  </li>
+                  <li>
+                      User understands that the enterprise has made a clear and conspicuous written disclosure to the
+                      consumer, prior to obtaining the report, in a document that consists solely of the disclosure that
+                      a Consumer Report may be obtained.
+                  </li>
+                  <li>
+                      User understands that the enterprise has obtained prior written authorization from the consumer and
+                      such information shall be retained only to the extent permitted by law.
+                  </li>
+                  <li>
+                      The information obtained will not be used in violation of any Federal or state law, including any
+                      equal opportunity law or regulation.
+                  </li>
+                  <li>
+                      If User intends to take any adverse action based in whole or in part on the Consumer Report, a copy
+                      of the report and a summary of the consumer’s rights will be provided to the consumer prior to taking
+                      adverse action.
+                  </li>
+              </ol>
+              <p>
+                  User acknowledges that the FCRA imposes criminal penalties – including a fine, up to two years in prison, or
+                  both – against anyone who knowingly and willfully obtains information on a consumer from a consumer reporting
+                  agency under false pretenses, and other penalties for anyone who obtains such consumer information without a
+                  permissible purpose.
+              </p>
+            </ng-template>
+            <ng-template [ngIf]="stepId === 'accept-nonfcra'">
+              <p>Notice:  The Insider Threat Portal provides access to additional public record data when certain criteria is met,
+                or potential Insider Threat Program risk is discovered or reported.</p>
+                <p>
+                  This additional data, which is not regulated by the Fair Credit Reporting Act (FCRA), is marked "Non-FCRA" and
+                  segregated from the FCRA data.
+                </p>
+                <p>By clicking <strong>Agree and Continue</strong>, the user acknowledges that the Non-FCRA data will only be used for analysis,
+                  inquiry or investigation of a person’s potential non-compliance with Federal, state, or local laws and regulations
+                  or matters related to internal preexisting written FBI policy.
+            </ng-template>
+            <div class="actions-buttons" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+                <button mat-flat-button color="primary" type="button" (click)="onSubmit()">Agree and Continue</button>
+                <button mat-flat-button color="warn" type="button" (click)="onCancel()">Cancel</button>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

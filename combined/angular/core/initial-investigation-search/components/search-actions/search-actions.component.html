@@ -1,0 +1,15 @@
+<div class="action-component iis-action-component">
+    <button mat-flat-button color="primary" type="submit" *ngIf="showEnroll" [disabled]="searchForm.invalid || !searchForm.touched"
+    class="submit-button">
+      Submit
+    </button>
+
+    <button mat-flat-button color="primary" class="submit-button" type="submit" [disabled]="searchForm.invalid || loading" *ngIf="!showEnroll"
+      (click)="submitSearch($event)">
+       Submit
+    </button>
+    <button mat-stroked-button type="reset" (click)="resetSearch($event)" [disabled]="!searchForm.dirty" class="reset-button">
+       Reset Form
+    </button>
+
+</div>

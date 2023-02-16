@@ -1,0 +1,40 @@
+<div class="search-container" fxLayout="row" fxLayoutAlign="start center">
+    <!-- Accordion -->
+    <mat-accordion [displayMode]="'flat'" [multi]="true" fxFlex="1 1 auto" fxFlexAlign="start" hideToggle="true">
+        <!-- Search Panel -->
+        <mat-expansion-panel [expanded]="true" class="mat-elevation-z0" #searchPanel>
+            <mat-expansion-panel-header>
+            <h1>
+                <mat-icon *ngIf="!searchPanel.expanded" class="md-18">add_box</mat-icon>
+                <mat-icon *ngIf="searchPanel.expanded" class="md-18">indeterminate_check_box</mat-icon> Search
+            </h1>
+            <span fxFlex></span>
+            </mat-expansion-panel-header>
+            <ng-container *ngIf="resultSearch === 'FAIL' || resultSearch === ''">
+                <div fxLayout="column" fxLayoutAlign="start center">
+                    <app-advanced-search-form (loaded)="loadedActions($event)" [actions]="searchActions"
+                    [filters]="fields" [progress]="loading" [columns]="gridColumns" [gutterSize]="gutterSize"
+                    [rowHeight]="rowHeight" [elevation]="elevation"></app-advanced-search-form>
+                </div>
+            </ng-container>
+        </mat-expansion-panel>
+        <!-- End Search Panel -->
+        <!-- Reports Panel -->
+        <ng-container *ngIf="resultsLoaded">
+            <mat-expansion-panel [expanded]="true" class="mat-elevation-z0" #reportsPanel>
+                <mat-expansion-panel-header>
+                    <h1>
+                        <mat-icon *ngIf="!reportsPanel.expanded" class="md-18">add_box</mat-icon>
+                        <mat-icon *ngIf="reportsPanel.expanded" class="md-18">indeterminate_check_box</mat-icon> Reports
+                    </h1>
+                </mat-expansion-panel-header>
+                <ng-container *ngIf="resultSearch === 'FAIL' || resultSearch === ''">
+                    <app-results fxFlex="100" [results]="results"></app-results>
+                </ng-container>
+            </mat-expansion-panel>
+        </ng-container>
+        <!-- End Reports Panel -->
+    </mat-accordion>
+    <!-- End Accordion -->
+</div>
+<app-no-records-found *ngIf="resultSearch === 'FAIL'"></app-no-records-found>

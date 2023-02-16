@@ -1,0 +1,120 @@
+<div class="lnx-ui-search-form-container">
+  <mat-card [ngClass]="elevation">
+      <form class="lnx-ui-search-form" method="POST" action="." [formGroup]="searchForm"
+          (ngSubmit)="onSearchSubmit()" (reset)="onSearchReset()">
+          <mat-card-header class="lnx-ui-search-form-header" *ngIf="title">
+              <mat-card-title>{{title}}</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+              <mat-grid-list [cols]="columns" [rowHeight]="rowHeight" [gutterSize]="gutterSize">
+                  <ng-container *ngFor="let field of formFields; let i=index; trackBy: trackBy;" >
+                      <mat-grid-tile [colspan]="field.cols" [rowspan]="field.rows">
+                          <mat-grid-tile-header *ngIf="field.headerText">
+                              {{ field.headerText }}
+                          </mat-grid-tile-header>
+                          <ng-container [ngSwitch]="field?.type">
+                              <mat-form-field *ngSwitchCase="'text'" class="lnx-ui-search-field" appearance="outline" [hideRequiredMarker]="searchForm.get(field.name).valid" [matTooltip]="allowableChars[field.name]"
+                               [matTooltipDisabled]="!searchForm.get(field.name).hasError('pattern')" matTooltipPosition="above">
+                                  <mat-label>
+                                    <ng-container *ngIf="searchForm.get(field.name).valid || !(searchForm.get(field.name).dirty && searchForm.get(field.name).touched)">{{ field.label }}</ng-container>
+                                    <ng-container *ngIf="searchForm.get(field.name).invalid && (searchForm.get(field.name).dirty && searchForm.get(field.name).touched)"> {{ field.name | errorMessage:searchForm }}</ng-container>
+                                  </mat-label>
+                                  <input matInput [placeholder]="field.placeholder" [formControlName]="field.name"
+                                      type="search" [required]="field.required" [maxlength]="getFieldMax(field.name)"/>
+                                  <mat-hint align="end" *ngIf="field.hint">{{ field.hint }}</mat-hint>
+                              </mat-form-field>
+                              <mat-form-field *ngSwitchCase="'number'" class="lnx-ui-search-field" appearance="outline" [hideRequiredMarker]="searchForm.get(field.name).valid" [matTooltip]="allowableChars[field.name]"
+                              [matTooltipDisabled]="!searchForm.get(field.name).hasError('pattern')" matTooltipPosition="above">
+                                  <mat-label>
+                                    <ng-container *ngIf="searchForm.get(field.name).valid || !(searchForm.get(field.name).dirty && searchForm.get(field.name).touched)">{{ field.label }}</ng-container>
+                                    <ng-container *ngIf="searchForm.get(field.name).invalid && (searchForm.get(field.name).dirty && searchForm.get(field.name).touched)"> {{ field.name | errorMessage:searchForm }}</ng-container>
+                                  </mat-label>
+                                <input matInput [placeholder]="field.placeholder" [formControlName]="field.name"
+                                    type="text" [required]="field.required" [maxlength]="getFieldMax(field.name)" (keydown)="onlyNumericKeys($event)"/>
+                                <mat-hint align="end" *ngIf="field.hint">{{ field.hint }}</mat-hint>
+                              </mat-form-field>
+                              <mat-checkbox *ngSwitchCase="'checkbox'" [formControlName]="field.name" [required]="field.required">
+                                  {{field.label}}
+                              </mat-checkbox>
+                              <mat-form-field *ngSwitchCase="'select'" appearance="outline" [matTooltip]="allowableChars[field.name]"
+                              [matTooltipDisabled]="!searchForm.get(field.name).hasError('pattern')" matTooltipPosition="above">
+                                  <mat-label>
+                                    <ng-container *ngIf="searchForm.get(field.name).valid || !(searchForm.get(field.name).dirty && searchForm.get(field.name).touched)">{{ field.label }}</ng-container>
+                                    <ng-container *ngIf="searchForm.get(field.name).invalid && (searchForm.get(field.name).dirty && searchForm.get(field.name).touched)"> {{ field.name | errorMessage:searchForm }}</ng-container>
+                                  </mat-label>
+                                  <mat-select [formControlName]="field.name" [required]="field.required" [disableOptionCentering]="true">
+                                      <mat-option>{{field.placeholder}}</mat-option>
+                                      <mat-option *ngFor="let option of field?.options"
+                                          [value]="option.value||option">
+                                          {{option.label}}
+                                      </mat-option>
+                                  </mat-select>
+                                  <mat-hint align="end" *ngIf="field.hint">{{ field.hint }}</mat-hint>
+                              </mat-form-field>
+                              <mat-form-field *ngSwitchCase="'autocomplete'" appearance="outline" [matTooltip]="allowableChars[field.name]"
+                              [matTooltipDisabled]="!searchForm.get(field.name).hasError('pattern')" matTooltipPosition="above">
+                                  <mat-label>
+                                    <ng-container *ngIf="searchForm.get(field.name).valid || !(searchForm.get(field.name).dirty && searchForm.get(field.name).touched)">{{ field.label }}</ng-container>
+                                    <ng-container *ngIf="searchForm.get(field.name).invalid && (searchForm.get(field.name).dirty && searchForm.get(field.name).touched)"> {{ field.name | errorMessage:searchForm }}</ng-container>
+                                  </mat-label>
+                                <input matInput [placeholder]="field.placeholder" [formControlName]="field.name"
+                                    type="text" [required]="field.required" [maxlength]="getFieldMax(field.name)" [matAutocomplete]="auto"/>
+                                <mat-autocomplete #auto="matAutocomplete">
+                                  <mat-option>{{field.placeholder}}</mat-option>
+                                  <mat-option *ngFor="let option of field?.options"
+                                      [value]="option.value||option">
+                                      {{option.label}}
+                                  </mat-option>
+                                </mat-autocomplete>
+                                <mat-hint align="end" *ngIf="field.hint">{{ field.hint }}</mat-hint>
+                              </mat-form-field>
+                              <mat-form-field *ngSwitchCase="'date'" class="lnx-ui-search-field" appearance="outline" [hideRequiredMarker]="searchForm.get(field.name).valid" [matTooltip]="allowableChars[field.name]"
+                              [matTooltipDisabled]="!searchForm.get(field.name).errors" matTooltipPosition="above">
+                                  <mat-label>
+                                    <ng-container *ngIf="searchForm.get(field.name).valid || !(searchForm.get(field.name).dirty && searchForm.get(field.name).touched)">{{ field.label }}</ng-container>
+                                    <ng-container *ngIf="searchForm.get(field.name).invalid && (searchForm.get(field.name).dirty && searchForm.get(field.name).touched)"> {{ field.name | errorMessage:searchForm }}</ng-container>
+                                  </mat-label>
+                                  <input matInput [matDatepicker]="picker" [placeholder]="field.placeholder"
+                                      [formControlName]="field.name" (focus)="picker.open()">
+                                  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                  <mat-datepicker #picker></mat-datepicker>
+                                  <mat-hint align="end" *ngIf="field.hint">{{ field.hint }}</mat-hint>
+                              </mat-form-field>
+                              <ng-container *ngSwitchCase="'radio'" [matTooltip]="allowableChars[field.name]"
+                              [matTooltipDisabled]="!searchForm.get(field.name).hasError('pattern')" matTooltipPosition="above">
+                                  <mat-label>
+                                    <ng-container *ngIf="searchForm.get(field.name).valid || !(searchForm.get(field.name).dirty && searchForm.get(field.name).touched)">{{ field.label }}</ng-container>
+                                    <ng-container *ngIf="searchForm.get(field.name).invalid && (searchForm.get(field.name).dirty && searchForm.get(field.name).touched)"> {{ field.name | errorMessage:searchForm }}</ng-container>
+                                  </mat-label>
+                                  <mat-radio-group [formControlName]="field.name" [required]="field.required">
+                                      <mat-radio-button class="example-radio-button"
+                                          *ngFor="let option of field.options" [value]="option.value||option">
+                                          {{option.label}}
+                                      </mat-radio-button>
+                                  </mat-radio-group>
+                              </ng-container>
+                              <mat-form-field *ngSwitchDefault class="lnx-ui-search-field" appearance="outline" [hideRequiredMarker]="searchForm.get(field.name).valid" [matTooltip]="allowableChars[field.name]"
+                              [matTooltipDisabled]="!searchForm.get(field.name).hasError('pattern')" matTooltipPosition="above">
+                                  <mat-label>
+                                    <ng-container *ngIf="searchForm.get(field.name).valid || !(searchForm.get(field.name).dirty && searchForm.get(field.name).touched)">{{ field.label }}</ng-container>
+                                    <ng-container *ngIf="searchForm.get(field.name).invalid && (searchForm.get(field.name).dirty && searchForm.get(field.name).touched)"> {{ field.name | errorMessage:searchForm }}</ng-container>
+                                  </mat-label>
+                                <input matInput [placeholder]="field.placeholder" [formControlName]="field.name"
+                                    type="text" [required]="field.required" [maxlength]="getFieldMax(field.name)"/>
+                                <mat-hint align="end" *ngIf="field.hint">{{ field.hint }}</mat-hint>
+                              </mat-form-field>
+                          </ng-container>
+                          <mat-grid-tile-footer *ngIf="field.footerText">
+                              {{ field.footerText }}
+                          </mat-grid-tile-footer>
+                      </mat-grid-tile>
+                  </ng-container>
+              </mat-grid-list>
+          </mat-card-content>
+          <mat-card-actions align="end">
+              <ng-template [cdkPortalOutlet]="actionsPortal" (attached)="receiveReference($event)"></ng-template>
+          </mat-card-actions>
+      </form>
+  </mat-card>
+  <mat-progress-bar mode="query" *ngIf="progress"></mat-progress-bar>
+</div>

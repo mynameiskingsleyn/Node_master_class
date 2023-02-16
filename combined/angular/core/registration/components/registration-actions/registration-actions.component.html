@@ -1,0 +1,4 @@
+<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
+    <button mat-flat-button color="primary" type="submit" [disabled]="searchForm.invalid || loading">Register</button>
+    <button mat-stroked-button type="reset" [disabled]="!searchForm.touched || !searchForm.dirty || loading">Clear Form</button>
+</div>

@@ -1,0 +1,36 @@
+<div class="no-record-dialog-box">
+  <div fxLayout="column" fxLayoutAlign="stretch">
+    <div fxLayout="row">
+      <h3 fxFlex mat-dialog-title>No Record</h3>
+      <div fxFlex></div>
+      <div fxFlexAlign="center end">
+        <button mat-icon-button mat-dialog-close color="primary">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-dialog-content class="mat-typography" fxLayout="row"
+      fxLayoutAlign="start center">
+      <strong>Source Credit Bureau: </strong>&nbsp;{{ message }}
+      <span *ngIf="loading"><mat-spinner strokeWidth="2" diameter="15"></mat-spinner></span>
+    </mat-dialog-content>
+    <mat-divider></mat-divider>
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+      <div fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="center" fxFlex>
+        <button mat-flat-button color="primary" [routerLink]="[viewReport()]">
+          <mat-icon>description</mat-icon> View No Record Report
+        </button>
+        <button mat-flat-button color="primary"
+          class="download-report"
+          [disabled]="downloading"
+          (click)="downloadReportPdf()">
+          <mat-icon *ngIf="!downloading">save_alt</mat-icon>
+          <mat-icon *ngIf="downloading"><mat-spinner diameter="20"
+              mode="indeterminate"></mat-spinner></mat-icon>
+          Download Report (PDF)
+        </button>
+      </div>
+    </mat-dialog-actions>
+  </div>
+</div>

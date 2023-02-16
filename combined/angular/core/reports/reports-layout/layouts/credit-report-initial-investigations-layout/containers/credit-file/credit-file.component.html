@@ -1,0 +1,58 @@
+<app-layout-block [title]="title" [loading]="loading" [expanded]="expanded" [hideHeader]="hideHeader">
+  <table aria-describedby="CreditFile">
+    <tr>
+      <td class="table-header">Name</td>
+      <td>{{ data?.Borrower?.UnparsedName }}</td>
+      <td>{{ data?.SourceType }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Social Security Number</td>
+      <td>{{ data?.Borrower?.SSN }}</td>
+      <td>{{ data?.SourceType }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Date of Birth</td>
+      <td>{{ data?.Borrower?.BirthDate | reportDate }}</td>
+      <td></td>
+    </tr>
+    <ng-container *ngFor="let address of data?.Borrower?.Residence; let i = index">
+      <tr>
+        <td class="table-header">
+          <span *ngIf="address?.BorrowerResidencyType === 'Current'">Current Residence</span>
+          <span *ngIf="address?.BorrowerResidencyType === 'Prior'">Previous Residence</span>
+        </td>
+        <td>{{ address?.StreetAddress }} {{ address?.City }}, {{ address?.State }} {{ address?.PostalCode }}</td>
+        <td>{{ data?.SourceType }}</td>
+      </tr>
+    </ng-container>
+    <tr>
+      <td class="table-header">Reported Monthly Income</td>
+      <td></td>
+      <td>{{ data?.SourceType }}</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><strong>Number of Credit Bureaus Hit:</strong> {{ report?.ReportsCombined }}</td>
+      <td><strong>Total Number of Trades in Report:</strong> {{ report?.Keys?.TRADELINE_TOTAL_TRADELINES_USED }}
+      </td>
+    </tr>
+    <tr>
+      <td class="table-header" colspan="4">Employment</td>
+    </tr>
+    <ng-container *ngFor="let employer of data?.Borrower?.Employer; let i = index">
+      <tr>
+        <td colspan="4">
+          <span *ngIf="employer?.EmploymentCurrentIndicator === 'Y'"><strong>Current Employer:</strong></span>
+          <span *ngIf="employer?.EmploymentCurrentIndicator === 'N'"><strong>Previous Employer:</strong></span> {{
+          employer?.Name }}
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Date Employment Verified:</strong> {{ employer?.EmploymentReportedDate | reportDate:dateFormats.display.long
+          }}</td>
+        <td><strong>Date Individual Left Employer</strong></td>
+        <td></td>
+      </tr>
+    </ng-container>
+  </table>
+</app-layout-block>

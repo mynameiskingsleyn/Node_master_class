@@ -1,0 +1,12 @@
+<div *ngIf="report?.Error" class="report-error">
+  <h2>There was an error performing this action. Please contact customer service if this error persists.</h2>
+</div>
+<div *ngIf="!report?.Error">
+  <app-report-header *ngIf="showHeader"></app-report-header>
+  <div class="report-viewer">
+    <div *ngFor="let view of reportViews; let i=index">
+        <ng-template [cdkPortalOutlet]="view" (attached)="receiveReference($event)">
+        </ng-template>
+    </div>
+  </div>
+</div>

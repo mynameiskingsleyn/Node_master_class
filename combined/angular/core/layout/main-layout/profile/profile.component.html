@@ -1,0 +1,17 @@
+<div class="user-profile-iis" fxLayout="row">
+    <mat-menu #profileMenu="matMenu" yPosition="above" xPosition="before">
+        <ng-template matMenuContent>
+            <button mat-menu-item [routerLink]="[ACL.HELP, []]">Help <mat-icon>help_outline</mat-icon></button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item [routerLink]="[ACL.CHANGE_PASSWORD, []]">Change Password <mat-icon>lock_open</mat-icon></button>
+            <mat-divider></mat-divider>
+            <button mat-menu-item [routerLink]="[ACL.AUTH_LOGOUT, []]">Sign Out <mat-icon>login</mat-icon></button>
+        </ng-template>
+    </mat-menu>
+    <div fxLayout="column">
+        <span class="profile-name">{{displayName}}</span>
+        <mat-progress-bar mode="indeterminate" *ngIf="loading"></mat-progress-bar>
+        <span *ngIf="!loading" class="profile-active-subjects">{{sActiveSubjects}} active personnel</span>
+    </div>
+    <button mat-icon-button class="pad-icon menu-button" [matMenuTriggerFor]="profileMenu"><mat-icon>keyboard_arrow_down</mat-icon></button>
+</div>

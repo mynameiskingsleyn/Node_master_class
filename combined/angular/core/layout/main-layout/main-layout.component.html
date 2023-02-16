@@ -1,0 +1,12 @@
+<app-main-header></app-main-header>
+<mat-sidenav-container id="main-container" fxLayout="row" fxLayout.xs="column" fxFlexFill>
+  <mat-sidenav id="main-navigation" mode="side" [opened]="openSidenav" style="flex: 1 1 1.5em">
+    <app-navigation></app-navigation>
+  </mat-sidenav>
+  <mat-sidenav-content style="flex: 3 3 calc(15em + 20px);">
+    <div class="main-layout-iis">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+<app-main-footer></app-main-footer>

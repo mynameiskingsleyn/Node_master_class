@@ -1,0 +1,69 @@
+<app-layout-block [title]="title" [loading]="loading" [expanded]="expanded" [printable]="printable" [hideHeader]="hideHeader">
+  <table aria-describedby="data" class="five-cols">
+    <tr>
+      <td class="table-header">Name</td>
+      <td>{{ data?.Borrower?.UnparsedName }}</td>
+      <td>{{ data?.SourceType }}</td>
+      <td class="table-header">Number of Credit Bureaus Hit</td>
+      <td>{{ report?.ReportsCombined }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Social Security Number</td>
+      <td>{{ data?.Borrower?.SSN }}</td>
+      <td>{{ data?.SourceType }}</td>
+      <td class="table-header">Total Number of Tradelines in Report</td>
+      <td>{{ report?.Keys?.TRADELINE_TOTAL_TRADELINES_USED }}</td>
+    </tr>
+    <tr>
+      <td class="table-header">Date of Birth</td>
+      <td>{{ data?.Borrower?.BirthDate | reportDate }}</td>
+      <td>{{ data?.SourceType }}</td>
+      <td class="table-header">Reported Monthly Income</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td colspan="5" class="table-header center-text">Consumer Address</td>
+    </tr>
+    <tr *ngFor="let address of data?.Borrower?.Residence; let i = index">
+      <td class="table-header">
+        <span *ngIf="address?.BorrowerResidencyType === 'Current'">Current Residence</span>
+        <span *ngIf="address?.BorrowerResidencyType === 'Prior'">Prior Residence</span>
+      </td>
+      <td>{{ address?.StreetAddress }} {{ address?.City }}, {{ address?.State }} {{ address?.PostalCode }}</td>
+      <td>{{ data?.SourceType }}</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td class="table-header center-text" colspan="5">Employment</td>
+    </tr>
+    <tr>
+      <td colspan="5">
+        <table *ngFor="let employer of data?.Borrower?.Employer; let i = index">
+          <tr>
+            <td class="table-header">
+              <span *ngIf="employer?.EmploymentCurrentIndicator === 'Y'"><strong>Current Employer (Name, Address, Date Reported)</strong></span>
+              <span *ngIf="employer?.EmploymentCurrentIndicator === 'N'"><strong>Previous Employer (Name, Address, Date Reported)</strong></span>
+            </td>
+            <td colspan="4">{{ employer?.Name }}
+              {{ employer?.City || employer?.City ? ',' : '' }}
+              {{ employer?.City }} {{ employer?.City ? ',' + employer?.State : employer?.State }}
+              {{ employer?.EmploymentReportedDate | reportDate:dateFormats.display.long }}
+            </td>
+          </tr>
+          <tr>
+            <td class="table-header">Date Employment Verified</td>
+            <td>{{ employer?.EmploymentReportedDate | reportDate:dateFormats.display.long }}</td>
+            <td [ngClass]="{'table-header' : employer?.EmploymentCurrentIndicator === 'N'}"><span
+                *ngIf="employer?.EmploymentCurrentIndicator === 'N'">Date Individual Left Employer</span></td>
+            <td><span *ngIf="employer?.EmploymentCurrentIndicator === 'N'"></span></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td colspan="5"></td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</app-layout-block>
