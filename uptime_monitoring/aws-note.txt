@@ -1,0 +1,1232 @@
+AWS tutorial
+
+Section 1-> Lesson 1 (Over view)
+	what you will be learning
+		1. AWS Certified Solutions Architect
+		2. AWS SysOps Administrator
+		3. Expertise Level Learning for Top 25 AWS Services
+		4. AWS Project - Explore Realtime 3 - Tier Architecture
+		EC2, VPC, Lambda, Route 53, Glacier, Cloud Front, RDS, DynamoDB, IAM, API Gateway, Cloud Watch, Trusted Adviser,
+		EFS, SNS, Lightsail, Certificate Manager, KMS, S3, Cloud Trail, Systems Manager, Inspector, Secrets Manager,
+		Cloud Formation, Elastic Beanstalk, Cost Explorer services.
+Section 2->Lesson 4(Cloud Computing Introduction)
+	What is cloud computing -> according to AWS—> it is the on-demand delivery of IT resources over the internet with
+	pay-as-you-go pricing. Instead of buying, owning, and maintaining physical, data centers and servers, you can access
+	technology services, such as computing power, storage and database on an as-needed basis from a cloud provider like AWS
+Lesson 5(Cloud Service Models)
+	what you need to do
+	setting up up to make sure servers are operational and made available for business you need
+	1. configure Networking among these servers so that they can communicate with each other and be made accessible over
+	    the internet to be able to be communicated with.
+ 	2. you need to purchase and configure Storage,
+	3  Need to rack your servers,
+	4. enable Virtualization layer to create multiple virtual servers on top of single physical frame in other to leverage ……,
+	5. install O/S,
+	6. install Middleware,
+	7. install  any Runtime to help run
+	   and process code
+	8. Keep and maintain Data
+	9. Install and configure the Applications to process this data and receive data from users and process it.
+	The above is referred to is On premises Customer Managed system
+
+	Cloud providers are providing this services to minimize what the customer needs to do
+	Iaas -> infrastructure as a Serive
+	Service provider will provide
+	1. Servers and rack your servers
+	2. Strorage
+	3. Networking, enable the
+	4. virtualization layer
+	Customers responsibility
+	5. installing the O/S, Middleware, Runtime, Data, Install and configure Applications.
+
+	PaaS(Platform as a Service)
+	Service provider will provide
+	1. Servers and rack your servers
+	2. Strorage
+	3. Networking, enable the
+	4. virtualization layer
+	5. O/S
+	6. Middleware
+	7. Runtime
+	Customer will be responsible for
+	8. Data and 9. Applications required.
+
+	SaaS(Software as a Service)
+	1. Servers and rack your servers
+	2. Strorage
+	3. Networking, enable the
+	4. virtualization layer
+	5. O/S
+	6. Middleware
+	7. Runtime
+	8. Data
+	9. Applications required to run our business.
+	Customer will be responsible for nothing
+	Example is —> image services, online games, shopping portals  etc. every other services that are offered over the internet.
+
+We would be focusing on IaaS,
+Lesson 6 (Cloud Deployment Models)
+Private Cloud
+	off-site/onsite Infrastructure Managed by you
+	Infrastructure is completely managed by you.
+	Ex: Century Link Cloud, Oracle Cloud, IBM Cloud.
+
+	You own your cloud space
+
+Hybrid Cloud
+	Application and data are in a combination of private and public cloud.
+	So application can be in an infrastructure hosted by a public cloud eg AWS and data in a private cloud like Oracle Cloud.
+
+Public Cloud
+	Off-site Infrastructure Managed by Service Provider
+	EX. AWS, Azure, GCP from Google.
+	Anyone can access this public cloud services.
+	your services are not accessible by anyone without the credentials.
+Lesson 7(pre Requisites)
+	Linux Basics,
+		User Management - How to create user, set up user password ==> useradd [options] username
+		File management  operations-> How to create File, Copy, Move, Delete Files.
+		File Permission -> How to set file permissions.
+		Linux package Management -> How to install/remove packages.
+		Linux file Systems -> How to create, mount and unmount File System.
+Section 4 Lesson 10(AWS Global Infrastructure)
+	(Regions)
+		AWS IaaS => There is infrastructures across the world.
+			Each Geographical location where AWS have their infrastructure managed is called a Region.
+			So when creating your virtual servers, you need to chose a Region in which to create this.
+			When you chose a Region, AWS will make sure that your virtual server is created in an infrastructure in that
+			Geographical location.
+			Currently AWS have 27 Regions around the world
+			Regions —> 						Region
+				us-east-1						us-west-1
+					N. Virginia					N.California
+				us-east-2
+
+			To maintain Higher availability, the AWS creates your service in a data center, there is multiple data centers that are
+			separate from each other,
+Lesson 11 (Availability zones)
+	This is all the infrastructure available in a given Region, AWS have multiple available zones that are interconnected with each
+	other, this makes for a failure in one to have a backup
+	Every region works as a separate entity, no connection between regions, but availability zones are interconnected.
+Lesson 12 (EC2 Basics)
+	What is EC2, This are the virtual Machines created at the availability level.
+	This EC2 is exposed at the internet as a public IP(Amazon EC2 IP)
+Lesson 13 (Create an EC2 Instance)
+	From the console => services -> EC2 under the compute section
+	 	Ones you select you region and everything,
+		step 1. Choose an Amazon Machine Image (Amazon Linux 2 AMI, Amazon Linux AMI, Red Hat
+		step 2. chose the instance type
+		step 3. Congigure Instance details( Number of Instances, Purchase options, Network, Subnet, Auto-assign Public IP,
+			    Placement group, Capacity Reservation, IAM role
+		step 4. Add storage . space size -> 4 gigs, 8, 16, 32
+			You can add multiple volumes
+		step 5  Add Tags (no need to do this)
+			Tags are more useful to identify the name of the instance.
+		Step 6 Configure Security Group -> Set of firewall rules that control the traffic for your instance.
+				Here you create security group, or use an existing one.
+	 	Step 7. Review Instance Launch.
+			here you create a key pair and download it (key.pem) its a “.pem” file.
+			ones this is created, AWS gives you a public ip address. You can now use this to login into this Instance via PUTTY.
+
+	Now you can access the EC2 instance using putty for windows or what ever you like (Termius for apple)
+		For Putty, windows, we should make the key available.
+		This key in pem, needs to be converted to putty format. U can use tool called putty Gen ( you can find file in putty.org)
+		download and run app. and select the key to convert the.
+		ones you are done with this, go back to Putty, select the ssh >> auth >> browse, and select the converted key. it will be the
+		“.ppk”
+		UN => ec2-user (this is the default user name for Amazon Linux 2, Fedora AMI, RHEL AMI, SUSE AMI)
+			   centOS AMI( the user name is centos)
+			   Debian AMI( user name is admin or root)
+			   Fedora AMI( fedora )
+			   Ubuntu AMI( ubuntu )
+Lesson 14(How to create EC2 instance [windows] based)
+	Same steps above except for you select > Microsoft Windows Server 2019 Base..
+	Loggin into the windows based instance is a little different
+	steps -> windows search —> Remote ==>select (Remote Desktop Connection)
+		here the password you need to get from the instance under Actions..
+
+Lesson 15(How to configure EC2 instance)
+	Manidatory details —>
+		Amazon Machine Image (AMI)
+		Hard disk/ Volume ,
+		Processor -> how many and number
+		Ram —> how much ram to be allocate
+		Operating System —> Chose the operating systems
+		More explanations for the Lesson 13 steps.
+Lesson 16(EC2 instance states)
+	Terminated ->
+	Pending -> means that AWS is still in the process of provisioning this instance.
+	Running state—> it is now available.
+
+	It is also possible to change the instance state based on business needs.
+	To do this, 1. select Instance >> Actions >> Instance State >> select state.
+		if you chose Stop option, the current state would be lost because it is removing the entire content of your real memory
+		To retain current state, you need the “Stop-Hibernate”. AWS will take the backup of memory and keep it in volume memory.
+		This will make sure the instance is returned to the state it was before the stop:Hibernate.
+		You can Terminate. and the server is gone
+		OPTIONS ==> Start, Stop, Stop-Hibernate, Reboot, Terminate.
+Lessong 17(EC2 Instance types) Amazon Elastic Compute Cloud
+	t2.micro
+		The amount of RAM is directory proportional to the number of clients it can handle.
+		command to see amount of ram ==> free -m
+		Command to get cpu info => cat /proc/cpuinfo
+	Touched changing instant type. from ==> instance>>settings>>instance type
+
+Lesson 18(EC2 Pricing Models) Amazon Elastic Compute Cloud
+	On Demand :  Hourly Billing, Un predictable Load, Pay as you go.
+				When instance is running you are paying..
+
+	Dedicated Host:  Physical Server, Control instances on the host, On Demand(Hourly Billing)
+				No other instances will be on your dedicated server
+			 Creating —>
+				goto instances > Dedicated Host > Allocate a Host >
+				select ==> instance family(md5…) instance type(m5d large, m5d.xlarge, m5d.2xlarge)
+						Availability Zone
+
+	Reserved: 	1yr/ 3 year Term, it is good for Predictable Load.
+				Max of 75% discount compared to On Demand.
+			Creating —>
+				goto instances > Reserved Instances > Purchase Reserved Instance >
+				 Select >> specify the configuration => on Platform (Linux/UNIX, Linux with SQL server standard, SUSE Linux ..)
+					Tenancy(dedicated, default), Offering class, Instance Type, Term, Payment Option.
+
+	Spot: 		Bid for Unused Capacity, More suitable for Flexible Workload that can be ran on non business hours.
+				Spot price vary supply/demand. You will be getting maximum of 90% discount  compared to on demand
+			Creating —>
+				Goto Instances >>Spot Requests >> Request Spot Instances >>
+					options -> Load balancing workloads, Flexible work, Big data workloads, Defined duration workloads.
+					there are many options for select including AMI,
+				Here you can select max cost(per hour)
+	How to use these
+	from console, goto instances > Dedicated Host > Allocate a Host >
+				select ==> instance family(md5…) instance type(m5d large, m5d.xlarge, m5d.2xlarge)
+						Availability Zone
+
+Lesson 19(Know Networking Terms)
+	Network -> communication between two machine having different IP addresses.
+		Network classes
+			Class A => 192.0.0.0/8
+			Class B => 192.168.0.0/16
+			Class C => 192.168.1.0/24
+		/24 ==> CIDR notation (classless inter domain Routing) system
+
+	Ip Address —> is the identifying address for machines in a network.
+			Ip address should be unique in a given network, can be seen in a different network since they are not connected.
+			Ip address is a decimal format with 4 octave. which is converted to binary format with a Length of 32 bits.
+			Note: having IP address is not enough to identify the server. it is required to have network address as well.
+			the 3 octaves are used to identify the network name Network 1 => 192.168.1.0/24 network 2 => 192.168.2.0/24
+
+	Protocol -> Set of rules in other to send massage from client to server in an understandable way.
+
+	Port -> when sending request to server, the server must specify port number for which the client must send the request.
+		Client Request -> Request + Destication IP + Protocol + Port.
+
+	Deamon -> is who is responsible for the port
+
+	Public Ip -> is the IP that is accessible over the internet.
+		if the machines on the network is connected via a router, that router is identified by an IP address assuming the network is
+		192.168.2.0, the routers would be example (192.168.2.1 and 192.168.2.2) public IP could be 103.91.180.103.
+	Router —>
+		if we have two router connected to the network, how does the in coming traffic from external IP know which router to
+		connect to. The system have a route table —> destination  | Target.
+		Router is also treated as a gate way
+	Private IP -> the ip that is only visible within the network
+
+Lesson 20(Apache HTTP Server)
+	when you have created the EC2 server, AWS creates it in the available zoom.
+		when you make the a request, the request is made on port 22. There are many services running on server side
+	port 			Service					Purpose
+	22			ssh				Login and Secure File Transfer
+	80			http				Web Application
+	443			https			Web Application (Secure)
+	53			named Service	Domain Name Resolution
+	21			FTP				File Transfer.
+
+
+	Your Server is still exposed in the Net, so you need to create a Security Layer known as Security Group.
+	Here you set the Inbound Rules to allow Port 22.
+	Security group rules
+		Inbound rules —> Allow Port 22, Allow Port 80
+		Outbound Rules —>
+	To increase security you need to set the security group.
+	if you desire to make your EC2 a web server, serving application to end users, you need to install httpd web application server.
+	httpd -> It will monitor the port 80 for request and identify the default document root folder/var/www/html  location.
+		So if the security group allows port 80, this would be routed to the appropriate port.
+
+	Demo —>
+		log into the EC2 Instance using putty,
+		change to root user —> sudo su -
+		here you can alter the inbound in the security group
+
+		install httpd ==> yum install httpd -y
+				this will install httpd to your machine(server)
+		Start httpd ==> service httpd start.
+			This will start the httpd service on port 80.
+			Now we need to keep the code in /ver/www/html folder
+			we cab copy our web app to the html folder
+			copy command ==>  cp -pr webapp/* /var/www/html/
+		Note—> You can also create a security Group via the  Network & Security.
+			You can have maximum of 5 Security group to an instance.
+SECTION 7 (VPC- Configure Custom Virtual Private     )
+
+Lesson 21(Build your own DataCenter)
+	Data center is a building space where you store your networks
+	What to have in mind when building this
+	1. How Many Networks?
+	2. What is the network range?
+	3. How many Servers in each Network?
+	4. How many public network should be configured
+	5. How many Private Networks?
+	6. Servers connectivity? what server can be connected to other servers.
+
+	7. You need to establish a Network Switch to have a connectivity with the servers and use the proper cable to connect to your
+		servers.
+	8. You need to have a local gateway installed in your data center to have communication between the data centers.
+	9. You need an Internet Gateway to be installed in the data center if you need access to the external network.
+
+	10 Plan on IP Address (CIDR) ==> Network Identifier and Host Identifier (Network configuration)
+
+Lesson 22(What is VPC) Virtual Private Cloud
+	When deploying on AWS, you have no control over Data center.
+	The logical data center which is created in the AWS cloud is called Virtual Private Cloud.
+	Here you can do everything you can do in a data center. who can access your network, which instances are private and which
+	are public face etc.
+	To get this, you need to deploy your AWS in VPC Layer. So your VPC will be acting as your logical data center.
+
+Lesson 23(Create Custom VPC)
+	VPC Allows you to create a custom topology.
+		You will need to create your IP range
+		Chose your availability Zone
+		Subnet -> Logical network segment within the VPC. It should have a network range which should be between the network
+			range of your VPC. Assume Network Range of your VPC is 192.168.0.0/16, your subnet can be 192.168.1.0/24.
+			One subnet should be associated to one availability Zone
+		Network ACL —> Is the network firewall having the inbound and outbound rules. works under subnet
+				Note, this is not mandatory.
+		Security group —> Inside the ACL, this is working on the EC2 level.
+				Note —> This is mandatory.
+		EC2 —> Now you deploy the Instance in the network. and the network will allocate the IP address based on the IP range
+			available.
+			AWS will create a default ROUTE Table
+			Ones subnet can have only one Route table
+		Internet connectivity —> you need to create an Internet Gateway. when you use this the route Table needs to be updated
+			route Table
+			Destination				|        	Target
+			192.168.0.0/16						local
+			0.0.0.0/0							IGW (Internet GateWay)
+
+		If route table has entry for Internet GateWay, it is referred to a public route table.
+		if the subnet has access to the internet it is referred to a Public subnet.
+		This will provide a public IP to this internet.
+Lesson 24(Demo Create a custom VPC in AWS)
+	in the console you can find the VPC under Networking & Content Delivery
+	select VPC
+	AWS ensures there is at least one VPC created in one region.
+	Creating one. ==> create new VPC
+		here you specify the network range e.g ==> 192.168.0.0/16
+	After creating the VPC we need to create a subnet.
+		There will be already created subnets, but you need to create yours
+		This will be created within an Availability zone.
+			one subnet can only have one Availability zone, but one Availability zone can have multiple subnets.
+		Here the CIDR(Classless Inter Domain Routing) can be 192.168.1.0/24 (should be within the VPC network range).
+		5 IPs are reserved for AWS
+	Now we need to create a route table —>
+	After creating a route table, we need to associate them to a Subnet. There is a portion in the console to do this within the
+	‘Route Tables’ menu
+		select “Edit Subnet Association
+	When you create your EC2 Instance, a little work needs to be done for the Subnets.
+	GoTo =>Subnets menu,  Select >Actions > Modify auto assign IP Settings, click on Auto-assign IPv4, which Enables
+		auto-assign public IPv4 address   and save.
+	After setting up a VPC and creating an EC2 Instance within that VPC, you would get an automatically assigned public IP
+	address.
+	Note: This IP address is not visible to the internet until you create an Internet GateWay
+	Create Internet Gateway =>
+		Under services, GOTO => VPC Service, On the Left, Select Internet GateWay =>
+		click => Create Internet Gateway, Specify Name Tag > and click create.
+		The new internet gate way will be detached. So to Attach it,
+		Select the GateWay, Click on Actions > Attach to VPC > Select the VPC from drop down
+	Configure route table to use Internet GateWay =>
+		Goto  and select the Route Tables Menu on the left
+		Click on Routes > Edit Routes > Add Route >
+			Here in the destination add ==> 0.0.0.0/0, On the Target, select from drop down “Internet Gateway” > it will change to
+			list of gateways, Now select the newly created Internet Gateway as target. and save route.
+		So since the Route table has an entry stating that by default traffic should go to an ip  address not falling under the Ip
+		range, this route table is regarded as a public route table. Also the subnet associated with this route table is regarded as
+		a public subnet.
+
+Lesson 25 (Private Subnet Vs. Public Subnet)
+	It is possible to create subnets in the different availability zones.
+	Assuming VPC route table  is
+		Destination     		|		Target
+		192.168.0.0/16				local
+		0.0.0.0/0					IGW
+	then subnets
+	subnet 1 (Availability zone - us-east-1a)
+		public subnet points to the VPC for the IGW target
+		Private subnet —> 192.168.1.0/24 ( falling into the network IP range of the VPC
+		Network ACL
+			EC2  private Ip (192.168.1.x)
+				public IP x.x.x.x
+
+	subnet 2 (Availability zone - us-east-1b)
+		public subnet points to the VPC for the IGW target
+		Private subnet —> 192.168.2.0/24 ( falling into the network IP range of the VPC
+		Network ACL
+			EC2  private Ip (192.168.2.x)
+				public IP x.x.x.x
+
+	When you have multiple Subnets in your VPC, AWS will insure that there is a “Local gateway” created for connectivity
+	between these Subnets
+
+	But you need to create a route table stating that if the location is falling within the VPC network Target should be local
+	This would be a Private route table
+		Destination     		|		Target
+		192.168.0.0/16				local
+	This will be routing only inside the VPC and will not have access to the internet.
+	This is for Private Subnet.
+	But this will need access to the internet. To resolve this, you need to create a NAT Gateway In the public Subnet
+	NAT(Network Address Translation)
+		To Enable the private Subnets to use this NAT Gateway, we need to update the Private Route Table in this Private Subnet
+		Destination     		|		Target
+		192.168.0.0/16				local
+		0.0.0.0/0					NAT GW
+	Users can not connect directory to these EC2/resources in the Private subnets directory.
+	In other to connect to these services, they need to first SSH into the public Subnet Instance and then from their, they can
+	SSH into the private Subnets. The public instance which I am logging into first is called Bastion Host
+
+LESSON 26(Public Subnets Vs. Private Subnet [LAB]) DEMO
+	Creating Public Server
+	From AWS console.
+		Goto Instances and Launch Instance
+			Take the steps => AIM
+			Under Network ==> select your VPC
+			And Subnet ==> Select your network
+			Launch Instance
+		Ones instance is created.
+	Now lets create a subNet
+	from console in service
+		Goto the VPC services
+			select VPC
+			click on subnets. click on create subnet
+				input tag Name,
+				select the VPC where to create this subnet
+				Select avalability zone.
+				In the IPv4 CIDR block, select the network range of the subnet e.g 192.168.2.0/24.
+			click on create
+	Go to route table for new route table for this subnet
+	Select the Name tag and select the VPC. and click create.
+
+	Now go to the route table and select,
+	Click on Subnet Associations
+		click on Edit Subnet Association
+			Select the subnet you have just created and click on save.
+
+	Now create new Instance(private Instance).
+		Follow the same process for creating instance and create new Instance
+		On step 3, Select the Custom Private Subnet(this will make this Instance part of the private Subnet)
+		Logging in
+		Accessing private instance from public instance (bastion Host)
+		From the public server ==> ssh ec2-user@192.168.2.113(private IP)
+			But we need the key pay for this and need to be made precent during login.
+			We need to create this key in the public instance => vi key.pem  and paste the key.
+			type this to change mode ==> chmod 600 key.pem
+		Attempt again ==>  ssh -i key.pem ec2-user@192.168.2.113
+		note -> We don’t have internet connection here test —> yum install httpd -y
+				this will not work.
+		To gain access to the internet, we need to add a NAT GW to the route. (Network Address Translation)
+
+		Adding the NAT
+			Goto AWS Service > VPC > NAT Gateways(will be on the left menu)
+				click > Create a Nat Gateway > Select the subnet(public subnet) Note->NAT gateway should be created on
+					public subnet
+				click on > Create New EIP( this will create a public IP for the NAT Gateway)
+			Ones the NAT Gateway is available, we need to update the Route table accordingly.
+
+			Back at the route tables, select the route table that is associated to your private subnet
+			Goto Routes > Edit Routes > Add a route
+				Destination 		| 		Target
+				0.0.0.0/0				newly created Nat Gateway
+
+Lesson 27(VPC Peering)
+		 What is VPC Peering …
+
+		We can create multiple VPCs ( VPC is the logical data center in the AWS Cloud)
+		If the EC2s instance in different VPC’s needs to communicate we need to create Peering Connection.
+		These will enable the VPCs to communicate using the private IPc e.g
+			VPC1 192.168.0.0/16  <—> VPC2 172.32.0.0/16
+		Peering between VPCs with the same network range is not possible e.g
+			VPC3 172.32.0.0/16 <—> VPC4 172.32.0.0/16
+		Peering must be connected between VPC’s to communicate, VPC1 even though connected to VPC2 cannot communicate
+			with VPC4 even though VPC2 is connected to VPC4, it requires its own connection.
+		In other words, peer to peer Connection Supported,  Transitive Peering Not supported.
+
+Lesson 28(VPC Peering Connections)
+	To do this, you need to create a subnet and route Table and attache the rout table to the subnet.
+	Deploy the EC2 instances in both VPC’s
+	To add the peering, update their route table, stating that if the destination is falling in the other VPC to route to it
+	VPC 1											VPC 2
+	Route Table										Route Table
+	Destination 		| 		Target					Destination 			| 		Target
+	192.168.0.0/16				local						172.32.0.0/16					local
+	172.32.0.0/16			Peering ID					192.168.0.0/16				Peering ID
+
+	Implementation
+		From console.
+		1. Create a new VPC for the second VPC
+		2. Create the subnet and attache to the VPC
+		    2.1  Specify the subnet range for the second subnet eg(172.32.0.0/16)
+		3. Create a route table and Specify the new VPC to attach it.
+		4. In the route table, associate the Route Table to the Subnet ( so that it will be using this)
+		    4.i  Click on subnet associations > Edit subnet associations > select your subnet from drop down and save.
+		5. Create a new EC2 Instance in the new subnet
+			i. EC2 control, Start the creation process
+			ii. On step 3, specify the Network to be the new VPC, and the subnet to be the Newly created Subnet associated with
+				the newly edited route table.
+
+		Now to establish connection we need VPC peering.
+		from Console
+		1. select VPC
+		2. Select ‘Peering connections’ from the left menu > Create peering connection
+		 	i. Now you select a local VPC to peer with, and the destination VPC.
+				finally click on create the Peering
+		3. Now you need to approve this peering in the Peering Connections section
+			i. Select the newly created VPC, Click on Actions > accept request > confirm.
+				Now connection is established
+
+		4. Go to the route tables
+			Edit route table associated with VPC one and VPC two accordingly to point to each other.
+			Now the peering is done.
+		Verifying the peering
+		ssh into the EC2 in VPC 1 and then from there try to ssh into EC2 in VPC 2 ==> ssh -i key.pem ec2-user@192.168.1.16
+
+
+LESSON 29(Network ACL Vs. Security Group)
+					Security Group								Network ACL
+	Operates at Instance level								Operates at the subnet level
+
+	Support allow rules only									Support allow rules and deny rules.
+
+	Is stateful: Return traffic is automatically allowed, 			Is stateless: Return traffic must be explicitly allowed by rules
+	regardless of any rules
+
+	All rules are evaluated before deciding whether to			Rules are processed in number order when deciding whether to allow
+	allow traffic											traffic
+
+	Applies to an instance only								Automatically applies to all instances in the subnet.
+
+	Mandate for EC2 instances								Optional - if not created, Subnet use default NACL. It is additional layer of 														defense
+
+Lesson 30 (Virtual Private Network[VPN])
+	with the Virtual Private Network having multiple VPC and each VPC have private network with multiple EC2.
+	For security reasons, we don’t want Corporate data centers (clients, cloud Engineers) to be connecting to this resources vial open internet.
+	To make this more secured, we need a Virtual Private Gateway that will connect to the Customer Gateway.
+	VPN with the use of VPG and CG creates a network for Customers to access private networks in the VPC.
+
+SECTION 8 EC2 Advanced - Virtual Servers in AWS Cloud
+Lesson 31(EC2 Instance Meta Data)
+	When you select an EC2 Instance, the details listed under this instance is called EC2 Instance Meta Data.
+	AWS makes sure that the EC2 meta data is available in the HTTP end point. You need to curl this endpoint to get the details
+		http://169.254.169.254
+	after you have sshed ==> curl http://169.254.169.254/latest/meta-data
+Lessong 32(How to manage instance setting)
+	Options to manage EC2 instances
+	On console -> go to running instances
+		> select Instance and then actions > connect
+			This will show you ways to connect to your Instance.
+
+	When logging to EC2 from console, it is called a remote login, we cannot log into the servers from console.
+	but if you can not login through the putty, it is possible to see the server status from console screen.
+	To do this,
+		Goto your console > Actions > Instance Settings > Get Instance Screen shot.
+	This can help for trouble shooting
+	Checking instance Log
+		Goto your console > Actions > Instance Settings > Get Systems Logs
+
+	Constum Private IP -> It is possible to create Custom private IP
+	Goto Instance > Actions > Networking > Manage IP addresses
+			Assign new IP > add it
+		This will give it a secondary IP.
+	Network Interface
+		Amazon creates a network interface when you create a new instance.
+		To see it, select and click on “network interface id”
+		This will take you to the network interface dashboard.
+		You will notice that the network interface has the primary and secondary IPs you specified in the instance.
+		It is possible to create a custom network interface and attach to you EC2 Instance.
+		Steps to do this
+		in the Network interface dashboard,
+		Click on “Create Network Interface”
+			add Description and select the subnet where it would be created.
+			you can also add to an IP to this or use auto.
+			You have to add a Security Group to this network interface.
+		ADD to your instance
+		Go to the Instance,
+		Go to Actions > Networking > Attach Network Interface
+			now select your network interface from drop down.
+
+Lesson 33(Bootstrap EC2 Instances) User Data
+	We are looking at how to create scripts that run when instances are created.
+		This can be done in the console while creating EC2 on step 3
+		under user, you can provide series of command to be run on booting up the EC2
+		Under Add Device
+			In User data
+				here you can provide the code e.g
+				#!/bin/bash
+				yum install httpd -y
+				service httpd start
+				cat << ‘EOF’ > /var/www/html/index.html
+
+Lesson 34(AMI - Create, Copy & Manage Permissions)Amazon Machine Image.
+	Note AMI -> This is the template that contains the OS and other related softwares.
+		Quick start tab -> This will show you all the AMI available.
+			AWS Marketplace —> will show you all the AMI that are managed by the Third party vendors.(Extra cost)
+			Community AMI -> More like fresh ami that are made available.
+			My AMIs -> you can also create your own AMI, that will be available here.
+	Create a Custom AMI
+		You can do this from your already created EC2 instance.
+		HOW
+			-> goto EC2 Instance > Actions > Image > Create Image
+				Then enter necessary info, remember to select “No reboot” if it is a production instance.
+		Ones created, You can view via the  IMAGES menu —> IMAGES > AMIs
+		Now you can decide to make this AMI public(meaning can be used by anyone) or you can make it usable by specific accounts
+		Select the AMI, got to Actions >Modify Image permissions >
+		Note that this AMI will not be available in other Regions. To make it Available,
+		GoTo AMI > Actions > Copy AMI > select destination region
+
+Lesson 35(EC2 Placement Groups)
+	AWS supports 3 Placement Groups
+		Cluster, Partition, Spread
+		Cluster
+			AWS creates racks when you create your EC2, your EC2 would be added to available rack  in the placement group within the
+			availability zone.
+			This is good for applications with Low network latency and high network throughput
+		Partition -> AWS also have Partitions with racks, within the availability zone,
+			When you are using this Placement Group, you will need to specify which partition you would want your instance to be created in
+			and AWS will create your Instance in this partition. Note your instance is deployed along with other instances in this rack.
+			This is good for applications that is Large distributed and replicated workloads. Recommended to sustain hardware failure.
+		Spread ->
+			when using this approach, AWS will insure that your Instance is deployed in a rack all by itself, No multiple instances.
+			One instance per rack.
+			This is good for Small number of critical instances that should be kept separate from each other.
+	LAB/practical
+		In console. by the left menu > Network & Security > Placement Groups.
+			click on  Create placement group
+				Specify Name and Strategy (Cluster, Partition, Spread).
+					if you chose partition, then you would have to select how many partitions (maximum allowed is 7)
+
+	Now you can chose the placement group you just created on Step 3 when creating instance.
+
+Lesson 36(Public IP Vs. Elastic IP)
+	when you create an Instance, AWS will automatically assign a Public IP to this instance. this IP changes whenever you restart the instance
+	Now AWS allows you to create a static IP called “Elastic IP”
+	Create Elastic IP
+		from Network & Security > Elastic IPs > click “Allocate Elastic IP Address”
+		this will create the public IP
+	Associate this IP to instance,
+		select the newly created elastic IP from the list
+		Click Actions > Associate Elastic IP address
+			Now select Instance from the drop down.
+	NOTE: AWS will charge for Elastic IPs.
+
+Lesson 37 (Summary )
+	Security group
+		VPC specific.
+	AMI
+		Region Specific, but can be copied to other regions.
+	KEY pair
+		Region specific,
+	Elastic IPs
+		Instance specific.
+	Route table
+		VPC Specific . Route table should be associated to subnets. one subnet can have only one route table but one route table can be
+		 associated to multiple subnets.
+	Internet GateWay
+		VPC specific resource. Internet gateway should be created for each VPC for internet access.
+——————————————————————————————————————————
+SECTION 9(EBS Volumes - Block Level Storage in the AWS Cloud.)
+Lesson 38(Introduction to Elastic Block Store -EBS)
+	Storage Volumes
+		Two type of Storage Volumes
+		1. 	EBS Volumes
+		2.	Instance Store Volumes
+	EBS Volumes (Elastic Block Store Volumes
+	   	By default every EC2 Instance has its own Root EBS Volume. You can also create a custom volume for you EC2 Instance.
+	   	Note: 1 EC2 can have multiple volumes, but 1 Volume cannot have multiple instances.
+		Different types of EBS Volumes supported by AWS
+		1.	General Purpose SSD(gp2)
+		2. 	Provisioned IOPS SSD (io1)
+		3.	Throughput Optimized HDD (st1)
+		4. 	Cold HDD(sc 1)
+		5. 	Magnetic (standard)
+
+	EBS Volume Charateristics
+		1.  Persistent block storage volumes.( This means that data will not be lost on reboot)
+		2.  99.999% availability(AWS automatically duplicate your storage, you can also take a snap shot
+		3.  Automatically replicated within its Availability Zone(AZ)
+		4. Point in time snapshot support
+		5. Modify Volume type as needs change.
+
+	check how much storage in EC2
+		Login to the EC2 via SSH
+			type command —> lsblk
+	Create an EBS Volume
+	  	EBS is an Availability zone resource
+
+		To create one,
+		Go to Console > Click on Volumes > Create Volume >
+			Select Volume type, size, IOPs, Availability zone, etc
+
+	Attach volume to EC2
+		Select Actions > Attach Volume > select instance > click ‘Attach Volume’
+
+Lesson 39(Instance Store Volumes)
+	AWS insures that one or more Instance Store Volume is attached to your instance.
+	These volumes are treated as a Hardware attached Volume, they are attached to your  EC2Instance.
+	This cannot be used to store your Software related data as data is lost when you reboot your Instance.
+	These are used for cache and buffer data. since this are attached to your EC2 Instance. it is faster than the EBS Volume.
+	Characteristics
+		Hardware Attached tp EC2 Instance
+		None Persistent data store.
+		Data not replicated by default.
+		No snapshot support.
+		AWS support SSD pr HDD types.
+	LAB
+		in console, Select Instances > Launch Instance>
+			On step 2 while looking at Instance Type -> you will see the “Instance Storage(GB)” column.
+			Since this instance are attached at point of creation, they are called hardware attached volumes.
+			You can not disassociate this instance volume and it is not possible to attach more Instance volume or modify.
+
+Lesson 40(EBS Snapshots).
+	How to create EBS Snapshots
+	ON Console,
+		Select EC2 Instance >>> here you will see the Root device and Block devices.
+		Snapshot is the point in time backup of your data.
+		To do this,
+			Select the volume > Actions > Create Snapshot > close
+		To see status of snapshots
+		On the left menu under Elastic Block Store Select “snapshots”, If volume is currupted due to changes made,
+		Select the snapshot , > Actions > Create Volume > select create Volume and close.
+
+	Ones volume is created, you will be able to find this in the Volume lists.
+	Now you can attach this volume to the Instance
+	   	Attach volume to EC2
+		Select Actions > Attach Volume > select instance > click ‘Attach Volume’
+
+
+
+SECTION 10: Cloud Watch Basic - Monitor AWS Resources & Applications Performance
+Lesson 41(Cloud Watch Metrics)
+	Cloud Watch is the monitoring solution provided to monitor the resources provided in AWS cloud.
+	If you are experiencing any issue you can utilize cloud watch.
+	The process of monitoring is referred to as Matric.
+	LAB
+		Go to the Services tab.
+		Under Management & Governance, Select “CloudWatch”
+		On the left, Select “Metrics”
+		For EC2 > click on Metrics  > per instance
+	You can also see the monitoring Metrics from the EC2 Instance.
+	Go to the EC2 Instance and select “Monitoring”
+		Here you can enable “Detailed Monitoring” (every 1 minute) compared to the “Basic Monitoring”(every 5 minutes)
+
+Lesson 42(Cloud Watch DashBoards)
+	It is tideous to see all instances one at a point.
+	We can create a bunch of instances in a dashboard so we can view all concurrently.
+	To do this
+	On Console, Goto CloudWatch
+	Select from left menu “DashBoards”
+	Select “Create dashboard” >> Give it a name and click “Create Dashboard”
+  	Select type of graph and continue
+	On Add metric graph,
+		select what you need to be added to the dash board. Using EC2 Id …
+	So practically you are adding widgets of your resources to the dashboard.
+
+Lesson 43(Cloud Watch Alarms)
+	IN the cloud watch you can see a lot about your resources eg for EC2,
+		In EC2 you can see ==>  CPU Usage, Memory Usage etc in the Metrics.
+		In EBS you can see ==> VolumeReadBytes, VolumeWriteBytes
+
+	Monitoring is great, but we would need an alarm to be triggered when threshold is bridged.
+	When configuring this alarm you need to define some parameters such as —>
+	Statistics: Average,  Period: 5 minutes, Threshold: greater than 80%, DataPoints: 2 out of 4, Notification: SNS Topic.
+
+	Cloud alarm has multiple states.
+	 —> Insufficient  ==> Hasn’t collected enough information to determine this
+	—> OK ==> means it is within threshold .
+	—> Alarm ==> When the threshold is bridge
+
+	To get an Email Notification, AWS has its own service called SNS Topic.
+
+SECTION 11: Simple Notification Service
+Lesson 44(SNS introduction)
+	Here we are looking at Publisher, Message and Email Client
+	This solution lets subscribers receive these emails.
+	SNS can send notifications to
+		Email Client, Mobile Client or Apps, Lambda, SQS, HTTP or HTTPS client. (Subscribers)
+	SNS Service uses the SNS Topic to deliver this messages
+
+	SNS Service  —————————————————->
+											—> SNS Topic  —-> Subscribers
+	Cloud Watch Alarm -> Publisher -> message ——->
+
+	SNS to any service in AWS is considered ‘System to System messaging’.
+	if it is a third Party like email and mobile it is called “User Notification”.
+
+Lesson 45(Create Topic & Subscriptions to the Topic)
+	LAB
+	From AWS Console, Go To Services tab
+	Under Application Integration > select “Simple Notification Service”
+	This will bring you to the SNS DashBoard
+	Create an SNS Topic
+	Inside the SNS DashBoard, Select Topics
+	Create Topic > Enter Topic name etc > click on create topic.
+	Ones Topic is created.
+	ones inside the Topic page, use the “Create subscription” button to start subscription creation
+	here you Select Protocol.
+Lesson 46(Cloud Watch Alarms - LAB)
+	On the AWS Console. Select EC2
+	Go to the Running Instances. (Just to see the running Instances)
+	Create Watch Alarm
+		go to Service > chose “CloudWatch” service.
+		In the Page, Go to the  “Alarms by AWS service” (this will show you all the alarms)
+		ON the left menu select  “Alarms”
+		> Create alarm > Select metric > EC2 >Per-Instance Matrix > search for the instance using Id
+		>From the available mettrix(CPUSurplusCreditsCharged, NetworkPacketsin, NetworkPacketsOut,CPUUtilization,MetadataNoToken, 				etc)
+			Step 1 (specify metric and conditions)
+			Select one(we are using CPUUtilization)
+			Now select, % of threshold, frequency(which can be as low as every 10 seconds), etc
+			Step 2 (Specify conditions)
+			> Configure actions
+				Add Notification >
+					here you select an existing SNS topic, or create a new topic, or Use topic ARN.
+				Add Auto Scaling action >
+
+				EC2 action > Options —> Stop this instance, Terminate this instance, Reboot this instance
+
+			Step 3.(Add description)
+
+			Step 4(preview and create)
+	To test Alarm.
+		Login to the ec2 -> and type command ==> stress
+			This will put stress on the cpu, we need to copy the sample command for how long we would want the stress to last.
+			Now make a dublicate of the terminal to log in and see the CPU usage
+			Command -> top
+				This will show you whats going on
+		On the alarm Dashboard we should see this
+————————————————————————————————————————————
+SECTION 12: Certificate Manager - Provision, Manage & Deploy SSL/TLC
+Lesson 47 (Data Encryption Introduction & Types) AWS Certificate Manager.
+	We use this to Provision, Manage, Deploy, and renew SSL/TLS certificates on the AWS platform.
+	Data Encryption Introduction & Types
+		1. Encryption at Rest
+		2. Encryption During Transit.
+	Encryption During Transit ->
+	Two system —> client(https://www.    Encryption During Transit                       server(we need certificate here with private and public key)
+
+	process —>
+	1. Client will send Request to the Server asking for Public key (Supported TLS/SSL version)
+	2. Server will respond with the Public key.
+	3. Client will use this public key and generate a master key. and send this “Pre-Master” key to the server.
+	4. This Master key that is both available in Server and Client is now used for Encryption and Decryption on both sides.
+	These steps are referred to as SSL handshake.
+
+Lesson 48 ( Create SSL/TLS Certificates - LAB)
+	How to create and provision AWS SSL
+	From AWS Console > click on “Certificate Manager” Service
+	Here —> click on “Get started”
+	Note: currently AWS support 2 type of Certification => Public certificate and private certificate.
+	Click on “Request a certificate”
+	5 steps from here
+	Step 1. Specify Domain Name,
+	Step 2. Select Validation Method ( we chose the DNS method, There is also Email method)
+	step 3. Add Tags (you can add name and Value = nameofChoice.) then click on “review”
+	step 4. Review  ( then click on “Confirm and Request”)
+	step 5. Validation (Here you are provided with CNAME which you would need to add to your DNS configuration )
+		it will take 24 to 48 hours to validate this certificate.
+
+SECTION 13: Route 53 - Scalable DNS and Domain Registration.
+Lesson 49(What is Route 53? | How DNS works
+	Route 53 is a scalable highly available Domain Name System in the AWS cloud. It is used for domain registration and managing
+	authoritative name servers of the Domain.
+	Domain name resolution to the IP address —> when a client type in the Domain name, it is sent to the DNS Server which has the
+	information about the domain name. if there is no info in the DNS, the request is sent to Route 53.
+	The Route 53 keeps Resource records  with columns  Resource		Record Type		Value.
+	When a request like “www.iwayQ.com” is sent, the Route 53 will first look for the respective hosted zone(iwaQ.com) and then resource
+	record(www).
+		Hosted Zone: iwayQ.com
+		Resource Records:
+		Resource			Record Type			Value
+		www					A				10.2.5.37
+	Resolution of domain name
+		1. Request is sent by the user using domain name to DNS Server(if domain info is in Server ) proceed to step 4.
+		2. Domain name is not in DNS Server, Domain name is sent to Route 53, using Hosted Zone and Resource record, Route 53 resolved 				the IP address
+		3. IP address is now sent back to the DNS Server
+		4. Now the DNS server having the IP address, sent it back to the client.
+		5. Client Now makes HTTP/S request to the IP address.
+		6. Http/S response is sent back to the client.
+
+Lesson 50(How to Create Hosted Zone)
+	From console > Services >
+	Under Networking Section > Select “Route 53”
+	Under DNS management, Click on “Get Started Now” >
+	> ON left menu > click(Register domains) > register Domain
+	> here search for Domain availability by typing in your domain.
+	—> if Domain is Available, add to cart and proceed to registration.
+	Add to cart and continue.
+	If Domain is Registered by a third party you can transfer domain. so you select “Transfer Domain”
+	ones created and transferred AWS will create “Hosted zone” for you.
+	You can also manually create a Hosted Zone.
+	To view Hosted Zones.
+	From the Dashboard(Route 53) on left menu > select Hosted Zones
+	Hosted zone —>  This is simply a logical container holding the authoritative name server resource Record information.
+	Create Hosted Zone -> Just click on “Create Hosted Zone”
+		here you enter -> Domain Name(something.com), Comment, Type(public, Private Hosted Zone for Amazon VPC).
+		For availability more than one name servers are created and associated to the domain e.g
+		Name			Type				value
+		iwayq.com		NS				ns-486.awsdns-60.com
+										ns-1041.awsdns-02.org
+										ns-800.awsdns-36.net
+		—————————————————————————————————————————-
+		iwayq.com		SOA				ns-486.awsdns-60.com,  awsdns-hostmaster.amazon
+		www.iwayq.com 	A				10.2.5.37
+
+	If managed by third party,
+	you need to log into the third party, and update the NameServer with the values provided in the Hosted Zone.
+
+	Record Set —> Here you add the “www”,  type(IPv4 address, CNAME, etc), alias, TTL, Value(Ip address of EC2 instance).
+		You need to complete this as well as this is where you add the IP address of your EC2 instance.
+
+	Create Record Set —> while in the Resource in Hosted zone, Click Button “Create Record Set” Here you attach the IP address to the
+		domain. this will add the last part of the record in the Hosted zone record table
+		Note ==> the resource name is WWW,
+
+	Here we explained how to register	a new domain and to add it to the route 53 service and how to create and manage Hosted zones .
+
+Lesson 51(DNS Record Types)
+	Various DNS Record Types.
+	say we have in the Hosted Zone: iwayQ.com Resource Records
+	Resource			Record Type 		Value
+	www				A				10.2.5.37
+	test				CNAME			www.iwayQ.com
+
+	Request for both www.iwayQ.com and test.iwayQ.com will resolve to —> www.iwayQ.com
+	test.iwayQ.com is regarded as an Alias to www.iwayQ.com, it is also called as CNAME.
+	A Record : www.iwayQ.com -> 10.2.5.37
+	CNAME Record: www.iwayQ.com —> test.iwayQ.com
+	There are many Record types.
+
+Lesson 52(Route 53 Health Check)
+	In console under Route 53
+		Select “Health Check” from the left menu
+		Note: Route 53 can monitor the health and performance of your application’s servers, or endpoints, from a network of health checkers
+		in locations around the world. You can specify either a domain name  or an IP address and a port fo create HTTP, HTTPS and TCP
+		 health checks
+
+———————————————————————————————————————————————————————————
+SECTION 14: Load Balancing - High Availability Solution for the Applications & Servers.
+Lesson 53(High Availability and Lad Balancer - Architecture)
+	AWS provides 3 types of Load Balancers at this point
+	Application Load Balancer,   		Network load Balancer		Classic Load Balancer
+
+
+	Classic Load Balancer
+	This is a situation where we use a load Balancer for more than 1 EC2 instance which would be a middle man directing traffic to one EC2 or
+	the other on failure. Here we specify which port number the load balancer would be and which port number it can forward request to
+	Here the Load balancer performs some tests to see if the target is healthy, if the target is healthy it forwards otherwise it does not forward.
+	if both instances are healthy, requests will be alternated between Instances by the Load balancer.
+	Characteristics of Classic Load Balancer
+		Target Health Checks.
+		Listener  configuration
+		Security Group
+		SSL Certs (https).
+		It can listen to HTTP/HTTPS ant TCP
+	Not recomended for Applications.
+
+	Application Load Balancer
+		Suitable for Deploying Micro Services. Services would be split into multiple micro services and each micro service would be deployed
+		into a group of web server.
+		Here, Two instances are Deployed and each is created as a target group. Target group can have one or more instances.
+		All the Instances which are created in a single target group would be configured as a single web application
+		Target group #1App 1 [ ec2, ec2 ], Target group #App2 [ ec2, ec2, ec2 ] .
+		Now we have an Application Load balancer created in the AWS, and these target groups are added as a Target to the load balancer.
+		When Users send request to the server, the load Balancer takes this request and decides which target group to send the request to.
+		(It checks if request is related to app1 or 2 and forwards respectively.
+		Now the target group will check the EC2s and which ever is healthy, it will forward the request to it.
+		Characteristics of Application Load Balancer
+			Listener Port configuration
+			SSL Certs
+			Availability Zones
+			Security Group
+			Configure Routing
+			Can support only HTTP/HTTPS
+
+		Application Load balancer are
+			Working on Layer 7, Context - aware, SSL/TLS Termination, Host/Path based Rules to examine request.
+
+
+	Network Load Balancer
+		This also receives and forwards request to the respective target group. Its behavior is same as The application Load Balancer in that
+		it works with Target groups ==> Group #1 [ EC2, EC2 ], Group #2 [ EC2, EC2 ]. It forwards request to the target group on a configured
+		port(e.g 80)
+		Characteristics
+			Listener Port
+			SSL Certs
+			Availability Zones
+			Configure Routing
+			Can only support TCP, TLS, UDP
+
+		This is working on Layer 4
+		context - not aware ( only points to one Target group so need to know the context )
+		End to end encryption.
+		This will be faster than Application Load Balancer
+
+Lesson 54(Create a Classic Load Balancer)
+	Go to console.
+		>EC2     service > On the Left menu, under Load Balancing
+		> Select ‘Load Balancers’ > ‘Create Load Balancer’ > Here select Type >
+		> Here you select Name, to which VPC it should be created, Whether internal or external, Listener Configuration:
+		> Next you add available subnets >
+		Step 2
+		Select the Security Group(or create new)
+		step 3 > confirm setting
+		Step 4 > Configure Health Check.
+			Here we select make our selections
+		Step 5 > Add EC2 Instances (These will be the targets)
+		Step 6> Add Tags —> here you will add Key and name.
+
+		Now we can see the load balancer within the Load balancer page.
+		here under Instances, we can see the instances.
+
+		Under the Description, We can see the DNS name have been created for this Load Balancer.
+		We can copy and add the DNS name as a CNAME record to the Route 53 in the Data sets, so we can access it.
+		Even before we add this to the Route 53, we can browse the web server using the DNS name.
+		>  Testing that the load balancer is working
+		     We can stop one of the web servers
+			Loginto the instance. stop the httpd service  ==> service httpd stop.
+
+Lesson 55(Application Load Balancer LAB)
+	Using 3 instances hosting different applications(Home, Video, Gallery)
+	EC2(Home) <Home APP> /var/www/html
+	EC2(Galllery) <Gallery APP> /var/www/html/gallery/
+	EC2(Video) <Vidoe APP> /var/www/html/video/
+
+	Creating a Load Balancer for this set up (Application Load Balancer)
+	First we need to create Target groups
+	From Console > EC2 > On the left menu > under “LOAD BALANCING” >select Target Groups >
+		Click on “Create target group” > Here you fill in info like >> name,  Type(Instance, IP, Lambda function). Protocol, port, VPC, Path,
+			Health check.
+		ones created, You now need to add instance to this target group
+		On the TargetGroup page,
+		>click on Target tab > Edit > Select the instance you need to add. >Click on “Add to Register” > click on “Save”
+		Repeat for 2 more
+	Second we need to create Load balancer
+	From EC2 > left menu > under “LOAD BALANCING” > select “Load Balancers” > “Create Load Balancer” > Select “Application Load
+	 Balancer”
+	ON Step 4: Configure Routing
+		Select a Target group from existing Target group since we have created this in the past. (Note you can only select one target group at
+		a time in this stage(Default Target group)
+	Now we need to add other target groups to this Load balancer. We can do this via Listeners tab.
+	> Select “Listeners” Tab >> under the list of the Listeners . > Click “View/edit rules”
+	> Under the Rules, we can see that there is a Rule sending to the Home.
+	now add rule > click on “+”  > Insert Rule >> Specify the condition (Host header, Path, Http header.., Http request method…, Query string..,
+		Source IP…)
+		In our case, we select Path ==> is “videos”   , in the THEN column . Forward to…. Select target group.
+		repeat for 3rd
+		Note: path must be a string ==> “path”
+
+Lesson 56(Network Load Balancer)
+	First We need to create target groups as in Application Load Balancer.
+	Here we create 2 targets to show this and add Instances.
+	Create Load Balancer
+		Go to Load balancer and start creation process.
+		Here we select Network
+		In Network —> The listener to not have “View/Edit rules”, You can only add new listener to the list
+		In our case ==> TCP on port 81
+		The default traffic is on port 80 and the TCP is on port 80
+		So on port 80 is routed to Home and port 81 is routed to Videos in our case.
+
+	In conclusion Network Load Balancer is pretty much used for Ports, so two applications running in 2 different Instance having been routed
+	to different ports is forwarded accordingly by the Load Balancer.
+
+————————————————————————————————————————————————————————-
+SECTION 15: Auto Scaling - Scale EC2 instances Proportion to Application Load)
+Lesson 57(What is Auto Scaling)
+	Auto scaling is use to scale EC2 service in proportion to Application Load
+	AWS introduced an auto Scaling, which insures that more EC2 instances are created to handle the traffic load as users increase.
+	Horizontal Scaling -> when auto Scaling is creating more instances with a Scale Out method  <——- adding more instance to load
+		balancer ——> to handle the traffic need of the system. So in other words we are not changing the capacity of existing instance, we
+		are just adding more instances. Ones traffic decreases the Auto Scaling will remove the additional instances (scale in)
+
+	Questions—>
+		How does auto load know when to scale in vs scale out?
+		How it choses EC2 config
+		Does terminating instance cause data lost.
+
+Lesson 58(Auto Scaling Group- Architecture)
+	Here we start with creating our VPC, instead of creating EC2s, we create  a Launch Configuration which would have the following
+	Launch Configuration
+		EC2 Type, AMI Type, Launch configuration, IAM Role, Security Group
+		We need to create Auto Scaling Group.
+		Specify which Availability zones to be used.
+		min and max EC2
+		Configure Scaling policy
+		Scaling policy
+			scale Out: CPU Utilization > 80%
+			Scale In: CPU Utilization < 20%
+			Period: 5 mins  ( Cloud watch alarm )
+			So we have -> Min:2  Desired:2  Max: 6. Desired value is modified every Period if the CPU Utiliazation demands change.
+		Cloud watch Alarm( used for scaling)
+		Avg. CPU Utilization > 80% -> Scale Out
+Lesson 59(Auto Scaling Group and Elastic Load Balancer)
+	Auto scaling group works with Private Subnets in the respective availability zone.
+	The request are not getting sent to the EC2’s directory since the numbers keep changing( these EC2s are private.
+	Rather we need an Elastic Load Balancer siting on a Public Subnet to handle these request.
+	Now the load balancer would be added to the Route 53 Record set.
+
+Lesson 60(Create launch Configuration)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+AWS DynamoDB
+What is DynamoDB?
+	It is a fully managed NoSQL database service offered by AWS. It works on key-value pair and other data structure documents
+	provided by Amazon.
+	Has three fundamental units ==> Attribute -> Item -> Table.
+	Attribute is the simplest unit.
+	Item ==> Has lots of attribute.
+	Table ==> has lots of Items.
+Why DynamoDB?
+	Problem that this solves ==>
+		Scalability -> Scales Seamlessly no matter the traffic,
+		Customizable -> Database is highly customizable according to priorities of the App
+		Data Types -> Data can be stored in multiple data types.
+		Stable Performance -> No matter the traffic or modifications, user gets stable app performance.
+
+
+DynamoDB Components
+Terms used for DynamoDB
+	Attribute: An attribute is a single field that is attached to an Item. E.g Employee Name
+	Item: An item is a set of attributes in a table. You can also understand an item as a set of attributes that can uniquely define
+		your entry in a table. For example, an item in Employee records will identify a single employee.
+	Table: A table can be visualized as a group of items. Taking an example of Employee records, you will have Employee name,
+		   Employee ID, Address and Phone Number all such items will be stored in a table.
+	Primary Key: A unique attribute that is necessary while creating a table. It cannot be null at any given point. Hence, while
+		   inserting an item into the table, a primary key attribute is a must.
+		two types of Primary keys
+		Simple Primary Key-> Made up of a single attribute
+		Composite Primary Key -> comprise of two attributes e.g car details table(brand name and model number).
+	Secondary index-> Can be understood as the attribute that lets you query the data, with or without the help of a Primary key.
+		DynamoDB has these secondary indexes that helps you achieve this additional access.
+	DynamoDB Streams -> is an additional/optional feature provided by DynamoDB to keep a track of data modification events in a
+		table
+
+DEMO: Creating a sample Table on DynamoDB
+	Three ways you can access a DynamoDB
+	1.  console —> just search for the DynamoDB and click on create DB
+
+	2. Command Line Interface
+	3. Using API -> AWS provides SDK case.
+
+
+
+
+Other db services compared to DynamoDB
+Features			DYNAMODB				RDS					RedShift						Aurora
+
+Scaling		Scales Seamlessly		Relatively easy to scale			More complexity in scaling		Relatively Easy to Scale
+
+Storage		Unlimited Storage				64TB				2PB							64TB with RDS
+
+Pricing		Pay-per-Use Model		Generally Cheaper than others	On-Demand model with added	Pricing depends upon 																Cost							RDS
+
+Maintenance	Maintained by AWS		Maintained by AWS				Require more Maintenance		No Maintenance 																								Required
+
+DynamoDB features
+	On-demand capacity mode-> Application using this normally scales up or down to accommodate traffic.
+
+	Built-in support for ACID transactions-> Provides server side support for transactions
+
+	On-demand backup -> Helps you create a complete a complete backup of your work at any given time
+	Point-in-time recovery-> Recover data from a given point.
+	Encryption at rest ->
+
+DynamoDB queries
+
+AWS Lambda
+AWS services Categories
+	Compute => EC2, Lampda ==> used to process data on the cloud.
+	Storage and content Deliver => S3, Glacia  ==> can be used to cache data
+	Database => DynamoDB, Aurora, RedShift, RDS
+	Networking=> Route 53
+	Management tools =>
+	Security =>
+	Applications => Notifications, emailing etc.
+
+	What is AWS Lambda => It is a ‘server less’ compute service. where developers don’t have to worry about which AWS resources
+	to launch or manage them.
+	All they have to do is put the code on lambda and it gets executed. it is used for executing your backend code while managing
+	your resources
+
+	How Lambda works? > Code that you want Lambda to run is known as a lambda function. Here the event source is the entity
+	that triggers a lambda function.
+	Execution role in lambda can be defined as an IAM(Identity and access Management) to give access permission for the AWS
+	resources.
+	to use lambda, all you have to do is upload your zip file, define an event source and you’re all ready to go.
+	in lambda all you have to do is insert the plain code and lambda will execute it.
+
+	Creating a Lambda function
+	in the console.
